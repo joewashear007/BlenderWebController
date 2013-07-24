@@ -32,8 +32,10 @@ class CGIExtHTTPRequestHandler(http.server.CGIHTTPRequestHandler):
 		[parentDirs, script] = base.rsplit('/', 1)
 		self.cgi_info = (parentDirs, script+query)
 		return True
+
 class WebSocketsHandler(socketserver.StreamRequestHandler):
 	magic = b'258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
+
 	def websocketHash(self, key):
 		result_string = key + self.magic
 		sha1_digest = hashlib.sha1(result_string).digest()
@@ -58,9 +60,14 @@ class WebSocketsHandler(socketserver.StreamRequestHandler):
 
 	def read_next_message(self):
 		try:
-			length = self.rfile.read(2)[1] & 127
+			msg = self.request.recv(2)
+			if not msg:
+				print("Nothing received")
+				return
+			length = msg[1] & 127
 			if length == 126:
-				length = struct.unpack(">H", self.rfile.read(2))[0]
+				length = struct.unpack(">H", self.request.recv(2))[0]
+				#length = struct.unpack(">H", self.rfile.read(2))[0]
 			elif length == 127:
 				length = struct.unpack(">Q", self.rfile.read(8))[0]
 			masks = self.rfile.read(4)
@@ -74,11 +81,9 @@ class WebSocketsHandler(socketserver.StreamRequestHandler):
 	def pack(self, data):
 		#pack bytes for sending to client
 		frame_head = bytearray(2)
-
 		# set final fragment & opcode 1 = text
 		frame_head[0] = frame_head[0] | (1 << 7)
 		frame_head[0] = frame_head[0] | (1 << 0)
-
 		# payload length
 		if len(data) < 126:
 			frame_head[1] = len(data)
@@ -125,10 +130,18 @@ class WebSocketsHandler(socketserver.StreamRequestHandler):
 		if self.handshake_done:
 			self.send_message("Connected!")
 		print("Done!")
+
 	def on_message(self, msg):
 		print(msg)
-		
+
 class HTTPServer(threading.Thread):
+	def checkPath(self):
+		if 0 < os.getcwd().count(' '): 
+			print("ERROR!!! - The cwd path contains blanks! Can't Start Servers")
+			return False
+		else:
+			return True
+
 	def __init__(self, HttpPort):
 		threading.Thread.__init__(self)
 		self.HttpPort = HttpPort
@@ -136,18 +149,20 @@ class HTTPServer(threading.Thread):
 		self.host = socket.gethostbyname(socket.gethostname())
 
 	def run(self):
-		if 0 < os.getcwd().count(' '): 
-			print("ERROR!!! - The cwd path contains blanks! Can't Start Servers")
-		else:
+		if not self.checkPath():
+			return 
+		try:
 			print("Starting HTTP Server ...")
-			server_addr = ("", self.HttpPort)
-			self.httpd = http.server.HTTPServer(server_addr, CGIExtHTTPRequestHandler)
+			self.httpd = http.server.HTTPServer(("", self.HttpPort), CGIExtHTTPRequestHandler)
 			print('Done! Serving on ' , self.host + ":" , self.HttpPort)
 			self.httpd.serve_forever()
+		except Exception as e:
+			print("There server could not be started")
 		
 	def stop(self):
 		print("Killing Http Server ...")
-		self.httpd.shutdown()
+		if self.httpd is not None:
+			self.httpd.shutdown()
 		print("Done")
 		
 class WebsocketServer(threading.Thread):
@@ -158,38 +173,34 @@ class WebsocketServer(threading.Thread):
 		self.host = socket.gethostbyname(socket.gethostname())
 
 	def run(self):
-		if 0 < os.getcwd().count(' '): 
-			print("ERROR!!! - The cwd path contains blanks! Can't Start Servers")
-		else:
+		try:
 			print("Starting Websocket Server ... ")
 			self.wsd = socketserver.TCPServer(("", self.WebsocketPort), WebSocketsHandler)
 			print('Done! Serving on ' , self.host , ":" , self.WebsocketPort)
 			self.wsd.serve_forever()
+		except Exception as e:
+			print("The server could not be started!")
 				
 	def stop(self):
 		print("Killing WebSocket Server ...")
-		self.wsd.shutdown()
+		if self.wsd is not None:
+			self.wsd.shutdown()
 		print("Done")
 
 def main():
 	quit = False
 	ServerRun = False
 	while( not quit):
-		c = input("Enter input [s,k,q]: ")
+		c = input("Enter input [s,q]: ")
 		if c == "s" and  not ServerRun:
 			httpServer = HTTPServer(8000)
 			wsServer = WebsocketServer(9999)
 			httpServer.start()
 			wsServer.start()
 			ServerRun = True
-		if c == "k" and ServerRun:
-			ServerRun = False
+		if c == "q":
 			httpServer.stop()
 			wsServer.stop()
-		if c == "q":
-			if ServerRun :
-				httpServer.stop()
-				wsServer.stop()
 			quit = True
 
 if __name__ == '__main__':

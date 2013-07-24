@@ -20,6 +20,7 @@ ServerRun = True
 #### FUNCS #####
 def callback(data):
 	print("Received: ", data)
+
 ################
 class CGIExtHTTPRequestHandler(http.server.CGIHTTPRequestHandler):    
 	def is_python(self, path):
@@ -86,7 +87,7 @@ class Websocket(object):
 		#The integer is represented as an array of bytesize. An OverflowError 
 		#is raised if the integer is not representable with the given number
 		#of bytes.
-			return bytearray(number.to_bytes(bytesize, byteorder='big'))
+		return bytearray(number.to_bytes(bytesize, byteorder='big'))
 
 	def pack(self, data):
 		#pack bytes for sending to client
