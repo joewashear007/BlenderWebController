@@ -30,7 +30,9 @@ try {
 		console.log("Socket opened.");
 	};
 	s.onclose = function (e) {
-		debug("Closed - code: " + event.code + ", reason: " + event.reason + ", wasClean: " + event.wasClean);
+		var p = document.createElement("p");
+		p.innerHTML = e.data;
+		output.appendChild(p);
 		console.log("Socket closed.");
 	};
 	s.onmessage = function (e) {
