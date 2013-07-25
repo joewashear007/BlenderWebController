@@ -49,7 +49,7 @@ try {
 close.addEventListener("submit", function (e) {
 	console.log("Closed Started");
 	e.preventDefault();
-	s.close();
+	s.close(1000, "Try to Close");
 }, false)
 
 form.addEventListener("submit", function (e) {

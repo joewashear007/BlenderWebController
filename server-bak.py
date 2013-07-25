@@ -52,31 +52,26 @@ class WebSocketsHandler(socketserver.StreamRequestHandler):
 		#Overwrtien function from socketserver
 		while ServerRun:
 			if not self.handshake_done:
-				self.handshake()
 				print("handshaking")
+				self.handshake()
 			else:
 				print("Reading")
-				self.read_next_message()
+				msg = self.request.recv(2)
+				if msg[0] == 136 or not msg:
+					print("Received Closed")
+					break
+				length = msg[1] & 127
+				if length == 126:
+					#length = struct.unpack(">H", self.request.recv(2))[0]
+					length = struct.unpack(">H", self.rfile.read(2))[0]
+				elif length == 127:
+					length = struct.unpack(">Q", self.rfile.read(8))[0]
+				masks = self.rfile.read(4)
+				decoded = ""
+				for char in self.rfile.read(length):
+					decoded += chr(char ^ masks[len(decoded) % 4])
+				self.on_message(decoded)
 
-	def read_next_message(self):
-		try:
-			msg = self.request.recv(2)
-			if not msg:
-				print("Nothing received")
-				return
-			length = msg[1] & 127
-			if length == 126:
-				length = struct.unpack(">H", self.request.recv(2))[0]
-				#length = struct.unpack(">H", self.rfile.read(2))[0]
-			elif length == 127:
-				length = struct.unpack(">Q", self.rfile.read(8))[0]
-			masks = self.rfile.read(4)
-			decoded = ""
-			for char in self.rfile.read(length):
-				decoded += chr(char ^ masks[len(decoded) % 4])
-			self.on_message(decoded)
-		except Exception as e:
-			print("Exception when reading!")
 		
 	def pack(self, data):
 		#pack bytes for sending to client
@@ -133,6 +128,7 @@ class WebSocketsHandler(socketserver.StreamRequestHandler):
 
 	def on_message(self, msg):
 		print(msg)
+		self.send_message("Got :" + msg)
 
 class HTTPServer(threading.Thread):
 	def checkPath(self):
