@@ -30,7 +30,11 @@ class CGIExtHTTPRequestHandler(http.server.CGIHTTPRequestHandler):
         self.cgi_info = (parentDirs, script+query)
         return True
 
-class WebSocketsHandler(socketserver.StreamRequestHandler):
+class WebSocketsHandler(threading.Thread, socketserver.BaseRequestHandler):
+    def __init__(self, request, client_address, server):
+        threading.Thread.__init__(self)
+        socketserver.BaseRequestHandler.__init__(self, request, client_address, server)
+
     magic = b'258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
     
     def _websocketHash(self, key):
@@ -41,36 +45,38 @@ class WebSocketsHandler(socketserver.StreamRequestHandler):
         return response_string
 
     def setup(self):
-        socketserver.StreamRequestHandler.setup(self)
+        #Overwrtien function from socketserver
+        #Init some varibles
+        #socketserver.StreamRequestHandler.setup(self)
         print("connection established", self.client_address)
         self.closeHandle = False
         self.handshake_done = False
-
+    
     def handle(self):
+        #handles the handshake with the server
         #Overwrtien function from socketserver
+        while not self.handshake_done:
+            self.handshake()
+            
+    def run(self):
+        #runs the handler in a thread
         while 1:
-            if not self.handshake_done:
-                print("handshaking")
-                self.handshake()
-            else:
-                print("Reading")
-                msg = self.request.recv(2)
-                if msg[0] == 136 or not msg or self.closeHandle: 
-                    if self.closeHandle:
-                        self.close()
-                    print("Received Closed")
-                    break
-                length = msg[1] & 127
-                if length == 126:
-                    #length = struct.unpack(">H", self.request.recv(2))[0]
-                    length = struct.unpack(">H", self.rfile.read(2))[0]
-                elif length == 127:
-                    length = struct.unpack(">Q", self.rfile.read(8))[0]
-                masks = self.rfile.read(4)
-                decoded = ""
-                for char in self.rfile.read(length):
-                    decoded += chr(char ^ masks[len(decoded) % 4])
-                self.on_message(decoded)
+            print("Reading")
+            msg = self.request.recv(2)
+            if msg[0] == 136 or not msg or self.closeHandle: 
+                print("Received Closed")
+                break
+            length = msg[1] & 127
+            if length == 126:
+                #length = struct.unpack(">H", self.request.recv(2))[0]
+                length = struct.unpack(">H", self.request.recv(2))[0]
+            elif length == 127:
+                length = struct.unpack(">Q", self.request.recv(8))[0]
+            masks = self.rfile.read(4)
+            decoded = ""
+            for char in self.rfile.read(length):
+                decoded += chr(char ^ masks[len(decoded) % 4])
+            self.on_message(decoded)
         self.close()
         
     def _get_framehead(self, close=False):
@@ -112,8 +118,7 @@ class WebSocketsHandler(socketserver.StreamRequestHandler):
         self.wfile.write(self._pack(message, True))
     
     def send_message(self, message):
-        print("Starting Send Msg")
-        self.wfile.write(self._pack(message))
+        self.request.sendall(self._pack(message))
 
     def handshake(self):
         key = None
@@ -201,10 +206,14 @@ class WebSocketTCPServer(socketserver.TCPServer):
     def __init__(self, server_address, RequestHandlerClass, bind_and_activate=True):
         socketserver.TCPServer.__init__(self, server_address, RequestHandlerClass, bind_and_activate)
         self.handlers = []
+        self.daemon_threads = False
         
     def finish_request(self, request, client_address):
         """Finish one request by instantiating RequestHandlerClass."""
+        print("Starting Request handler")
         self.RequestHandlerClass(request, client_address, self)
+        print("Serving forever")
+        self.RequestHandlerClass.start()
         self.handlers.append(self.RequestHandlerClass)
         
     def get_handlers(self):
