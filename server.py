@@ -30,10 +30,11 @@ class CGIExtHTTPRequestHandler(http.server.CGIHTTPRequestHandler):
         self.cgi_info = (parentDirs, script+query)
         return True
 
-class WebSocketsHandler(threading.Thread, socketserver.BaseRequestHandler):
-    def __init__(self, request, client_address, server):
-        threading.Thread.__init__(self)
-        socketserver.BaseRequestHandler.__init__(self, request, client_address, server)
+#class WebSocketsHandler(threading.Thread, socketserver.BaseRequestHandler):
+class WebSocketsHandler(socketserver.BaseRequestHandler):
+   # def __init__(self, request, client_address, server):
+   #     threading.Thread.__init__(self)
+   #     socketserver.BaseRequestHandler.__init__(self, request, client_address, server)
 
     magic = b'258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
     
@@ -58,7 +59,7 @@ class WebSocketsHandler(threading.Thread, socketserver.BaseRequestHandler):
         while not self.handshake_done:
             self.handshake()
             
-    def run(self):
+    #def run(self):
         #runs the handler in a thread
         while 1:
             print("Reading")
@@ -72,9 +73,9 @@ class WebSocketsHandler(threading.Thread, socketserver.BaseRequestHandler):
                 length = struct.unpack(">H", self.request.recv(2))[0]
             elif length == 127:
                 length = struct.unpack(">Q", self.request.recv(8))[0]
-            masks = self.rfile.read(4)
+            masks = self.request.recv(4)
             decoded = ""
-            for char in self.rfile.read(length):
+            for char in self.request.recv(length):
                 decoded += chr(char ^ masks[len(decoded) % 4])
             self.on_message(decoded)
         self.close()
@@ -115,7 +116,7 @@ class WebSocketsHandler(threading.Thread, socketserver.BaseRequestHandler):
         self.closeHandle = True
         print("Server: Closing Connection")
         self.send_message("Server: Closing Connection")
-        self.wfile.write(self._pack(message, True))
+        self.request.sendall(self._pack(message, True))
     
     def send_message(self, message):
         self.request.sendall(self._pack(message))
@@ -133,7 +134,7 @@ class WebSocketsHandler(threading.Thread, socketserver.BaseRequestHandler):
                 key = line.split(b': ')[1]
                 break
         if key is None:
-            raise IOError("Couldn't find the key?\n\n", data)
+            raise Exception("Couldn't find the key?:", data)
         print('Handshaking...')
         digest = self._websocketHash(key)
         response = 'HTTP/1.1 101 Switching Protocols\r\n'
@@ -201,7 +202,7 @@ class HTTPServer(threading.Thread):
             self.httpd.shutdown()
         print("Done")
 
-class WebSocketTCPServer(socketserver.TCPServer):
+class WebSocketTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     #Added a list of current handlers so they can be closed
     def __init__(self, server_address, RequestHandlerClass, bind_and_activate=True):
         socketserver.TCPServer.__init__(self, server_address, RequestHandlerClass, bind_and_activate)
@@ -210,11 +211,15 @@ class WebSocketTCPServer(socketserver.TCPServer):
         
     def finish_request(self, request, client_address):
         """Finish one request by instantiating RequestHandlerClass."""
-        print("Starting Request handler")
         self.RequestHandlerClass(request, client_address, self)
-        print("Serving forever")
-        self.RequestHandlerClass.start()
-        self.handlers.append(self.RequestHandlerClass)
+        
+    def process_request(self, request, client_address):
+        """Start a new thread to process the request."""
+        t = threading.Thread(target = self.process_request_thread,
+                             args = (request, client_address))
+        t.daemon = True
+        t.start()
+        self.handlers.append(t)
         
     def get_handlers(self):
         #returns the list of handlers
@@ -257,7 +262,7 @@ class WebsocketServer(threading.Thread):
             print("Trying to Close handles, there are: ", len(self.wsd.get_handlers()) )
             for h in  self.wsd.get_handlers():
                 print("Close handle...")
-                h.close()
+                #h.join()
             self.wsd.shutdown()
         print("Done")
 
@@ -267,7 +272,7 @@ def launchUI(http_address, ws_address):
     html.write(Template(temp.read()).substitute(address=ws_address))
     html.close()
     temp.close()
-    webbrowser.open(http_address+ "/index.html")
+    webbrowser.open(http_address+ "index.html")
     
 def main():
     quit = False
