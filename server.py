@@ -12,6 +12,7 @@ from io import StringIO
 from string import Template
 import webbrowser
 
+#Can Remove this class?
 class CGIExtHTTPRequestHandler(http.server.CGIHTTPRequestHandler):
     def is_python(self, path):
         return path.lower().endswith('.cgi')
@@ -31,7 +32,7 @@ class CGIExtHTTPRequestHandler(http.server.CGIHTTPRequestHandler):
 
 class WebSocketsHandler(socketserver.StreamRequestHandler):
     magic = b'258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
-
+    
     def _websocketHash(self, key):
         result_string = key + self.magic
         sha1_digest = hashlib.sha1(result_string).digest()
@@ -42,6 +43,7 @@ class WebSocketsHandler(socketserver.StreamRequestHandler):
     def setup(self):
         socketserver.StreamRequestHandler.setup(self)
         print("connection established", self.client_address)
+        self.closeHandle = False
         self.handshake_done = False
 
     def handle(self):
@@ -53,7 +55,9 @@ class WebSocketsHandler(socketserver.StreamRequestHandler):
             else:
                 print("Reading")
                 msg = self.request.recv(2)
-                if msg[0] == 136 or not msg:
+                if msg[0] == 136 or not msg or self.closeHandle: 
+                    if self.closeHandle:
+                        self.close()
                     print("Received Closed")
                     break
                 length = msg[1] & 127
@@ -102,6 +106,7 @@ class WebSocketsHandler(socketserver.StreamRequestHandler):
         return frame
     
     def close(self, message="Cxn Closed"):
+        self.closeHandle = True
         print("Server: Closing Connection")
         self.send_message("Server: Closing Connection")
         self.wfile.write(self._pack(message, True))
@@ -163,7 +168,9 @@ class HTTPServer(threading.Thread):
             return
         try:
             print("Starting HTTP Server ...")
-            self.httpd = http.server.HTTPServer(("", self.port), CGIExtHTTPRequestHandler)
+            #Using srd CGU Handler
+            self.httpd = http.server.HTTPServer(("", self.port), http.server.CGIHTTPRequestHandler)
+            #self.httpd = http.server.HTTPServer(("", self.port), CGIExtHTTPRequestHandler)
             print('Done! Serving on ' , self.host + ":" , self.port)
         except Exception as e:
             print("There server could not be started")
@@ -189,6 +196,21 @@ class HTTPServer(threading.Thread):
             self.httpd.shutdown()
         print("Done")
 
+class WebSocketTCPServer(socketserver.TCPServer):
+    #Added a list of current handlers so they can be closed
+    def __init__(self, server_address, RequestHandlerClass, bind_and_activate=True):
+        socketserver.TCPServer.__init__(self, server_address, RequestHandlerClass, bind_and_activate)
+        self.handlers = []
+        
+    def finish_request(self, request, client_address):
+        """Finish one request by instantiating RequestHandlerClass."""
+        self.RequestHandlerClass(request, client_address, self)
+        self.handlers.append(self.RequestHandlerClass)
+        
+    def get_handlers(self):
+        #returns the list of handlers
+        return self.handlers
+    
 class WebsocketServer(threading.Thread):
     def __init__(self, WebsocketPort):
         threading.Thread.__init__(self)
@@ -201,10 +223,11 @@ class WebsocketServer(threading.Thread):
         #Starts the server at object init
         try:
             print("Starting Websocket Server ... ")
-            self.wsd = socketserver.TCPServer(("", self.port), WebSocketsHandler)
+            #self.wsd = socketserver.TCPServer(("", self.port), WebSocketsHandler)
+            self.wsd = WebSocketTCPServer(("", self.port), WebSocketsHandler)
             print('Done! Serving on ' , self.host , ":" , self.port)
         except Exception as e:
-            print("Error! - Server Not Started!")
+            print("Error! - Server Not Started!", e)
             
     def get_address(self):
         #returns string of the servers address or None
@@ -222,6 +245,10 @@ class WebsocketServer(threading.Thread):
     def stop(self):
         print("Killing WebSocket Server ...")
         if self.wsd is not None:
+            print("Trying to Close handles, there are: ", len(self.wsd.get_handlers()) )
+            for h in  self.wsd.get_handlers():
+                print("Close handle...")
+                h.close()
             self.wsd.shutdown()
         print("Done")
 

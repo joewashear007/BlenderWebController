@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>WebSocket Client</title>
+		<style>form, button, input {display:inline;}</style>
+	</head>
+	<body>
+		<form id="form" style="display:inline">
+			<input type="text" id="message"><button type="submit">Send</button>
+		</form>
+		<form id="close"><button>Close</button></form>
+		<hr>
+		<div id="output"></div>
+	<script>
+            var inputBox = document.getElementById("message");
+            var output = document.getElementById("output");
+            var form = document.getElementById("form");
+            var close = document.getElementById("close");
+            try {
+                var s = new WebSocket("ws://192.168.1.100:9999/");
+			console.log("Created Websocket");
+                s.onopen = function (e) {
+                    console.log("Socket opened.");
+                };
+                s.onclose = function (e) {
+                    var p = document.createElement("p");
+                    p.innerHTML = e.data;
+                    output.appendChild(p);
+                    console.log("Socket closed.");
+                };
+                s.onmessage = function (e) {
+                    console.log("Socket message:", e.data);
+                    var p = document.createElement("p");
+                    p.innerHTML = e.data;
+                    output.appendChild(p);
+                };
+                s.onerror = function (e) {
+                    console.log("Socket error:", e);
+                };
+            } catch (ex) {
+                console.log("Socket exception:", ex);
+            }
+
+            close.addEventListener("submit", function (e) {
+                console.log("Closed Started");
+                e.preventDefault();
+                s.close(1000, "Try to Close");
+            }, false)
+
+            form.addEventListener("submit", function (e) {
+                console.log("Form Submitted");
+                e.preventDefault();
+                s.send(inputBox.value);
+                inputBox.value = "";
+            }, false)
+ 		</script>
+	</body>
+</html>
+
+
