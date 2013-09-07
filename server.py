@@ -1,5 +1,14 @@
 #! /usr/bin/env python3
 
+# /*
+ # * ----------------------------------------------------------------------------
+ # * "THE BEER-WARE LICENSE" (Revision 42):
+ # * <joewashear007@gmail.com> wrote this file. As long as you retain this notice you
+ # * can do whatever you want with this stuff. If we meet some day, and you think
+ # * this stuff is worth it, you can buy me a beer in return Joseph Livecchi
+ # * ----------------------------------------------------------------------------
+ # */
+ 
 import http.server
 import threading
 import os
@@ -8,9 +17,13 @@ import socketserver
 import base64
 import hashlib
 import struct
+import webbrowser
 from io import StringIO
 from string import Template
-import webbrowser
+
+#GLOBALS
+httpServer = None
+wsServer = None
 
 #Can Remove this class?
 class CGIExtHTTPRequestHandler(http.server.CGIHTTPRequestHandler):
@@ -38,13 +51,6 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
 
     magic = b'258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
     
-    def _websocketHash(self, key):
-        result_string = key + self.magic
-        sha1_digest = hashlib.sha1(result_string).digest()
-        response_data = base64.encodestring(sha1_digest).strip()
-        response_string = response_data.decode('utf8')
-        return response_string
-
     def setup(self):
         #Overwrtien function from socketserver
         #Init some varibles
@@ -79,39 +85,6 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
                 decoded += chr(char ^ masks[len(decoded) % 4])
             self.on_message(decoded)
         self.close()
-        
-    def _get_framehead(self, close=False):
-        #Gets the frame header for sending data, set final fragment & opcode
-        frame_head = bytearray(2)
-        frame_head[0] = frame_head[0] | (1 << 7)
-        if close:
-            # send the close connection frame
-            frame_head[0] = frame_head[0] | (8 << 0)
-        else:
-            #send the default text frame
-            frame_head[0] = frame_head[0] | (1 << 0)
-        return frame_head
-            
-        
-    def _pack(self, data ,close=False):
-        #pack bytes for sending to client
-        frame_head = self._get_framehead(close)        
-        # payload length
-        if len(data) < 126:
-            frame_head[1] = len(data)
-        elif len(data) < ((2**16) - 1):
-            # First byte must be set to 126 to indicate the following 2 bytes
-            # interpreted as a 16-bit unsigned integer are the payload length
-            frame_head[1] = 126
-            frame_head += int_to_bytes(len(data), 2)
-        elif len(data) < (2**64) -1:
-            # Use 8 bytes to encode the data length
-            # First byte must be set to 127
-            frame_head[1] = 127
-            frame_head += int_to_bytes(len(data), 8)
-        frame = frame_head + data.encode('utf-8')
-        return frame
-    
     def close(self, message="Cxn Closed"):
         self.closeHandle = True
         print("Server: Closing Connection")
@@ -149,9 +122,55 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
         print("Done!")
 
     def on_message(self, msg):
+        #Override this function to handle the input from webcontroller
         print(msg)
         self.send_message("Got :" + msg)
+        
+    def _websocketHash(self, key):
+        result_string = key + self.magic
+        sha1_digest = hashlib.sha1(result_string).digest()
+        response_data = base64.encodestring(sha1_digest).strip()
+        response_string = response_data.decode('utf8')
+        return response_string
 
+    def _get_framehead(self, close=False):
+        #Gets the frame header for sending data, set final fragment & opcode
+        frame_head = bytearray(2)
+        frame_head[0] = frame_head[0] | (1 << 7)
+        if close:
+            # send the close connection frame
+            frame_head[0] = frame_head[0] | (8 << 0)
+        else:
+            #send the default text frame
+            frame_head[0] = frame_head[0] | (1 << 0)
+        return frame_head
+            
+        
+    def _pack(self, data ,close=False):
+        #pack bytes for sending to client
+        frame_head = self._get_framehead(close)        
+        # payload length
+        if len(data) < 126:
+            frame_head[1] = len(data)
+        elif len(data) < ((2**16) - 1):
+            # First byte must be set to 126 to indicate the following 2 bytes
+            # interpreted as a 16-bit unsigned integer are the payload length
+            frame_head[1] = 126
+            frame_head += int_to_bytes(len(data), 2)
+        elif len(data) < (2**64) -1:
+            # Use 8 bytes to encode the data length
+            # First byte must be set to 127
+            frame_head[1] = 127
+            frame_head += int_to_bytes(len(data), 8)
+        frame = frame_head + data.encode('utf-8')
+        return frame
+    
+class BlenderHandeler(WebSocketsHandler):
+    def on_message(self, msg):
+        #Override this function to handle the input from webcontroller
+        bge.logic.globalDict["moves"].append(msg)
+        #self.send_message("Got :" + msg)
+        
 class HTTPServer(threading.Thread):
     def __init__(self, HttpPort):
         threading.Thread.__init__(self)
@@ -202,11 +221,12 @@ class HTTPServer(threading.Thread):
             self.httpd.shutdown()
         print("Done")
 
+
 class WebSocketTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     #Added a list of current handlers so they can be closed
     def __init__(self, server_address, RequestHandlerClass, bind_and_activate=True):
         socketserver.TCPServer.__init__(self, server_address, RequestHandlerClass, bind_and_activate)
-        self.handlers = []
+    #    self.handlers = []
         self.daemon_threads = False
         
     def finish_request(self, request, client_address):
@@ -214,16 +234,15 @@ class WebSocketTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
         self.RequestHandlerClass(request, client_address, self)
         
     def process_request(self, request, client_address):
-        """Start a new thread to process the request."""
-        t = threading.Thread(target = self.process_request_thread,
-                             args = (request, client_address))
+        #Start a new thread to process the request
+        t = threading.Thread(target = self.process_request_thread, args = (request, client_address))
         t.daemon = True
         t.start()
-        self.handlers.append(t)
+        #self.handlers.append(t)
         
-    def get_handlers(self):
-        #returns the list of handlers
-        return self.handlers
+    #def get_handlers(self):
+    #    #returns the list of handlers
+    #    return self.handlers
     
 class WebsocketServer(threading.Thread):
     def __init__(self, WebsocketPort):
@@ -259,10 +278,10 @@ class WebsocketServer(threading.Thread):
     def stop(self):
         print("Killing WebSocket Server ...")
         if self.wsd is not None:
-            print("Trying to Close handles, there are: ", len(self.wsd.get_handlers()) )
-            for h in  self.wsd.get_handlers():
-                print("Close handle...")
-                #h.join()
+            #print("Trying to Close handles, there are: ", len(self.wsd.get_handlers()) )
+            #for h in  self.wsd.get_handlers():
+            #    print("Close handle...")
+            #    #h.join()
             self.wsd.shutdown()
         print("Done")
 
@@ -274,26 +293,41 @@ def launchUI(http_address, ws_address):
     temp.close()
     webbrowser.open(http_address+ "index.html")
     
+def runServer():
+    if httpServer is not None and wsServer is not None:
+        print("Error, Can't Start Server Already Start!")
+        return
+    httpServer = HTTPServer(8000)
+    wsServer = WebsocketServer(9999)
+    http_address = httpServer.get_address()
+    ws_address = wsServer.get_address()
+    if ws_address is not None and http_address is not None:
+        launchUI(http_address, ws_address)
+        httpServer.start()
+        wsServer.start()
+    else:
+        print("Error Starting Webserver!")
+
+def stopServer():
+    httpServer.stop()
+    wsServer.stop()
+
+            
+def runInBlender():
+    bge =  __import__('bge') 
+    bge.logic.globalDict["moves"] =[]
+    runServer()
+    
 def main():
     quit = False
     while( not quit):
         c = input("Enter input [s,q]: ")
         if c == "s":
-            httpServer = HTTPServer(8000)
-            wsServer = WebsocketServer(9999)
-            http_address = httpServer.get_address()
-            ws_address = wsServer.get_address()
-            if ws_address is not None and http_address is not None:
-                launchUI(http_address, ws_address)
-                httpServer.start()
-                wsServer.start()
-            else:
-                print("Error Starting Webserver!")
-            
+            runServer()
         if c == "q":
-            httpServer.stop()
-            wsServer.stop()
+            stopServer()
             quit = True
-
+    
 if __name__ == '__main__':
     main()
+
