@@ -294,19 +294,20 @@ def launchUI(http_address, ws_address):
     webbrowser.open(http_address+ "index.html")
     
 def runServer():
-    if httpServer is not None and wsServer is not None:
+    try:
+        httpServer = HTTPServer(8000)
+        wsServer = WebsocketServer(9999)
+        http_address = httpServer.get_address()
+        ws_address = wsServer.get_address()
+        if ws_address is not None and http_address is not None:
+            launchUI(http_address, ws_address)
+            httpServer.start()
+            wsServer.start()
+        else:
+            print("Error Starting Webserver!")
+    except Exception as e:
         print("Error, Can't Start Server Already Start!")
         return
-    httpServer = HTTPServer(8000)
-    wsServer = WebsocketServer(9999)
-    http_address = httpServer.get_address()
-    ws_address = wsServer.get_address()
-    if ws_address is not None and http_address is not None:
-        launchUI(http_address, ws_address)
-        httpServer.start()
-        wsServer.start()
-    else:
-        print("Error Starting Webserver!")
 
 def stopServer():
     httpServer.stop()
