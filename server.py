@@ -267,48 +267,59 @@ class WebSocketHttpServer():
         self.handler = handler_class
         self.httpServer = None
         self.wsServer = None
-        self.http_address = ""
-        self.ws_address = ""
+
+    def _make_server_temp_dir(self):
+        #make the new temp directory
         self.cwd = os.path.dirname(os.path.realpath(__file__))
-        os.chdir(tempfile.gettempdir())
+        self.tempdir = tempfile.mkdtemp()
+        os.chdir(self.tempdir)
+        print("Changed Directory to: " + self.tempdir)
+        #copy the files over
+    
+    def _make_webpage(self):
+        shutil.copytree( self.cwd+"\\res\\", self.tempdir+"\\res\\")
+        html = open(self.tempdir + "\\index.html" ,"w")
+        temp = open(self.cwd + "\\index.temp", "r")
+        content = temp.read()
+        content_sub = Template(content).substitute(address=self.wsServer.get_address())
+        html.write(content_sub)
+        html.close()
+        temp.close()
         
     def stop(self):
-        httpServer.stop()
-        wsServer.stop()
+        try:
+            self.httpServer.stop()
+            self.wsServer.stop()
+        except Exception as e:
+            print("The Servers were never started")
         
     def start(self):
         try:
+            # make directorys and copy files
+            self._make_server_temp_dir()
             #launch the servers
-            httpServer = HTTPServer(self.http_port)
-            wsServer = WebsocketServer(self.websocket_port, self.handler)
-            if wsServer is not None and httpServer is not None:
-                #Get the Address of the servers
-                self.http_address = httpServer.get_address()
-                self.ws_address = wsServer.get_address()
-                httpServer.start()
-                wsServer.start()
+            self.httpServer = HTTPServer(self.http_port)
+            self.wsServer = WebsocketServer(self.websocket_port, self.handler)
+            if self.wsServer is not None and self.httpServer is not None:
+                self.httpServer.start()
+                self.wsServer.start()
+                self._make_webpage()
                 return True
             else:
-                #print("Error Starting Webserver!")
+                print("Error Starting Webserver!")
                 return False
         except Exception as e:
-            #print("Error, Can't Start Server Already Start!")
+            print("Error, There is some error!")
+            print(e)
             return False
             
     def launch_webpage(self):
         #Copies all the resource over to the temp dir
-        shutil.copytree( self.cwd+"\\res\\", tempfile.gettempdir()+"\\res\\")
-        html = open("index.html" ,"w")
-        temp = open(self.cwd +"\index.temp", "r")
-        html.write(Template(temp.read()).substitute(address=self.ws_address))
-        html.close()
-        temp.close()
-        webbrowser.open(self.http_address+ "index.html")
+        webbrowser.open(self.httpServer.get_address() + "index.html")
         
     def server_status(self):
         return
-    
-    
+
 if __name__ == '__main__':
     print("No Main Program!")
 
