@@ -23,11 +23,12 @@ import webbrowser
 from io import StringIO
 from string import Template
 
-#GLOBALS
-httpServer = None
-wsServer = None
-
 # Inherit this class to handle the websocket connection
+class QuiteCGIHandler(http.server.CGIHTTPRequestHandler):
+    def log_message(self, format, *args):
+        pass
+        #sys.stderr.write("%s - - [%s] %s\n" % (self.address_string(),self.log_date_time_string(),format%args))
+
 class WebSocketsHandler(socketserver.BaseRequestHandler):
 
 #-------------- Over ride these  ----------------------------------------
@@ -45,22 +46,22 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
     def setup(self):
         #Overwrtien function from socketserver
         #Init some varibles
-        #socketserver.StreamRequestHandler.setup(self)
-        print("connection established", self.client_address)
+        print("\nConnection Established", self.client_address)
         self.closeHandle = False
-        self.handshake_done = False
     
     def handle(self):
         #handles the handshake with the server
         #Overwrtien function from socketserver
-        while not self.handshake_done:
+        try:
             self.handshake()
+        except:
+            print("HANDSHAKE ERROR! - Try using FireFox")
+            return
             
         #runs the handler in a thread
         while 1:
-            print("Reading")
             msg = self.request.recv(2)
-            if msg[0] == 136 or not msg or self.closeHandle: 
+            if not msg or self.closeHandle or msg[0] == 136: 
                 print("Received Closed")
                 break
             length = msg[1] & 127
@@ -78,7 +79,7 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
         
     def close(self, message="Cxn Closed"):
         self.closeHandle = True
-        print("Server: Closing Connection")
+        print("Server: Closing Connection for ", self.client_address)
         self.send_message("Server: Closing Connection")
         self.request.sendall(self._pack(message, True))
     
@@ -89,25 +90,23 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
             if b'Upgrade:' in line:
                 upgrade = line.split(b': ')[1]
                 if not upgrade == "websocket":
-                    print("ERROR! - Upgrade is not websocket!")
-                    return
+                    raise Exception("Upgrade is Not a websocket!", data)
             if b'Sec-WebSocket-Key:' in line:
                 key = line.split(b': ')[1]
                 break
         if key is None:
             raise Exception("Couldn't find the key?:", data)
-        print('Handshaking...')
+        print('Handshaking...   ', end = '')
         digest = self._websocketHash(key)
         response = 'HTTP/1.1 101 Switching Protocols\r\n'
         response += 'Upgrade: websocket\r\n'
         response += 'Connection: Upgrade\r\n'
         response += 'Sec-WebSocket-Accept: %s\r\n\r\n' % digest
         self.handshake_done = self.request.send(response.encode())
-        print("Done!")
-        print("Sending Connected Message")
+        print("Sending Connected Message...   ", end = '')
         if self.handshake_done:
             self.send_message("Connected!")
-        print("Done!")
+        print("Connected!\n")
         
     def _websocketHash(self, key):
         result_string = key + self.magic
@@ -159,7 +158,8 @@ class HTTPServer(threading.Thread):
         #Starts the server at object init
         try:
             #Using srd CGI Handler
-            self.httpd = http.server.HTTPServer(("", self.port), http.server.CGIHTTPRequestHandler)
+            #self.httpd = http.server.HTTPServer(("", self.port), http.server.CGIHTTPRequestHandler)
+            self.httpd = http.server.HTTPServer(("", self.port), QuiteCGIHandler)
             print("HTTP Server: " , self.host + ":" , self.port)
         except Exception as e:
             print("The HTTP server could not be started")

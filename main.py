@@ -17,17 +17,16 @@ def main():
 	print()
 	print()
 	print("*** Starting Websocket Server ***")
-    print()
-    print("Press Any Key To Quit...")
-    print()
+	print()
+	print("Press Any Key To Quit...")
+	print()
 	server = WebSocketHttpServer(8000, 9999, WebSocketsHandler)
 	if server.start():
-		print("Server Started on:" + server.httpServer.get_address())
-		print("Launching Website")
+		print()
 		server.launch_webpage()
 	else:
 		print("Error Starting Server")
-	i = input("Press any key to quit!")
+	i = input()
 	server.stop()
 	print("Good Bye")
 
