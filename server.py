@@ -154,27 +154,15 @@ class HTTPServer(threading.Thread):
         self.httpd = None
         self.host = socket.gethostbyname(socket.gethostname())
         self._start_server()
-        
-    def _checkPath(self):
-        #Checks the curretn path for an blanks
-        if 0 < os.getcwd().count(' '):
-            print("ERROR!!! - The cwd path contains blanks! Can't Start Servers")
-            return False
-        else:
-            return True
-            
+           
     def _start_server(self):
         #Starts the server at object init
-        if not self._checkPath():
-            return
         try:
-            print("Starting HTTP Server ...")
-            #Using srd CGU Handler
+            #Using srd CGI Handler
             self.httpd = http.server.HTTPServer(("", self.port), http.server.CGIHTTPRequestHandler)
-            #self.httpd = http.server.HTTPServer(("", self.port), CGIExtHTTPRequestHandler)
-            print('Done! Serving on ' , self.host + ":" , self.port)
+            print("HTTP Server: " , self.host + ":" , self.port)
         except Exception as e:
-            print("There server could not be started")
+            print("The HTTP server could not be started")
     
     def get_address(self):
         #returns string of the servers address or None
@@ -188,7 +176,7 @@ class HTTPServer(threading.Thread):
         if self.httpd is not None:
             self.httpd.serve_forever()
         else:
-            print("Error! - Server Not Started!")
+            print("Error! - HTTP Server is NULL")
 
     def stop(self):
         #Overwrtien from Threading.Thread
@@ -231,11 +219,10 @@ class WebsocketServer(threading.Thread):
     def _start_server(self):
         #Starts the server at object init
         try:
-            print("Starting Websocket Server ... ")
             self.wsd = WebSocketTCPServer(("", self.port), self.handler)
-            print('Done! Serving on ' , self.host , ":" , self.port)
+            print('WebSocket Server: ' , self.host , ":" , self.port)
         except Exception as e:
-            print("Error! - Server Not Started!", e)
+            print("Error! - Websocket Server Not Started!", e)
             
     def get_address(self):
         #returns string of the servers address or None
@@ -248,7 +235,7 @@ class WebsocketServer(threading.Thread):
         if self.wsd is not None:
             self.wsd.serve_forever()
         else:
-            print("The server could not be started!")
+            print("The WebSocket Server is NULL")
 
     def stop(self):
         print("Killing WebSocket Server ...")
@@ -273,7 +260,7 @@ class WebSocketHttpServer():
         self.cwd = os.path.dirname(os.path.realpath(__file__))
         self.tempdir = tempfile.mkdtemp()
         os.chdir(self.tempdir)
-        print("Changed Directory to: " + self.tempdir)
+        print("Server Directory: " + self.tempdir)
         #copy the files over
     
     def _make_webpage(self):
@@ -306,20 +293,19 @@ class WebSocketHttpServer():
                 self._make_webpage()
                 return True
             else:
-                print("Error Starting Webserver!")
+                print("Error Starting The Servers, Something is not Initalized!")
                 return False
         except Exception as e:
-            print("Error, There is some error!")
+            print()
+            print("Error!!!, There is some error!")
             print(e)
+            print()
             return False
             
     def launch_webpage(self):
         #Copies all the resource over to the temp dir
         webbrowser.open(self.httpServer.get_address() + "index.html")
         
-    def server_status(self):
-        return
-
 if __name__ == '__main__':
     print("No Main Program!")
 

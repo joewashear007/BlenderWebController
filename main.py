@@ -13,32 +13,21 @@ from server import WebSocketHttpServer
 from server import WebSocketsHandler
 import threading
 
-running = True
-
-def run(server):
-	server.start()
-	while running:
-		server.server_status()
-
 def main():
 	print()
 	print()
 	print("*** Starting Websocket Server ***")
+    print()
+    print("Press Any Key To Quit...")
+    print()
 	server = WebSocketHttpServer(8000, 9999, WebSocketsHandler)
 	if server.start():
 		print("Server Started on:" + server.httpServer.get_address())
-	#start the server its only threading
-	#t = threading.Thread(target = run, args = (server,) )
-	#t.daemon = False
-	#t.start()
 		print("Launching Website")
 		server.launch_webpage()
 	else:
 		print("Error Starting Server")
-		
 	i = input("Press any key to quit!")
-	running = False
-	#t.join()
 	server.stop()
 	print("Good Bye")
 
