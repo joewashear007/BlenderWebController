@@ -48,8 +48,7 @@
 							<button id=ButtonDown>\/</button>
 						</td><td></td></tr>
 						<tr><td colspan=3>
-							<div>
-								<button id=ButtonIn>+</button><button id=ButtonOut>-</button>
+                            <button id=ButtonIn>+</button><button id=ButtonOut>-</button>
 						</td></tr>
 					</table>
 				</div>
@@ -58,6 +57,7 @@
 		<div>
 			<a id=DebugTitle >Received Data</a>
 				<p class=debug></p>
+        </div>
 	</body>
 </html>
 
