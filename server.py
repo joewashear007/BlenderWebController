@@ -37,6 +37,10 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
         print(msg)
         self.send_message("Got :" + msg)
         
+    def on_close(self):
+        print("Server: Closing Connection for ", self.client_address)
+        self.send_message("Server: Closing Connection")
+        
     def send_message(self, message):
         self.request.sendall(self._pack(message))
 #-------------------------------------------------------------------
@@ -79,9 +83,8 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
         
     def close(self, message="Cxn Closed"):
         self.closeHandle = True
-        print("Server: Closing Connection for ", self.client_address)
-        self.send_message("Server: Closing Connection")
         self.request.sendall(self._pack(message, True))
+        self.on_close()
     
     def handshake(self):
         key = None
@@ -306,6 +309,12 @@ class WebSocketHttpServer():
         #Copies all the resource over to the temp dir
         webbrowser.open(self.httpServer.get_address() + "index.html")
         
+    def status(self):
+        if self.wsServer is None or self.httpServer is None:
+            return False
+        else:
+            return True
+            
 if __name__ == '__main__':
     print("No Main Program!")
 
