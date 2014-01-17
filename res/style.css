@@ -8,132 +8,157 @@
  */
 
 *{font-family: Verdana, Verdana, Geneva, sans-serif; }
-html { font-size: 100%;
-        margin: 0px;
-        padding:0px;
-		}
-		
-body { margin: 0px;}
-.debug {
-	display:none;
-}
-table
-{ 
-margin-left: auto;
-margin-right: auto;
-}
 
-section[role="region"] > header:first-child {
-  position: relative;
-  z-index: 10;
-  padding: 0;
-  height: 5rem;
-  color: #fff;
-  background: url(header.png) repeat-x 0 0;
-  background-size: auto 100%;
-  border: none;
+html,body,#wrapper {
+    height:100%;
+    padding:0;
+    margin:0;
 }
-section[role="region"] > header:first-child h1 {
-  font-size: 2.5rem;
-  line-height: 4.8rem;
-  text-align: left;
-  color: #fff;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  display: block;
-  overflow: hidden;
-  margin: 0 0 0 3rem;
-  padding-right: 1rem;
-  height: 100%;
-  font-weight: normal;
+#wrapper {
+    position:relative;
 }
-section[role="region"] header h2 {
-  margin: 0;
-  padding: 0.8rem 3rem;
-  color: #424242;
-  font-weight: 400;
-  font-size: 1.5rem;
-  line-height: 1.8rem;
-  border-bottom: solid 0.1rem #e6e6e6;
+#top {
+    position:absolute;
+    height:50px;
+    width:100%;
+    background: #914f00;
+    background: -moz-linear-gradient(top, #914f00 0%, #bc5100 30%, #bc5100 70%, #914f00 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#914f00), color-stop(30%,#bc5100), color-stop(70%,#bc5100), color-stop(100%,#914f00));
+    background: -webkit-linear-gradient(top, #914f00 0%,#bc5100 30%,#bc5100 70%,#914f00 100%);
+    background: -o-linear-gradient(top, #914f00 0%,#bc5100 30%,#bc5100 70%,#914f00 100%);
+    background: -ms-linear-gradient(top, #914f00 0%,#bc5100 30%,#bc5100 70%,#914f00 100%);
+    background: linear-gradient(to bottom, #914f00 0%,#bc5100 30%,#bc5100 70%,#914f00 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#914f00', endColorstr='#914f00',GradientType=0 );
+    color: white;
+    box-shadow: 0px 0px 5px black;
+    z-index:20;
 }
-/* Generic set of actions in toolbar */
-section[role="region"] > header:first-child menu[type="toolbar"] {
-  height: 100%;
-  float: right;
+#top h1{
+    margin-left: 10px;
+    font-size: 1.2rem;
+    text-shadow: 0.1rem 0.1rem 0 rgba(150,150,150,0.3);
+    z-index: 0;
+    display:inline-block;
 }
-
-section[role="region"] > header:first-child menu[type="toolbar"] button {
-  -moz-box-sizing: border-box;
-  position: relative;
-  float: left;
-  width: auto;
-  min-width: 5rem;
-  height: 5rem;
-  margin-bottom: 0;
-  padding: 0 1rem;
-  border-radius: 0;
-  line-height: 5rem;
-  background: none;
-  text-align: center;
-  text-shadow: none;
-  z-index: 5;
+#top button{
+    width:100px;
+    height:50px;
+    position: absolute;
+    right:0px;
+    color: white;
+    text-align: center;
+    text-shadow: 0.1rem 0.1rem 0 rgba(150,150,150,0.3);
+    font-size: 1.0rem;
+    font-weight: 1500;
+    border: none;
+    z-index:100;
+    box-shadow: -1px 0px 2px rgba(150,150,150, 0.5);
+    background: #914f00;
+    background: -moz-linear-gradient(top, #914f00 0%, #bc5100 30%, #bc5100 70%, #914f00 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#914f00), color-stop(30%,#bc5100), color-stop(70%,#bc5100), color-stop(100%,#914f00));
+    background: -webkit-linear-gradient(top, #914f00 0%,#bc5100 30%,#bc5100 70%,#914f00 100%);
+    background: -o-linear-gradient(top, #914f00 0%,#bc5100 30%,#bc5100 70%,#914f00 100%);
+    background: -ms-linear-gradient(top, #914f00 0%,#bc5100 30%,#bc5100 70%,#914f00 100%);
+    background: linear-gradient(to bottom, #914f00 0%,#bc5100 30%,#bc5100 70%,#914f00 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#914f00', endColorstr='#914f00',GradientType=0 );
 }
-section[role="region"] > header:first-child button {
-  border: none;
-  padding: 0;
-  overflow: hidden;
-  font-weight: 400;
-  font-size: 1.5rem;
-  line-height: 1.1em;
-  color: #fff;
-  border-radius: 0;
-  text-decoration: none;
-}
-section[role="region"] > header:first-child menu[type="toolbar"] button:last-child {
-  background: url(separator.png) no-repeat left center / auto 4.8rem;
-  margin-left: -0.2rem;
-  z-index: 1;
-}
-
-section[role="region"] > header:first-child menu[type="toolbar"] {
-  padding: 0;
-  margin: 0;
-}
-
-/* Pressed state */
-section[role="region"] > header:first-child menu[type="toolbar"] button:active  {
-  background: #008aaa !important;
-  transition: background 0.2s ease;
-}
-
-button, a[role="button"], .button {
-  width: 100%;
-  height: 3.8rem;
-  margin: 0 0 1rem;
-  padding: 0 1.5rem;
-  -moz-box-sizing: border-box;
-  display: inline-block;
-  vertical-align: middle;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  background: #fafafa url(default.png) repeat-x left bottom / auto 100%;
-  border: 0.1rem solid #a6a6a6;
-  border-radius: 0.2rem;
-  font-weight: 500;
-  font-size: 1.6rem;
-  line-height: 3.8rem;
-  color: #333;
-  text-align: center;
-  text-shadow: 0.1rem 0.1rem 0 rgba(255,255,255,0.3);
-  text-decoration: none;
-  outline: none;
-}
-
-/* Press (default & recommend) */
-button:active{
+#top button:active{
   border-color: #008aaa;
   background: #008aaa;
   background-size: auto 100%;
   color: #333;
+}
+
+#middle {
+    z-index: 0;
+    position:absolute;
+    top:50px;
+    bottom:50px;
+    width:100%;
+    padding-left:5%;
+    padding-right:5%;
+	background:
+    linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
+    linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
+    linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
+    linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
+    linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
+    linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
+    background-color: #131313;
+    background-size: 20px 20px;
+}
+#middle > div {
+    background-color: white;
+    box-shadow: 0px 0px 5px rga(150,150,150);
+    height: 100%;
+    width: 90%;
+}
+#bottom {
+    position:absolute;
+    bottom:0;
+    height:40px;
+    width:100%;
+    color: grey;
+    text-align: center;
+    text-shadow: 0.1rem 0.1rem 0 rgba(150,150,150,0.3);
+    font-size: 1.0rem;
+    font-weight: 1500;
+    background:white;
+    text-align: center;
+    box-shadow: 0px 0px 5px #333;
+    vertical-align: center;
+    padding-top: 10px;
+}	
+#toggleControl{
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    height: 40px;
+    width:50px;
+    box-shadow: -1px 0px 2px rgba(150,150,150, 0.5);
+    padding-top: 10px;
+}
+#ButtonControl{
+    width: 100%;
+    margin-top: -20px;
+}
+#ButtonControl table{
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+#ButtonControl p{
+    color: #333;
+    padding: 20px;
+    font-weight:bold;
+    text-shadow: 0.1rem 0.1rem 0 rgba(150,150,150,0.3);
+}
+#ButtonControl button{
+    width:7rem;
+    height:7rem;
+    color: white;
+    text-align: center;
+    text-shadow: 0.1rem 0.1rem 0 rgba(150,150,150,0.3);
+    font-size: 3.0rem;
+    font-weight: bold;
+    border: none;
+    z-index:100;
+    border-radius: 0.2rem;
+    box-shadow: 0px 0px 5px rgba(0,0,0, 1);
+    background: -moz-linear-gradient(top, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.25) 75%, rgba(0,0,0,0.65) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.25)), color-stop(75%,rgba(0,0,0,0.25)), color-stop(100%,rgba(0,0,0,0.65)));
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 75%,rgba(0,0,0,0.65) 100%);
+    background: -o-linear-gradient(top, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 75%,rgba(0,0,0,0.65) 100%);
+    background: -ms-linear-gradient(top, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 75%,rgba(0,0,0,0.65) 100%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 75%,rgba(0,0,0,0.65) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#40000000', endColorstr='#a6000000',GradientType=0 );
+}
+
+#SwipeControl{
+	display:none;
+}
+#SwipeBox{
+    height: 100%;
+    border: 0.3rem solid green;   
+}
 }

@@ -15,27 +15,23 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no" />
 		<title>BlenderWebController</title>
-		<script type="text/javascript" src="res/jquery.min.js"></script>
-		<script type="text/javascript" src="res/controller.js"></script>
-		<link href="res/style.css" rel="stylesheet" type="text/css" />
-		<script>
-			var address = "$address";
-		</script>
+		<link rel="stylesheet" href="res/style.css" />
+		<script src="res/jquery-1.8.2.min.js"></script>
+		<script src="res/hammer.min.js"></script>
+		<script src="res/hammer.fakemultitouch.js"></script>
+		<script src="res/hammer.showtouches.js"></script>
 	</head>
-	
 	<body>
-		<section role="region">
-			<header>
-				<menu type="toolbar">
+		<div id="wrapper">
+			<div id="top">
+				<div>
+					<h1>Blender Web Controller</h1>
 					<button id="Status">Not Connect</button>
-				</menu>
-				<h1>Button Control</h1>
-			</header>
-			<article>
-				<header>
-					<h2>Control Blender Using Buttons</h2>
-				</header>
-				<div id=ButtonControl >
+				</div>
+			</div>
+			<div id="middle">
+				<div id="ButtonControl">
+					<p>Use the Buttons To Control The Blender Object</p>
 					<table>
 						<tr><td></td><td>
 							<button id=ButtonUp>/\</button>
@@ -48,16 +44,190 @@
 							<button id=ButtonDown>\/</button>
 						</td><td></td></tr>
 						<tr><td colspan=3>
-                            <button id=ButtonIn>+</button><button id=ButtonOut>-</button>
+							<button id=ButtonIn>+</button><button id=ButtonOut>-</button>
 						</td></tr>
 					</table>
 				</div>
-			</article>
-		</section>
-		<div>
-			<a id=DebugTitle >Received Data</a>
-				<p class=debug></p>
-        </div>
+				<div id="SwipeControl">
+					<div id="SwipeBox">
+						<div class="log well well-small">
+						<h4>Events</h4>
+						<ul class="unstyled events" id="events-list">
+							<li>touch</li>
+							<li>release</li>
+							<li>hold</li>
+							<li>tap</li>
+							<li>doubletap</li>
+
+							<li>dragstart</li>
+							<li>drag</li>
+							<li>dragend</li>
+							<li>dragleft</li>
+							<li>dragright</li>
+							<li>dragup</li>
+							<li>dragdown</li>
+
+							<li>swipe</li>
+							<li>swipeleft</li>
+							<li>swiperight</li>
+							<li>swipeup</li>
+							<li>swipedown</li>
+
+							<li>transformstart</li>
+							<li>transform</li>
+							<li>transformend</li>
+							<li>rotate</li>
+							<li>rotateleft</li>
+							<li>rotateright</li>
+							<li>pinch</li>
+							<li>pinchin</li>
+							<li>pinchout</li>
+						</ul>
+						<h4>EventData</h4>
+						<ul class="unstyled properties">
+							<li class="property-gesture"><strong>gesture</strong> <span id="log-prop-gesture"></span></li>
+							<li><strong>touches</strong> <span id="log-prop-touches"></span></li>
+							<li><strong>pointerType</strong> <span id="log-prop-pointerType"></span></li>
+							<li><strong>center</strong> <span id="log-prop-center"></span></li>
+							<li><strong>angle</strong> <span id="log-prop-angle"></span>&deg;</li>
+							<li><strong>direction</strong> <span id="log-prop-direction"></span></li>
+							<li><strong>distance</strong> <span id="log-prop-distance"></span>px</li>
+
+							<li><strong>deltaTime</strong> <span id="log-prop-deltaTime"></span>ms</li>
+							<li><strong>deltaX</strong> <span id="log-prop-deltaX"></span>px</li>
+							<li><strong>deltaY</strong> <span id="log-prop-deltaY"></span>px</li>
+
+							<li><strong>velocityX</strong> <span id="log-prop-velocityX"></span></li>
+							<li><strong>velocityY</strong> <span id="log-prop-velocityY"></span></li>
+
+							<li><strong>scale</strong>  <span id="log-prop-scale"></span></li>
+							<li><strong>rotation</strong> <span id="log-prop-rotation"></span>&deg;</li>
+
+							<li><strong>target</strong> <span id="log-prop-target"></span></li>
+						</ul>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div id="bottom">
+				<div id="Details" >
+					<a id=DebugTitle >Received Data</a>
+						<p class=debug></p>
+				</div>
+				<div id="toggleControl">b/s</div>
+			</div>
+		</div>
+		<script>
+			Hammer.plugins.fakeMultitouch();
+			var address = "$address";
+			function open (e) 	{ $("#Status").text("Connected"); 		};
+			function close(e) 	{ $("#Status").text("Closed");			};
+			function msg  (e) 	{ $(".debug").append("<p>Received: "+ e.data + "</p>"); };
+			function error(e)  	{ $("#Status").text("Error");			};
+			$(document).ready(function(){
+				try {
+					if (address != "" || address != "$address"){
+						var s = new WebSocket(address);
+						s.onopen = open;
+						s.onclose = close;
+						s.onmessage = msg;
+						s.onerror = error;
+					}
+				} catch (ex) {
+					console.log("Socket exception:", ex);
+					$("#Status").text("Error");
+				}
+				$("button").click( function () {
+					if( $(this).attr("id") == "Status")	{	s.close(1000, "Try to Close");	}
+					else 								{	s.send($(this).attr("id"));		}
+				});
+				$("#DebugTitle").click( function() {
+					$(".debug").toggle();
+				});
+				$("#toggleControl").click( function() {
+					$("#SwipeControl").fadeToggle();
+					$("#ButtonControl").fadeToggle();
+				});
+			});
+
+				
+			Hammer.plugins.fakeMultitouch();
+
+    function getEl(id) {
+        return document.getElementById(id);
+    }
+
+
+    var log_elements = {};
+    var prevent_scroll_drag = true;
+
+    function getLogElement(type, name) {
+        var el = log_elements[type + name];
+        if(!el) {
+            return log_elements[type + name] = getEl("log-"+ type +"-"+ name);
+        }
+        return el;
+    }
+
+    // log properties
+    var properties = ['gesture','center','deltaTime','angle','direction',
+        'distance','deltaX','deltaY','velocityX','velocityY', 'pointerType',
+        'scale','rotation','touches','target'];
+
+    function logEvent(ev) {
+        if(!ev.gesture) {
+            return;
+        }
+
+        // add to the large event log at the bottom of the page
+        var log = [this.id, ev.type];
+        //event_log.innerHTML = log.join(" - ") +"\n" + event_log.innerHTML;
+
+        // highlight gesture
+        var event_el = getLogElement('gesture', ev.type);
+        event_el.className = "active";
+
+
+        for(var i= 0,len=properties.length; i<len; i++) {
+            var prop = properties[i];
+            var value = ev.gesture[prop];
+            switch(prop) {
+                case 'center':
+                    value = value.pageX +"x"+ value.pageY;
+                    break;
+                case 'gesture':
+                    value = ev.type;
+                    break;
+                case 'target':
+                    value = ev.gesture.target.tagName;
+                    break;
+                case 'touches':
+                    value = ev.gesture.touches.length;
+                    break;
+            }
+            getLogElement('prop', prop).innerHTML = value;
+        }
+    }
+
+
+    // get all the events
+    var all_events = [];
+    $("#events-list li").each(function() {
+        var li = $(this);
+        var type = li.text();
+        li.attr("id", "log-gesture-"+type);
+        all_events.push(type);
+    });
+
+
+    // start!
+    var hammertime = Hammer(getEl('SwipeBox'), {
+            prevent_default: true,
+            no_mouseevents: true
+        })
+        .on(all_events.join(" "), logEvent);
+
+		</script>
 	</body>
 </html>
 
