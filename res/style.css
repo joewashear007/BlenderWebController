@@ -74,6 +74,7 @@ html,body,#wrapper {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom:50px;
 }
 .row {
     display: block;
