@@ -216,5 +216,5 @@ pip-log.txt
 
 #The generated index file
 index.html
-.blend1
-.blend2
+*.blend1
+*.blend2
