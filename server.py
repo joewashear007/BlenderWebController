@@ -70,7 +70,6 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
                 break
             length = msg[1] & 127
             if length == 126:
-                #length = struct.unpack(">H", self.request.recv(2))[0]
                 length = struct.unpack(">H", self.request.recv(2))[0]
             elif length == 127:
                 length = struct.unpack(">Q", self.request.recv(8))[0]
@@ -90,15 +89,12 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
         key = None
         data = self.request.recv(1024).strip()
         for line in data.splitlines():
-            print("--- ", line)
             if b'Upgrade:' in line:
-                upgrade = line.split(b': ')[1].strip()
-                print("Trying to upgrade:",upgrade)
+                upgrade = line.split(b': ')[1]
                 if not upgrade == b'websocket':
                     raise Exception("Upgrade is Not a websocket!", data)
             if b'Sec-WebSocket-Key:' in line:
                 key = line.split(b': ')[1]
-                print("Got Key: ", key)
                 break
         if key is None:
             raise Exception("Couldn't find the key?:", data)
@@ -256,13 +252,16 @@ class WebSocketHttpServer():
         self.httpServer = None
         self.wsServer = None
 
+    def _clean_server_temp_dir(self):
+        os.chdir(self.cwd)
+        shutil.rmtree(self.tempdir)
+        os.rmdir(self.tempdir)
+        
     def _make_server_temp_dir(self):
         #make the new temp directory
         self.cwd = os.path.dirname(os.path.realpath(__file__))
         self.tempdir = tempfile.mkdtemp()
         os.chdir(self.tempdir)
-        print("Server Directory: " + self.tempdir)
-        #copy the files over
     
     def _make_webpage(self):
         shutil.copytree( self.cwd+"\\res\\", self.tempdir+"\\res\\")
@@ -284,14 +283,14 @@ class WebSocketHttpServer():
         try:
             self.httpServer.stop()
             self.wsServer.stop()
+            self._clean_server_temp_dir()
         except Exception as e:
             print("The Servers were never started")
         
     def start(self):
-        # try:
+        try:
             # make directory and copy files
             self._make_server_temp_dir()
-            #launch the servers
             self.httpServer = HTTPServer(self.http_address)
             self.wsServer = WebsocketServer(self.handler, self.ws_address)
             if self.wsServer is not None and self.httpServer is not None:
@@ -302,12 +301,12 @@ class WebSocketHttpServer():
             else:
                 print("Error Starting The Servers, Something is not Initialized!")
                 return False
-        # except Exception as e:
-            # print()
-            # print("Error!!!, There is some error!")
-            # print(e)
-            # print()
-            # return False
+        except Exception as e:
+            print()
+            print("Error!!!, There is some error!")
+            print(e)
+            print()
+            return False
             
     def launch_webpage(self):
         #Copies all the resource over to the temp dir
