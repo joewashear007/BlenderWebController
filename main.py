@@ -19,7 +19,7 @@ def main():
 	print()
 	print("Press Any Key To Quit...")
 	print()
-	server = WebSocketHttpServer(8000, 9999, WebSocketsHandler)
+	server = WebSocketHttpServer(WebSocketsHandler)
 	if server.start():
 		print()
 		server.launch_webpage()

@@ -23,12 +23,12 @@ import webbrowser
 from io import StringIO
 from string import Template
 
-# Inherit this class to handle the websocket connection
+
 class QuiteCGIHandler(http.server.CGIHTTPRequestHandler):
     def log_message(self, format, *args):
-        pass
-        #sys.stderr.write("%s - - [%s] %s\n" % (self.address_string(),self.log_date_time_string(),format%args))
+        pass #Hides all messages for Request Handler
 
+# Inherit this class to handle the websocket connection
 class WebSocketsHandler(socketserver.BaseRequestHandler):
 
 #-------------- Over ride these  ----------------------------------------
@@ -150,27 +150,24 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
         return frame
             
 class HTTPServer(threading.Thread):
-    def __init__(self, HttpPort):
+    def __init__(self):
         threading.Thread.__init__(self)
-        self.port = HttpPort
         self.httpd = None
-        self.host = socket.gethostbyname(socket.gethostname())
         self._start_server()
            
     def _start_server(self):
         #Starts the server at object init
         try:
-            #Using srd CGI Handler
-            #self.httpd = http.server.HTTPServer(("", self.port), http.server.CGIHTTPRequestHandler)
-            self.httpd = http.server.HTTPServer(("", self.port), QuiteCGIHandler)
-            print("HTTP Server: " , self.host + ":" , self.port)
+            #Using std CGI Handler
+            self.httpd = http.server.HTTPServer(('', 0), QuiteCGIHandler)
+            print("HTTP Server on : ", self.get_address() )
         except Exception as e:
             print("The HTTP server could not be started")
     
     def get_address(self):
         #returns string of the servers address or None
         if self.httpd is not None:
-            return 'http://{host}:{port}/'.format(host=self.host, port=self.port)
+            return 'http://{host}:{port}/'.format(host=socket.gethostbyname(self.httpd.server_name), port=self.httpd.server_port)
         else:
             return None
 
@@ -188,7 +185,7 @@ class HTTPServer(threading.Thread):
             self.httpd.shutdown()
         print("Done")
 
-class WebSocketTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+class WebSocketTCPServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
     #Added a list of current handlers so they can be closed
     def __init__(self, server_address, RequestHandlerClass, bind_and_activate=True):
         socketserver.TCPServer.__init__(self, server_address, RequestHandlerClass, bind_and_activate)
@@ -211,26 +208,25 @@ class WebSocketTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
         return self.handlers
     
 class WebsocketServer(threading.Thread):
-    def __init__(self, WebsocketPort, handler):
+    #def __init__(self, WebsocketPort, handler):
+    def __init__(self, handler):
         threading.Thread.__init__(self)
-        self.port = WebsocketPort
         self.wsd = None
         self.handler = handler
-        self.host = socket.gethostbyname(socket.gethostname())
         self._start_server()
 
     def _start_server(self):
         #Starts the server at object init
         try:
-            self.wsd = WebSocketTCPServer(("", self.port), self.handler)
-            print('WebSocket Server: ' , self.host , ":" , self.port)
+            self.wsd = WebSocketTCPServer(('', 0), self.handler)
+            print( self.get_address())
         except Exception as e:
             print("Error! - Websocket Server Not Started!", e)
             
     def get_address(self):
         #returns string of the servers address or None
         if self.wsd is not None:
-            return 'ws://{host}:{port}/'.format(host=self.host, port=self.port)
+            return 'ws://{host}:{port}/'.format(host=socket.gethostbyname(self.wsd.server_name), port=self.wsd.server_port)
         else:
             return None
             
@@ -251,9 +247,7 @@ class WebsocketServer(threading.Thread):
         return self.wsd.get_handlers()
         
 class WebSocketHttpServer():
-    def __init__(self, http_port, websocket_port, handler_class):
-        self.http_port = http_port
-        self.websocket_port = websocket_port
+    def __init__(self, handler_class):
         self.handler = handler_class
         self.httpServer = None
         self.wsServer = None
@@ -269,12 +263,18 @@ class WebSocketHttpServer():
     def _make_webpage(self):
         shutil.copytree( self.cwd+"\\res\\", self.tempdir+"\\res\\")
         html = open(self.tempdir + "\\index.html" ,"w")
-        temp = open(self.cwd + "\\index.temp", "r")
-        content = temp.read()
-        content_sub = Template(content).substitute(address=self.wsServer.get_address())
-        html.write(content_sub)
+        for line in open(self.cwd + "\\index.temp", "r"):
+            if line.find("$address") > 0 :
+                line = Template(line).safe_substitute(address=self.wsServer.get_address())
+            if line.find("__PYTHON_INSERT__") > 0:
+                css = open(self.cwd + "\\res\\style.css", "r")
+                js = open(self.cwd + "\\res\\controller.js", "r")
+                html.write("<script>"+js.read()+"</script>")
+                html.write("<style>"+css.read()+"</style>")
+                js.close()
+                css.close()
+            html.write(line)
         html.close()
-        temp.close()
         
     def stop(self):
         try:
@@ -285,18 +285,18 @@ class WebSocketHttpServer():
         
     def start(self):
         try:
-            # make directorys and copy files
+            # make directory and copy files
             self._make_server_temp_dir()
             #launch the servers
-            self.httpServer = HTTPServer(self.http_port)
-            self.wsServer = WebsocketServer(self.websocket_port, self.handler)
+            self.httpServer = HTTPServer()
+            self.wsServer = WebsocketServer(self.handler)
             if self.wsServer is not None and self.httpServer is not None:
                 self.httpServer.start()
                 self.wsServer.start()
                 self._make_webpage()
                 return True
             else:
-                print("Error Starting The Servers, Something is not Initalized!")
+                print("Error Starting The Servers, Something is not Initialized!")
                 return False
         except Exception as e:
             print()
