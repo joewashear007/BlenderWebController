@@ -15,7 +15,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no" />
 		<title>BlenderWebController</title>
-		<!-- <link rel="stylesheet" href="res/style.css" /> -->
+		<link rel="stylesheet" href="res/style.css" />
 		<!-- <script src="res/controller.js"></script> -->
 		<script src="res/jquery-1.8.2.min.js"></script>
 		<script src="res/hammer.min.js"></script>
@@ -29,27 +29,22 @@
 			<div id="top">
 				<div>
 					<h1>Blender Web Controller</h1>
-					<button id="Status">Not Connect</button>
+					
 				</div>
 			</div>
 			<div id="middle">
-				<div id="ButtonControl">
+				<div id="ButtonControl" class="container">
 					<p>Use the Buttons To Control The Blender Object</p>
-					<table>
-						<tr><td></td><td>
-							<button id=RotateUp>/\</button>
-						</td><td></td></tr>
-						<tr><td>
-							<button id=RotateLeft><</button></td><td></td><td>
-							<button id=RotateRight>></button>
-						</td></tr>
-						<tr><td></td><td>
-							<button id=RotateDown>\/</button>
-						</td><td></td></tr>
-						<tr><td colspan=3>
-							<button id=ZoomIn>+</button><button id=ZoomOut>-</button>
-						</td></tr>
-					</table>
+                        <div class="row">
+                        <button id=RotateUp class="col col-1">/\</button>
+                        </div><div class="row">
+                        <button id=RotateLeft class="col col-3"><</button>
+                        <button id=RotateRight class="col col-3 right">></button>
+                        </div><div class="row">
+                        <button id=RotateDown class="col col-1">\/</button>
+                        </div><div class="row">
+                        <button id=ZoomIn class="col col-2">+</button><button id=ZoomOut class="col col-2">-</button>
+                        </div>
 				</div>
 				<div id="SwipeControl">
 					<div id="SwipeBox">
@@ -113,11 +108,10 @@
 				</div>
 			</div>
 			<div id="bottom">
-				<div id="Details" >
-					<a id=DebugTitle >Received Data</a>
-						<p class=debug></p>
-				</div>
-				<div id="toggleControl">b/s</div>
+                <button id="toggleControl">b/s</button>
+                <button id="DebugTitle" >Details</button>	
+                <button id="Status">Not Connect</button>
+				<button id="MasterLock">Lock</button>
 			</div>
 		</div>
 		<script>

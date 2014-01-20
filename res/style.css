@@ -13,12 +13,22 @@ html,body,#wrapper {
     height:100%;
     padding:0;
     margin:0;
+    background:
+        linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
+        linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
+        linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
+        linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
+        linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
+        linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
+    background-color: #131313;
+    background-size: 20px 20px;
 }
 #wrapper {
     position:relative;
 }
+/*------------- Top Banner ------------------*/
 #top {
-    position:absolute;
+    position:fixed;
     height:50px;
     width:100%;
     background: #914f00;
@@ -40,109 +50,101 @@ html,body,#wrapper {
     z-index: 0;
     display:inline-block;
 }
-#top button{
-    width:100px;
-    height:50px;
-    position: absolute;
-    right:0px;
-    color: white;
-    text-align: center;
-    text-shadow: 0.1rem 0.1rem 0 rgba(150,150,150,0.3);
-    font-size: 1.0rem;
-    font-weight: 1500;
-    border: none;
-    z-index:100;
-    box-shadow: -1px 0px 2px rgba(150,150,150, 0.5);
-    background: #914f00;
-    background: -moz-linear-gradient(top, #914f00 0%, #bc5100 30%, #bc5100 70%, #914f00 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#914f00), color-stop(30%,#bc5100), color-stop(70%,#bc5100), color-stop(100%,#914f00));
-    background: -webkit-linear-gradient(top, #914f00 0%,#bc5100 30%,#bc5100 70%,#914f00 100%);
-    background: -o-linear-gradient(top, #914f00 0%,#bc5100 30%,#bc5100 70%,#914f00 100%);
-    background: -ms-linear-gradient(top, #914f00 0%,#bc5100 30%,#bc5100 70%,#914f00 100%);
-    background: linear-gradient(to bottom, #914f00 0%,#bc5100 30%,#bc5100 70%,#914f00 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#914f00', endColorstr='#914f00',GradientType=0 );
-}
-#top button:active{
-  border-color: #008aaa;
-  background: #008aaa;
-  background-size: auto 100%;
-  color: #333;
-}
-
+/*------------- Middle Content ------------------*/
 #middle {
     z-index: 0;
     position:absolute;
     top:50px;
     bottom:50px;
-    width:100%;
-    padding-left:5%;
-    padding-right:5%;
-	background:
-    linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
-    linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
-    linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
-    linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
-    linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
-    linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
-    background-color: #131313;
-    background-size: 20px 20px;
+    width: 100%;
 }
 #middle > div {
     background-color: white;
-    box-shadow: 0px 0px 5px rga(150,150,150);
-    height: 100%;
     width: 90%;
-}
-#bottom {
-    position:absolute;
-    bottom:0;
-    height:40px;
-    width:100%;
-    color: grey;
-    text-align: center;
-    text-shadow: 0.1rem 0.1rem 0 rgba(150,150,150,0.3);
-    font-size: 1.0rem;
-    font-weight: 1500;
-    background:white;
-    text-align: center;
-    box-shadow: 0px 0px 5px #333;
-    vertical-align: center;
-    padding-top: 10px;
-}	
-#toggleControl{
-    position: absolute;
-    right: 0px;
-    bottom: 0px;
-    height: 40px;
-    width:50px;
-    box-shadow: -1px 0px 2px rgba(150,150,150, 0.5);
-    padding-top: 10px;
-}
-#ButtonControl{
-    width: 100%;
-    margin-top: -20px;
-}
-#ButtonControl table{
-    width: 300px;
     margin-left: auto;
     margin-right: auto;
 }
-#ButtonControl p{
+.container > p{
     color: #333;
-    padding: 20px;
+    padding: 20px 20px 0px 20px;
     font-weight:bold;
     text-shadow: 0.1rem 0.1rem 0 rgba(150,150,150,0.3);
 }
+.container{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.row {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+}
+.col {
+    display: inline;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+.col-1{
+    width: 100%;
+}
+.col-2{
+    width: 50%
+}
+.col-3{
+    width: 30%;
+}
+.right{
+    float: right;
+}
+/*------------- Bottom Banner ------------------*/
+#bottom {
+    position:fixed;
+    bottom:0;
+    height:50px;
+    width:100%;
+    box-shadow: 0px 0px 5px #333;
+}
+
+#bottom > button {
+    background: #064773;
+    background: -webkit-gradient(linear, left top, left bottom, from(#cdd7de), to(#064773));
+    background: -webkit-linear-gradient(top, #cdd7de, #064773);
+    background: -moz-linear-gradient(top, #cdd7de, #064773);
+    background: -ms-linear-gradient(top, #cdd7de, #064773);
+    background: -o-linear-gradient(top, #cdd7de, #064773);
+    color: white;
+    vertical-align: middle;
+    float:left;
+    width: 25%;
+    height: 50px;
+    border: none;
+    border-left: 0.1rem solid #333;
+    font-weight: bold;
+}
+#bottom > button:hover {
+   border-top-color: #28597a;
+   background: #28597a;
+   color: #ccc;
+}
+#bottom > button:active {
+   border-top-color: #1b435e;
+   background: #1b435e;
+}
+
+/*------------- Button Control ------------------*/
+#ButtonControl{
+
+}
+
 #ButtonControl button{
-    width:7rem;
-    height:7rem;
     color: white;
     text-align: center;
     text-shadow: 0.1rem 0.1rem 0 rgba(150,150,150,0.3);
-    font-size: 3.0rem;
+    font-size: 2.0rem;
     font-weight: bold;
     border: none;
-    z-index:100;
     border-radius: 0.2rem;
     box-shadow: 0px 0px 5px rgba(0,0,0, 1);
     background: -moz-linear-gradient(top, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.25) 75%, rgba(0,0,0,0.65) 100%);
@@ -154,11 +156,11 @@ html,body,#wrapper {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#40000000', endColorstr='#a6000000',GradientType=0 );
 }
 
+/*------------- Swipe Control ------------------*/
 #SwipeControl{
 	display:none;
 }
 #SwipeBox{
     height: 100%;
-    border: 0.3rem solid green;   
-}
+    border: 0.3rem solid green;
 }

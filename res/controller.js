@@ -15,7 +15,7 @@ function msg  (e) 	{ $(".debug").append("<p>Received: "+ e.data + "</p>"); };
 function error(e)  	{ $("#Status").text("Error");			};
 $(document).ready(function(){
     try {
-        if (address != "" ) {
+        if (address != "" ||  address != "$address") {
             var s = new WebSocket(address);
             s.onopen = open;
             s.onclose = close;
