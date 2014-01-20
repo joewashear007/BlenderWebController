@@ -37,17 +37,17 @@
 					<p>Use the Buttons To Control The Blender Object</p>
 					<table>
 						<tr><td></td><td>
-							<button id=ButtonUp>/\</button>
+							<button id=RotateUp>/\</button>
 						</td><td></td></tr>
 						<tr><td>
-							<button id=ButtonLeft><</button></td><td></td><td>
-							<button id=ButtonRight>></button>
+							<button id=RotateLeft><</button></td><td></td><td>
+							<button id=RotateRight>></button>
 						</td></tr>
 						<tr><td></td><td>
-							<button id=ButtonDown>\/</button>
+							<button id=RotateDown>\/</button>
 						</td><td></td></tr>
 						<tr><td colspan=3>
-							<button id=ButtonIn>+</button><button id=ButtonOut>-</button>
+							<button id=ZoomIn>+</button><button id=ZoomOut>-</button>
 						</td></tr>
 					</table>
 				</div>

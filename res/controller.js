@@ -28,7 +28,11 @@ $(document).ready(function(){
     }
     $("button").click( function () {
         if( $(this).attr("id") == "Status")	{	s.close(1000, "Try to Close");	}
-        else 								{	s.send($(this).attr("id"));		}
+        else {
+            var data = {"Actuator":$(this).attr("id"), };
+            console.log(data);
+            s.send(JSON.stringify(data));		
+        }
     });
     $("#DebugTitle").click( function() {
         $(".debug").toggle();
