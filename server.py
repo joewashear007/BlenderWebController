@@ -90,12 +90,15 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
         key = None
         data = self.request.recv(1024).strip()
         for line in data.splitlines():
+            print("--- ", line)
             if b'Upgrade:' in line:
-                upgrade = line.split(b': ')[1]
-                if not upgrade == "websocket":
+                upgrade = line.split(b': ')[1].strip()
+                print("Trying to upgrade:",upgrade)
+                if not upgrade == b'websocket':
                     raise Exception("Upgrade is Not a websocket!", data)
             if b'Sec-WebSocket-Key:' in line:
                 key = line.split(b': ')[1]
+                print("Got Key: ", key)
                 break
         if key is None:
             raise Exception("Couldn't find the key?:", data)
@@ -150,16 +153,16 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
         return frame
             
 class HTTPServer(threading.Thread):
-    def __init__(self):
+    def __init__(self, address_info=('',0)):
         threading.Thread.__init__(self)
         self.httpd = None
-        self._start_server()
+        self._start_server( address_info )
            
-    def _start_server(self):
+    def _start_server(self, address_info):
         #Starts the server at object init
         try:
             #Using std CGI Handler
-            self.httpd = http.server.HTTPServer(('', 0), QuiteCGIHandler)
+            self.httpd = http.server.HTTPServer(address_info, QuiteCGIHandler)
             print("HTTP Server on : ", self.get_address() )
         except Exception as e:
             print("The HTTP server could not be started")
@@ -208,17 +211,16 @@ class WebSocketTCPServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
         return self.handlers
     
 class WebsocketServer(threading.Thread):
-    #def __init__(self, WebsocketPort, handler):
-    def __init__(self, handler):
+    def __init__(self, handler, address_info=('',0)):
         threading.Thread.__init__(self)
         self.wsd = None
         self.handler = handler
-        self._start_server()
+        self._start_server(address_info)
 
-    def _start_server(self):
+    def _start_server(self, address_info):
         #Starts the server at object init
         try:
-            self.wsd = WebSocketTCPServer(('', 0), self.handler)
+            self.wsd = WebSocketTCPServer( address_info, self.handler)
             print( self.get_address())
         except Exception as e:
             print("Error! - Websocket Server Not Started!", e)
@@ -247,7 +249,9 @@ class WebsocketServer(threading.Thread):
         return self.wsd.get_handlers()
         
 class WebSocketHttpServer():
-    def __init__(self, handler_class):
+    def __init__(self, handler_class, http_address=('',0), ws_address=('',0) ):
+        self.http_address = http_address
+        self.ws_address = ws_address
         self.handler = handler_class
         self.httpServer = None
         self.wsServer = None
@@ -284,12 +288,12 @@ class WebSocketHttpServer():
             print("The Servers were never started")
         
     def start(self):
-        try:
+        # try:
             # make directory and copy files
             self._make_server_temp_dir()
             #launch the servers
-            self.httpServer = HTTPServer()
-            self.wsServer = WebsocketServer(self.handler)
+            self.httpServer = HTTPServer(self.http_address)
+            self.wsServer = WebsocketServer(self.handler, self.ws_address)
             if self.wsServer is not None and self.httpServer is not None:
                 self.httpServer.start()
                 self.wsServer.start()
@@ -298,12 +302,12 @@ class WebSocketHttpServer():
             else:
                 print("Error Starting The Servers, Something is not Initialized!")
                 return False
-        except Exception as e:
-            print()
-            print("Error!!!, There is some error!")
-            print(e)
-            print()
-            return False
+        # except Exception as e:
+            # print()
+            # print("Error!!!, There is some error!")
+            # print(e)
+            # print()
+            # return False
             
     def launch_webpage(self):
         #Copies all the resource over to the temp dir
