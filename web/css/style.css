@@ -6,7 +6,6 @@
  * this stuff is worth it, you can buy me a beer in return Joseph Livecchi
  * ----------------------------------------------------------------------------
  */
-
 *{font-family: Verdana, Verdana, Geneva, sans-serif; }
 
 html,body,#wrapper {
@@ -112,6 +111,9 @@ html,body,#wrapper {
     border: none;
     border-left: 0.1rem solid #333;
     font-size: 2.0rem
+}
+.buttonErr{
+    background: linear-gradient(to bottom, #cdd7de, #990000) !important;
 }
 #bottom > button:hover {
    border-top-color: #28597a;

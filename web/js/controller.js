@@ -9,9 +9,9 @@
  
 //Hammer.plugins.fakeMultitouch();
 
-function open (e) 	{ $("#Status").text("Connected"); 		};
-function close(e) 	{ $("#Status").text("Closed");			};
-function msg  (e) 	{ $(".debug").append("<p>Received: "+ e.data + "</p>"); };
+function open (e) 	{ $("#DebugMsgList").append("<p>Connect!</p>"); $("#ToggleCxnStatus").removeClass("buttonErr"); };
+function close(e) 	{ $("#DebugMsgList").append("<p>Connection Closed!</p>"); $("#ToggleCxnStatus").addClass("buttonErr"); };
+function msg  (e) 	{ $("#DebugMsgList").append("<p>Received: "+ e.data + "</p>"); };
 function error(e)  	{ $("#Status").text("Error");			};
 
 $(document).ready(function(){
@@ -37,16 +37,20 @@ $(document).ready(function(){
         $("#DebugInfo").hide();
         $("#CxnStatus").show();
         $("#PopWrap").fadeIn();
-        //s.close(1000, "Try to Close"); 
     });
-    $("#DebugTitle").click( function() {
-        $(".debug").toggle();
+	$("#ToggleDebugInfo").click( function() { 
+        $("#PopWrapHead > h3").text("Messages");
+        $("#DebugInfo").show();
+        $("#CxnStatus").hide();
+        $("#PopWrap").fadeIn();
     });
     $("#PopWrapCloseBtn").click(function(){ $("#PopWrap").fadeOut(); });
+    $("#DebugMsgListBtn").click(function(){ $("#DebugMsgList").empty(); });
+    $("#CxnStatusDiscxnBtn").click(function(){ s.close(1000, "Try to Close"); });
     $("#ToggleControl").click( function() {
         $("#SwipeControl").fadeToggle();
         $("#ButtonControl").fadeToggle();
-        $(this).text( $(this).text() == "↝" ? "👉" : "↝");
+        $(this).text();
     });
 });
 

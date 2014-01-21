@@ -8,21 +8,22 @@
  * ----------------------------------------------------------------------------
  */
 -->
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no" />
 		<title>BlenderWebController</title>
-		<script src="res/jquery-1.8.2.min.js"></script>
-		<script src="res/hammer.min.js"></script>
-		<script src="res/hammer.fakemultitouch.js"></script>
-		<script src="res/hammer.showtouches.js"></script>
+		<script src="js/jquery-1.8.2.min.js"></script>
+		<script src="js/hammer.min.js"></script>
+		<script src="js/hammer.fakemultitouch.js"></script>
+		<script src="js/hammer.showtouches.js"></script>
         <script>var address = "$address";</script>
-        <link rel="stylesheet" href="res/style.css" />
-		<script src="res/controller.js"></script>
-        <!-- __PYTHON_INSERT__ -->
+        <link rel="stylesheet" href="css/font-awesome.min.css" />
+        <!-- <link rel="stylesheet" href="css/style.css" />
+		<script src="js/controller.js"></script> -->
+        
+		<!-- __PYTHON_INSERT__ -->
 	</head>
 	<body>
 		<div id="wrapper">
@@ -36,14 +37,15 @@
 				<div id="ButtonControl" class="container">
 					<p>Use the Buttons To Control The Blender Object</p>
                         <div class="row">
-                        <button id=RotateUp class="col col-1 ctrlBtn">↑</button>
+                        <button id=RotateUp class="col col-1 ctrlBtn fa fa-arrow-up"></button>
                         </div><div class="row">
-                        <button id=RotateLeft class="col col-3 ctrlBtn">←</button>
-                        <button id=RotateRight class="col col-3 right ctrlBtn">→</button>
+                        <button id=RotateLeft class="col col-3 ctrlBtn fa fa-arrow-left"></button>
+                        <button id=RotateRight class="col col-3 right ctrlBtn fa fa-arrow-right"></button>
                         </div><div class="row">
-                        <button id=RotateDown class="col col-1 ctrlBtn">↓</button>
+                        <button id=RotateDown class="col col-1 fa fa-arrow-down"></button>
                         </div><div class="row">
-                        <button id=ZoomIn class="col col-2 ctrlBtn">+</button><button id=ZoomOut class="col col-2 ctrlBtn">-</button>
+                        <button id=ZoomIn class="col col-2 ctrlBtn">+</button>
+						<button id=ZoomOut class="col col-2 ctrlBtn">-</button>
                         </div>
 				</div>
 				<div id="SwipeControl">
@@ -108,11 +110,12 @@
 				</div>
 			</div>
 			<div id="bottom">
-                <button id="settings">🔧</button>
-                <button id="ToggleControl">👉↝</button>
-                <button id="DebugTitle" >📝</button>	
-                <button id="ToggleCxnStatus">📴📶</button>
-				<button id="MasterLock">🔓🔒</button>
+                <button id="settings" class="fa fa-wrench"></button>
+                <button id="ToggleControl" class="fa fa-hand-o-right"></button>
+				<button id="MasterLock" class="fa fa-lock"></button>
+                <button id="ToggleDebugInfo" class="fa fa-list-ul"></button>	
+                <button id="ToggleCxnStatus" class="buttonErr fa fa-signal"></button>
+				
 			</div>
 		</div>
         <div id="PopWrap">
@@ -121,6 +124,7 @@
                 <p>You are connect and ready to go!</p>
                 <p>Serverd From: 192.168.1.1:8000</p>
                 <p>Connected to: 192.168.1.1:45623</p>
+				<button id="CxnStatusDiscxnBtn">Clear</button>
             </div>
              <div id="DebugInfo">
                 <span id="DebugMsgList">
@@ -128,6 +132,7 @@
                     <p>Rotatet Right</p>
                     <p>You have master lock!</p>
                 </span>
+				<button id="DebugMsgListBtn">Clear</button>
             </div>
         </div>
 		<script>
