@@ -32,13 +32,7 @@ html,body,#wrapper {
     height:50px;
     width:100%;
     background: #914f00;
-    background: -moz-linear-gradient(top, #914f00 0%, #bc5100 30%, #bc5100 70%, #914f00 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#914f00), color-stop(30%,#bc5100), color-stop(70%,#bc5100), color-stop(100%,#914f00));
-    background: -webkit-linear-gradient(top, #914f00 0%,#bc5100 30%,#bc5100 70%,#914f00 100%);
-    background: -o-linear-gradient(top, #914f00 0%,#bc5100 30%,#bc5100 70%,#914f00 100%);
-    background: -ms-linear-gradient(top, #914f00 0%,#bc5100 30%,#bc5100 70%,#914f00 100%);
     background: linear-gradient(to bottom, #914f00 0%,#bc5100 30%,#bc5100 70%,#914f00 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#914f00', endColorstr='#914f00',GradientType=0 );
     color: white;
     box-shadow: 0px 0px 5px black;
     z-index:20;
@@ -109,20 +103,15 @@ html,body,#wrapper {
 }
 
 #bottom > button {
-    background: #064773;
-    background: -webkit-gradient(linear, left top, left bottom, from(#cdd7de), to(#064773));
-    background: -webkit-linear-gradient(top, #cdd7de, #064773);
-    background: -moz-linear-gradient(top, #cdd7de, #064773);
-    background: -ms-linear-gradient(top, #cdd7de, #064773);
-    background: -o-linear-gradient(top, #cdd7de, #064773);
+    background: linear-gradient(to bottom, #cdd7de, #064773);
     color: white;
     vertical-align: middle;
     float:left;
-    width: 25%;
+    width: 20%;
     height: 50px;
     border: none;
     border-left: 0.1rem solid #333;
-    font-weight: bold;
+    font-size: 2.0rem
 }
 #bottom > button:hover {
    border-top-color: #28597a;
@@ -148,13 +137,7 @@ html,body,#wrapper {
     border: none;
     border-radius: 0.2rem;
     box-shadow: 0px 0px 5px rgba(0,0,0, 1);
-    background: -moz-linear-gradient(top, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.25) 75%, rgba(0,0,0,0.65) 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.25)), color-stop(75%,rgba(0,0,0,0.25)), color-stop(100%,rgba(0,0,0,0.65)));
-    background: -webkit-linear-gradient(top, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 75%,rgba(0,0,0,0.65) 100%);
-    background: -o-linear-gradient(top, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 75%,rgba(0,0,0,0.65) 100%);
-    background: -ms-linear-gradient(top, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 75%,rgba(0,0,0,0.65) 100%);
     background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 75%,rgba(0,0,0,0.65) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#40000000', endColorstr='#a6000000',GradientType=0 );
 }
 
 /*------------- Swipe Control ------------------*/
@@ -164,4 +147,40 @@ html,body,#wrapper {
 #SwipeBox{
     height: 100%;
     border: 0.3rem solid green;
+}
+/* --------------------- Pop Messgaes -----------------*/
+#PopWrap{
+    display: none;
+    margin: 75px auto;
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    left: 10%;
+    right: 10%;
+    width : 80%;
+    background-color: white;
+    z-index: 50;
+    border: 0.2rem solid #333;
+    box-shadow: 0px 0px 15px rgb(00,0,0);
+}
+#PopWrap > div{
+    margin: 0px 10px;
+    overflow: scroll;
+}
+#PopWrapHead{
+    width: 100%;
+    height: 50px;
+    background-color: white;
+    display: inline-block;
+    border-bottom: 0.2rem solid #333;
+}
+#PopWrapHead > h3{
+    float: left;
+    display: inline;
+    padding-left: 10px;
+}
+#PopWrapCloseBtn{
+    float:right;
+    height: 50px;
+    width: 50px;
 }

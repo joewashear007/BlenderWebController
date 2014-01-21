@@ -7,39 +7,46 @@
  * ----------------------------------------------------------------------------
  */
  
-Hammer.plugins.fakeMultitouch();
+//Hammer.plugins.fakeMultitouch();
 
 function open (e) 	{ $("#Status").text("Connected"); 		};
 function close(e) 	{ $("#Status").text("Closed");			};
 function msg  (e) 	{ $(".debug").append("<p>Received: "+ e.data + "</p>"); };
 function error(e)  	{ $("#Status").text("Error");			};
+
 $(document).ready(function(){
-    try {
-        if (address != "" ||  address != "$address") {
-            var s = new WebSocket(address);
-            s.onopen = open;
-            s.onclose = close;
-            s.onmessage = msg;
-            s.onerror = error;
-        }
-    } catch (ex) {
-        console.log("Socket exception:", ex);
-        $("#Status").text("Error");
-    }
-    $("button").click( function () {
-        if( $(this).attr("id") == "Status")	{	s.close(1000, "Try to Close");	}
-        else {
-            var data = {"Actuator":$(this).attr("id"), };
-            console.log(data);
-            s.send(JSON.stringify(data));		
-        }
+    // try {
+        // if (address != "" ||  address != "$address") {
+            // var s = new WebSocket(address);
+            // s.onopen = open;
+            // s.onclose = close;
+            // s.onmessage = msg;
+            // s.onerror = error;
+        // }
+    // } catch (ex) {
+        // console.log("Socket exception:", ex);
+        // $("#Status").text("Error");
+    // }
+    $(".ctrlBtn").click( function () {
+        var data = {"Actuator":$(this).attr("id"), };
+        console.log(data);
+        s.send(JSON.stringify(data));
+    });
+    $("#ToggleCxnStatus").click( function() { 
+        $("#PopWrapHead > h3").text("Cxn Status");
+        $("#DebugInfo").hide();
+        $("#CxnStatus").show();
+        $("#PopWrap").fadeIn();
+        //s.close(1000, "Try to Close"); 
     });
     $("#DebugTitle").click( function() {
         $(".debug").toggle();
     });
-    $("#toggleControl").click( function() {
+    $("#PopWrapCloseBtn").click(function(){ $("#PopWrap").fadeOut(); });
+    $("#ToggleControl").click( function() {
         $("#SwipeControl").fadeToggle();
         $("#ButtonControl").fadeToggle();
+        $(this).text( $(this).text() == "↝" ? "👉" : "↝");
     });
 });
 

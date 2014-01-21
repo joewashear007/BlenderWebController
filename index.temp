@@ -15,13 +15,13 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no" />
 		<title>BlenderWebController</title>
-		<link rel="stylesheet" href="res/style.css" />
-		<!-- <script src="res/controller.js"></script> -->
 		<script src="res/jquery-1.8.2.min.js"></script>
 		<script src="res/hammer.min.js"></script>
 		<script src="res/hammer.fakemultitouch.js"></script>
 		<script src="res/hammer.showtouches.js"></script>
         <script>var address = "$address";</script>
+        <link rel="stylesheet" href="res/style.css" />
+		<script src="res/controller.js"></script>
         <!-- __PYTHON_INSERT__ -->
 	</head>
 	<body>
@@ -36,14 +36,14 @@
 				<div id="ButtonControl" class="container">
 					<p>Use the Buttons To Control The Blender Object</p>
                         <div class="row">
-                        <button id=RotateUp class="col col-1">/\</button>
+                        <button id=RotateUp class="col col-1 ctrlBtn">↑</button>
                         </div><div class="row">
-                        <button id=RotateLeft class="col col-3"><</button>
-                        <button id=RotateRight class="col col-3 right">></button>
+                        <button id=RotateLeft class="col col-3 ctrlBtn">←</button>
+                        <button id=RotateRight class="col col-3 right ctrlBtn">→</button>
                         </div><div class="row">
-                        <button id=RotateDown class="col col-1">\/</button>
+                        <button id=RotateDown class="col col-1 ctrlBtn">↓</button>
                         </div><div class="row">
-                        <button id=ZoomIn class="col col-2">+</button><button id=ZoomOut class="col col-2">-</button>
+                        <button id=ZoomIn class="col col-2 ctrlBtn">+</button><button id=ZoomOut class="col col-2 ctrlBtn">-</button>
                         </div>
 				</div>
 				<div id="SwipeControl">
@@ -108,12 +108,28 @@
 				</div>
 			</div>
 			<div id="bottom">
-                <button id="toggleControl">b/s</button>
-                <button id="DebugTitle" >Details</button>	
-                <button id="Status">Not Connect</button>
-				<button id="MasterLock">Lock</button>
+                <button id="settings">🔧</button>
+                <button id="ToggleControl">👉↝</button>
+                <button id="DebugTitle" >📝</button>	
+                <button id="ToggleCxnStatus">📴📶</button>
+				<button id="MasterLock">🔓🔒</button>
 			</div>
 		</div>
+        <div id="PopWrap">
+            <span id="PopWrapHead"><h3>Status: Good!</h3><button id="PopWrapCloseBtn" >X</button></span>
+            <div id="CxnStatus">
+                <p>You are connect and ready to go!</p>
+                <p>Serverd From: 192.168.1.1:8000</p>
+                <p>Connected to: 192.168.1.1:45623</p>
+            </div>
+             <div id="DebugInfo">
+                <span id="DebugMsgList">
+                    <p>Connected</p>
+                    <p>Rotatet Right</p>
+                    <p>You have master lock!</p>
+                </span>
+            </div>
+        </div>
 		<script>
             
         </script>
