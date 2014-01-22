@@ -15,18 +15,18 @@ function msg  (e) 	{ $("#DebugMsgList").append("<p>Received: "+ e.data + "</p>")
 function error(e)  	{ $("#Status").text("Error");			};
 
 $(document).ready(function(){
-    // try {
-        // if (address != "" ||  address != "$address") {
-            // var s = new WebSocket(address);
-            // s.onopen = open;
-            // s.onclose = close;
-            // s.onmessage = msg;
-            // s.onerror = error;
-        // }
-    // } catch (ex) {
-        // console.log("Socket exception:", ex);
-        // $("#Status").text("Error");
-    // }
+    try {
+        if (address != "" ||  address != "$address") {
+            var s = new WebSocket(address);
+            s.onopen = open;
+            s.onclose = close;
+            s.onmessage = msg;
+            s.onerror = error;
+        }
+    } catch (ex) {
+        console.log("Socket exception:", ex);
+        $("#Status").text("Error");
+    }
     $(".ctrlBtn").click( function () {
         var data = {"Actuator":$(this).attr("id"), };
         console.log(data);
