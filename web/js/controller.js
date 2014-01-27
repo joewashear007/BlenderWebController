@@ -27,11 +27,13 @@ $(document).ready(function(){
         console.log("Socket exception:", ex);
         $("#Status").text("Error");
     }
-    $(".ctrlBtn").click( function () {
+    $(".ctrlBtn").mousedown( function () {
         var data = {"Actuator":$(this).attr("id"), };
-        console.log(data);
         s.send(JSON.stringify(data));
-    });
+    }).mouseup(function(){
+		var data = {"Stop":"All", };
+        s.send(JSON.stringify(data));
+	});
     $("#ToggleCxnStatus").click( function() { 
         $("#PopWrapHead > h3").text("Cxn Status");
         $("#DebugInfo").hide();

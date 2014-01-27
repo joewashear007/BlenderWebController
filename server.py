@@ -264,18 +264,18 @@ class WebSocketHttpServer():
         os.chdir(self.tempdir)
     
     def _make_webpage(self):
-        shutil.copytree( self.cwd+"\\web\\", self.tempdir+"\\web\\")
-        html = open(self.tempdir + "\\web\\index.html" ,"w")
-        for line in open(self.cwd + "\\web\\index.temp", "r"):
+        shutil.copytree( self.cwd+"/web/", self.tempdir+"/web/")
+        html = open(self.tempdir + "/web/index.html" ,"w")
+        for line in open(self.cwd + "/web/index.temp", "r"):
             if line.find("$address") > 0 :
                 line = Template(line).safe_substitute(address=self.wsServer.get_address())
-            if line.find("__PYTHON_INSERT__") > 0:
-                css = open(self.cwd + "\\web\\css\\style.css", "r")
-                js = open(self.cwd + "\\web\\js\\controller.js", "r")
-                html.write("<script>"+js.read()+"</script>")
-                html.write("<style>"+css.read()+"</style>")
-                js.close()
-                css.close()
+            #if line.find("__PYTHON_INSERT__") > 0:
+            #    css = open(self.cwd + "/web/css/style.css", "r")
+            #    js = open(self.cwd + "/web/js/controller.js", "r")
+            #    html.write("<script>"+js.read()+"</script>")
+            #    html.write("<style>"+css.read()+"</style>")
+            #    js.close()
+            #    css.close()
             html.write(line)
         html.close()
         

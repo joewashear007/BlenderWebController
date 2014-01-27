@@ -20,8 +20,8 @@
 		<script src="js/hammer.showtouches.js"></script>
         <script>var address = "$address";</script>
         <link rel="stylesheet" href="css/font-awesome.min.css" />
-        <!-- <link rel="stylesheet" href="css/style.css" />
-		<script src="js/controller.js"></script> -->
+        <link rel="stylesheet" href="css/style.css" />
+		<script src="js/controller.js"></script> 
         
 		<!-- __PYTHON_INSERT__ -->
 	</head>
