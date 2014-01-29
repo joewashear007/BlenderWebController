@@ -39,13 +39,14 @@
                         <div class="row">
                         <button id=RotateUp class="col col-1 ctrlBtn fa fa-arrow-up"></button>
                         </div><div class="row">
-                        <button id=RotateLeft class="col col-3 ctrlBtn fa fa-arrow-left"></button>
-                        <button id=RotateRight class="col col-3 right ctrlBtn fa fa-arrow-right"></button>
+                        <button id=RotateLeft class="col col-2 ctrlBtn fa fa-arrow-left"></button>
+                        <button id=RotateRight class="col col-2 ctrlBtn fa fa-arrow-right"></button>
                         </div><div class="row">
                         <button id=RotateDown class="col col-1 ctrlBtn fa fa-arrow-down"></button>
                         </div><div class="row">
-                        <button id=ZoomIn class="col col-2 ctrlBtn">+</button>
-						<button id=ZoomOut class="col col-2 ctrlBtn">-</button>
+                        <button id=ZoomIn class="col col-2 ctrlBtn fa fa-plus "></button><button id=ZRotateLeft class="col col-2 ctrlBtn fa fa-repeat"></button>
+                        </div><div class="row">
+						<button id=ZoomOut class="col col-2 ctrlBtn fa fa-minus"></button><button id=ZRotateRight class="col col-2 ctrlBtn fa fa-undo"></button>
                         </div>
 				</div>
 				<div id="SwipeControl">

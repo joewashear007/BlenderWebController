@@ -81,16 +81,11 @@ html,body,#wrapper {
     padding: 10px;
 }
 .col-1{
-    width: 100%;
+    width: 97%;
 }
 .col-2{
-    width: 50%
-}
-.col-3{
-    width: 30%;
-}
-.right{
-    float: right;
+    width: 47%;
+    margin-right: 2%;
 }
 /*------------- Bottom Banner ------------------*/
 #bottom {
