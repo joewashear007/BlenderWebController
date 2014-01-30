@@ -46,6 +46,7 @@ $(document).ready(function(){
         $("#CxnStatus").hide();
         $("#PopWrap").fadeIn();
     });
+    $("#ResetModel").mouseup(function() { s.send(JSON.stringify({"Reset":true}));});
     $("#PopWrapCloseBtn").click(function(){ $("#PopWrap").fadeOut(); });
     $("#DebugMsgListBtn").click(function(){ $("#DebugMsgList").empty(); });
     $("#CxnStatusDiscxnBtn").click(function(){ s.close(1000, "Try to Close"); });
