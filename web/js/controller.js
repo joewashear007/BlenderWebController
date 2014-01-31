@@ -7,7 +7,7 @@
  * ----------------------------------------------------------------------------
  */
  
-//Hammer.plugins.fakeMultitouch();
+Hammer.plugins.fakeMultitouch();
 
 function open (e) 	{ $("#DebugMsgList").append("<p>Connect!</p>"); $("#ToggleCxnStatus").removeClass("buttonErr"); };
 function close(e) 	{ $("#DebugMsgList").append("<p>Connection Closed!</p>"); $("#ToggleCxnStatus").addClass("buttonErr"); };
@@ -59,79 +59,31 @@ $(document).ready(function(){
         $("#ButtonControl").fadeToggle();
         $(this).text();
     });
+
+    // // start!
+    var element = document.getElementById('SwipeControl');
+    var hammertime = Hammer(element, {
+            prevent_default: true,
+            no_mouseevents: true
+    }).on("tap", function(event) {
+            $("#SwipeEvent").text("tap");
+        }).on("swipeleft", function(event) {
+            $("#SwipeEvent").text("swipeleft");
+        }).on("swiperight", function(event) {
+            $("#SwipeEvent").text("swiperight");
+        }).on("swipedown", function(event) {
+            $("#SwipeEvent").text("swipedown");
+        }).on("swipeup", function(event) {
+            $("#SwipeEvent").text("swipeup");
+        }).on("pinchin", function(event) {
+            $("#SwipeEvent").text("pinchin");
+        }).on("pinchout", function(event) {
+            $("#SwipeEvent").text("pinchout");
+        }).on("rotate", function(event) {
+            $("#SwipeEvent").text("rotate");
+        });
+
+
 });
 
 
-function getEl(id) {
-    return document.getElementById(id);
-}
-
-
-var log_elements = {};
-var prevent_scroll_drag = true;
-
-function getLogElement(type, name) {
-    var el = log_elements[type + name];
-    if(!el) {
-        return log_elements[type + name] = getEl("log-"+ type +"-"+ name);
-    }
-    return el;
-}
-
-// log properties
-var properties = ['gesture','center','deltaTime','angle','direction',
-    'distance','deltaX','deltaY','velocityX','velocityY', 'pointerType',
-    'scale','rotation','touches','target'];
-
-function logEvent(ev) {
-    if(!ev.gesture) {
-        return;
-    }
-
-    // add to the large event log at the bottom of the page
-    var log = [this.id, ev.type];
-    //event_log.innerHTML = log.join(" - ") +"\n" + event_log.innerHTML;
-
-    // highlight gesture
-    var event_el = getLogElement('gesture', ev.type);
-    event_el.className = "active";
-
-
-    for(var i= 0,len=properties.length; i<len; i++) {
-        var prop = properties[i];
-        var value = ev.gesture[prop];
-        switch(prop) {
-            case 'center':
-                value = value.pageX +"x"+ value.pageY;
-                break;
-            case 'gesture':
-                value = ev.type;
-                break;
-            case 'target':
-                value = ev.gesture.target.tagName;
-                break;
-            case 'touches':
-                value = ev.gesture.touches.length;
-                break;
-        }
-        getLogElement('prop', prop).innerHTML = value;
-    }
-}
-
-
-// get all the events
-var all_events = [];
-$("#events-list li").each(function() {
-    var li = $(this);
-    var type = li.text();
-    li.attr("id", "log-gesture-"+type);
-    all_events.push(type);
-});
-
-
-// start!
-var hammertime = Hammer(getEl('SwipeBox'), {
-        prevent_default: true,
-        no_mouseevents: true
-    })
-    .on(all_events.join(" "), logEvent);

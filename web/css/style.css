@@ -147,9 +147,14 @@ html,body,#wrapper {
 /*------------- Swipe Control ------------------*/
 #SwipeControl{
 	display:none;
+	height: 90%;
 }
+
 #SwipeBox{
-   
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin-bottom: 0px;
 }
 /* --------------------- Pop Messgaes -----------------*/
 #PopWrap{

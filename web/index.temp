@@ -50,65 +50,9 @@
 						<button id=ZoomOut class="col col-2 ctrlBtn fa fa-minus"></button><button id=ZRotateRight class="col col-2 ctrlBtn fa fa-undo"></button>
                         </div>
 				</div>
-				<div id="SwipeControl">
-					<div id="SwipeBox">
-						<div class="log well well-small">
-						<h4>Events</h4>
-						<ul class="unstyled events" id="events-list">
-							<li>touch</li>
-							<li>release</li>
-							<li>hold</li>
-							<li>tap</li>
-							<li>doubletap</li>
-
-							<li>dragstart</li>
-							<li>drag</li>
-							<li>dragend</li>
-							<li>dragleft</li>
-							<li>dragright</li>
-							<li>dragup</li>
-							<li>dragdown</li>
-
-							<li>swipe</li>
-							<li>swipeleft</li>
-							<li>swiperight</li>
-							<li>swipeup</li>
-							<li>swipedown</li>
-
-							<li>transformstart</li>
-							<li>transform</li>
-							<li>transformend</li>
-							<li>rotate</li>
-							<li>rotateleft</li>
-							<li>rotateright</li>
-							<li>pinch</li>
-							<li>pinchin</li>
-							<li>pinchout</li>
-						</ul>
-						<h4>EventData</h4>
-						<ul class="unstyled properties">
-							<li class="property-gesture"><strong>gesture</strong> <span id="log-prop-gesture"></span></li>
-							<li><strong>touches</strong> <span id="log-prop-touches"></span></li>
-							<li><strong>pointerType</strong> <span id="log-prop-pointerType"></span></li>
-							<li><strong>center</strong> <span id="log-prop-center"></span></li>
-							<li><strong>angle</strong> <span id="log-prop-angle"></span>&deg;</li>
-							<li><strong>direction</strong> <span id="log-prop-direction"></span></li>
-							<li><strong>distance</strong> <span id="log-prop-distance"></span>px</li>
-
-							<li><strong>deltaTime</strong> <span id="log-prop-deltaTime"></span>ms</li>
-							<li><strong>deltaX</strong> <span id="log-prop-deltaX"></span>px</li>
-							<li><strong>deltaY</strong> <span id="log-prop-deltaY"></span>px</li>
-
-							<li><strong>velocityX</strong> <span id="log-prop-velocityX"></span></li>
-							<li><strong>velocityY</strong> <span id="log-prop-velocityY"></span></li>
-
-							<li><strong>scale</strong>  <span id="log-prop-scale"></span></li>
-							<li><strong>rotation</strong> <span id="log-prop-rotation"></span>&deg;</li>
-
-							<li><strong>target</strong> <span id="log-prop-target"></span></li>
-						</ul>
-					</div>
-					</div>
+				<div id="SwipeControl" class="container">
+                    <p>Swipe Here</p>
+                    <p id="SwipeEvent"><p>
 				</div>
 			</div>
 			<div id="bottom">
