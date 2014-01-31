@@ -15,6 +15,10 @@ function msg  (e) 	{ $("#DebugMsgList").append("<p>Received: "+ e.data + "</p>")
 function error(e)  	{ $("#Status").text("Error");			};
 
 $(document).ready(function(){
+    $("#CxnStatus p").remove();
+    $("#CxnStatus button").before("<p>Host:" + document.URL + "</p>");
+    $("#CxnStatus button").before("<p>Websocket:" + address + "</p>");
+    var qrcode = new QRCode(document.getElementById("CxnQR"), document.URL);
     try {
         if (address != "" ||  address != "$address") {
             var s = new WebSocket(address);

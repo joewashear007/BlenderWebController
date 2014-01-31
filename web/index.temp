@@ -18,6 +18,7 @@
 		<script src="js/hammer.min.js"></script>
 		<script src="js/hammer.fakemultitouch.js"></script>
 		<script src="js/hammer.showtouches.js"></script>
+		<script src="js/qrcode.min.js"></script>
         <script>var address = "$address";</script>
         <link rel="stylesheet" href="css/font-awesome.min.css" />
         <link rel="stylesheet" href="css/style.css" />
@@ -122,16 +123,12 @@
         <div id="PopWrap">
             <span id="PopWrapHead"><h3>Status: Good!</h3><button id="PopWrapCloseBtn" >X</button></span>
             <div id="CxnStatus">
-                <p>You are connect and ready to go!</p>
-                <p>Serverd From: 192.168.1.1:8000</p>
-                <p>Connected to: 192.168.1.1:45623</p>
+                <p>Not Connected</p>
+                <span id="CxnQR"></span>
 				<button id="CxnStatusDiscxnBtn">Disconnect</button>
             </div>
              <div id="DebugInfo">
                 <span id="DebugMsgList">
-                    <p>Connected</p>
-                    <p>Rotatet Right</p>
-                    <p>You have master lock!</p>
                 </span>
 				<button id="DebugMsgListBtn">Clear</button>
             </div>

@@ -56,6 +56,9 @@ html,body,#wrapper {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
+    outline-color: #914f00;
+    outline-style:inset;
+    outline-width:thick;
 }
 .container > p{
     color: #333;
@@ -95,7 +98,6 @@ html,body,#wrapper {
     width:100%;
     box-shadow: 0px 0px 5px #333;
 }
-
 #bottom > button {
     background: linear-gradient(to bottom, #cdd7de, #064773);
     color: white;
@@ -105,7 +107,8 @@ html,body,#wrapper {
     height: 50px;
     border: none;
     border-left: 0.1rem solid #333;
-    font-size: 2.0rem
+    font-size: 2.0rem;
+    text-shadow: 0.1rem 0.1rem 0 rgb(100,100,100);
 }
 .buttonErr{
     background: linear-gradient(to bottom, #cdd7de, #990000) !important;
@@ -115,20 +118,19 @@ html,body,#wrapper {
    background: #28597a;
    color: #ccc;
 }
+.buttonErr:hover{
+    background: #990000 !important;
+}
 #bottom > button:active {
    border-top-color: #1b435e;
    background: #1b435e;
 }
 
 /*------------- Button Control ------------------*/
-#ButtonControl{
-
-}
-
 #ButtonControl button{
     color: white;
     text-align: center;
-    text-shadow: 0.1rem 0.1rem 0 rgba(150,150,150,0.3);
+    text-shadow: 0.1rem 0.1rem 0 rgb(150,150,150);
     font-size: 2.0rem;
     font-weight: bold;
     border: none;
@@ -136,14 +138,18 @@ html,body,#wrapper {
     box-shadow: 0px 0px 5px rgba(0,0,0, 1);
     background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 75%,rgba(0,0,0,0.65) 100%);
 }
-
+#ButtonControl button:hover{
+    box-shadow : 0px 0px 5px #064773;
+}
+#ButtonControl button:active{
+    background: rgba(0,0,0,0.65);
+}
 /*------------- Swipe Control ------------------*/
 #SwipeControl{
 	display:none;
 }
 #SwipeBox{
-    height: 100%;
-    border: 0.3rem solid green;
+   
 }
 /* --------------------- Pop Messgaes -----------------*/
 #PopWrap{
@@ -159,10 +165,19 @@ html,body,#wrapper {
     z-index: 50;
     border: 0.2rem solid #333;
     box-shadow: 0px 0px 15px rgb(00,0,0);
+    overflow:scroll;
 }
 #PopWrap > div{
     margin: 0px 10px;
-    overflow: scroll;
+    overflow: auto;
+}
+#PopWrap div button{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    height: 50px;
+    font-weight: bold;
 }
 #PopWrapHead{
     width: 100%;
@@ -180,4 +195,12 @@ html,body,#wrapper {
     float:right;
     height: 50px;
     width: 50px;
+}
+#CxnQR{
+    width: 50%;
+    display: block;
+    margin: auto;
+}
+#CxnQR > img{
+    width: 100%;
 }
