@@ -65,23 +65,16 @@ $(document).ready(function(){
     var hammertime = Hammer(element, {
             prevent_default: true,
             no_mouseevents: true
-    }).on("tap", function(event) {
-            $("#SwipeEvent").text("tap");
-        }).on("swipeleft", function(event) {
-            $("#SwipeEvent").text("swipeleft");
-        }).on("swiperight", function(event) {
-            $("#SwipeEvent").text("swiperight");
-        }).on("swipedown", function(event) {
-            $("#SwipeEvent").text("swipedown");
-        }).on("swipeup", function(event) {
-            $("#SwipeEvent").text("swipeup");
-        }).on("pinchin", function(event) {
-            $("#SwipeEvent").text("pinchin");
-        }).on("pinchout", function(event) {
-            $("#SwipeEvent").text("pinchout");
-        }).on("rotate", function(event) {
-            $("#SwipeEvent").text("rotate");
-        });
+    })
+    .on("tap",          function(event) { $("#SwipeEvent").text("tap");                                 })
+    .on("dragleft",    function(event) { s.send(JSON.stringify({"Actuator":"RotateLeft", }));          })
+    .on("dragright",   function(event) { s.send(JSON.stringify({"Actuator":"RotateRight", }));         })
+    .on("dragdown",    function(event) { s.send(JSON.stringify({"Actuator":"RotateDown", }));          })
+    .on("dragup",      function(event) { s.send(JSON.stringify({"Actuator":"RotateUp", }));            })
+    .on("pinchin",      function(event) { s.send(JSON.stringify({"Actuator":"ZoomIn", }));              })
+    .on("pinchout",     function(event) { s.send(JSON.stringify({"Actuator":"ZoomOut", }));             })
+    .on("rotate",       function(event) { s.send(JSON.stringify({"Actuator":"ZRotateLeft", }));         })
+    .on("release",      function(event) { s.send(JSON.stringify({"Stop":"All", }));                     });
 
 
 });
