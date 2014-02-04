@@ -264,8 +264,10 @@ class WebSocketHttpServer():
         os.chdir(self.tempdir)
     
     def _make_webpage(self):
-        shutil.copytree( self.cwd+"/web/", self.tempdir+"/web/")
-        html = open(self.tempdir + "/web/index.html" ,"w")
+        shutil.copytree( self.cwd+"/web/js", self.tempdir+"/js/")
+        shutil.copytree( self.cwd+"/web/css/", self.tempdir+"/css/")
+        shutil.copytree( self.cwd+"/web/fonts/", self.tempdir+"/fonts/")
+        html = open(self.tempdir + "/index.html" ,"w")
         for line in open(self.cwd + "/web/index.temp", "r"):
             if line.find("$address") > 0 :
                 line = Template(line).safe_substitute(address=self.wsServer.get_address())
@@ -310,7 +312,7 @@ class WebSocketHttpServer():
             
     def launch_webpage(self):
         #Copies all the resource over to the temp dir
-        webbrowser.open(self.httpServer.get_address() + "\\web\\index.html")
+        webbrowser.open(self.httpServer.get_address() + "/index.html")
         
     def status(self):
         if self.wsServer is None or self.httpServer is None:
