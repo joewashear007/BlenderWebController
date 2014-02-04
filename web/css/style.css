@@ -6,7 +6,45 @@
  * this stuff is worth it, you can buy me a beer in return Joseph Livecchi
  * ----------------------------------------------------------------------------
  */
-*{font-family: Verdana, Verdana, Geneva, sans-serif; }
+*{
+    font-family: Verdana, Verdana, Geneva, sans-serif; 
+    text-shadow: 0.1rem 0.1rem 0 rgba(150,150,150,0.3);    
+}
+button{
+    color: white;
+    text-align: center;
+    font-size: 2.0rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 0.2rem;
+    box-shadow: 0px 0px 5px rgba(0,0,0, 1);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 75%,rgba(0,0,0,0.65) 100%);
+}
+button:hover{
+    box-shadow : 0px 0px 5px #064773;
+}
+button:active{
+    background: rgba(0,0,0,0.65);
+}
+.danger{
+     background: linear-gradient(to bottom, #FDA2A2, #990000) !important;
+     color:white;
+     font-weight:bold;
+     text-align: center;
+     border: solid 1px black;
+     font-size: 2.0rem;
+}
+.danger-button:hover{
+    background: #990000 !important;
+}
+
+.label{
+    color: #333;
+    padding: 20px 20px 0px 20px;
+    font-weight:bold;
+}
+
+
 
 html,body,#wrapper {
     height:100%;
@@ -39,7 +77,6 @@ html,body,#wrapper {
 #top h1{
     margin-left: 10px;
     font-size: 1.2rem;
-    text-shadow: 0.1rem 0.1rem 0 rgba(150,150,150,0.3);
     z-index: 0;
     display:inline-block;
 }
@@ -59,12 +96,6 @@ html,body,#wrapper {
     outline-color: #914f00;
     outline-style:inset;
     outline-width:thick;
-}
-.container > p{
-    color: #333;
-    padding: 20px 20px 0px 20px;
-    font-weight:bold;
-    text-shadow: 0.1rem 0.1rem 0 rgba(150,150,150,0.3);
 }
 .container{
     display: block;
@@ -100,27 +131,18 @@ html,body,#wrapper {
 }
 #bottom > button {
     background: linear-gradient(to bottom, #cdd7de, #064773);
-    color: white;
-    vertical-align: middle;
     float:left;
     width: 20%;
     height: 50px;
-    border: none;
     border-left: 0.1rem solid #333;
-    font-size: 2.0rem;
-    text-shadow: 0.1rem 0.1rem 0 rgb(100,100,100);
 }
-.buttonErr{
-    background: linear-gradient(to bottom, #cdd7de, #990000) !important;
-}
+
 #bottom > button:hover {
    border-top-color: #28597a;
    background: #28597a;
    color: #ccc;
 }
-.buttonErr:hover{
-    background: #990000 !important;
-}
+
 #bottom > button:active {
    border-top-color: #1b435e;
    background: #1b435e;
@@ -128,22 +150,8 @@ html,body,#wrapper {
 
 /*------------- Button Control ------------------*/
 #ButtonControl button{
-    color: white;
-    text-align: center;
-    text-shadow: 0.1rem 0.1rem 0 rgb(150,150,150);
-    font-size: 2.0rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 0.2rem;
-    box-shadow: 0px 0px 5px rgba(0,0,0, 1);
-    background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 75%,rgba(0,0,0,0.65) 100%);
 }
-#ButtonControl button:hover{
-    box-shadow : 0px 0px 5px #064773;
-}
-#ButtonControl button:active{
-    background: rgba(0,0,0,0.65);
-}
+
 /*------------- Swipe Control ------------------*/
 #SwipeControl{
 	display:none;
@@ -182,7 +190,7 @@ html,body,#wrapper {
     margin-right: auto;
     width: 90%;
     height: 50px;
-    font-weight: bold;
+    font-size: 1.0rem;
 }
 #PopWrapHead{
     width: 100%;
@@ -197,15 +205,28 @@ html,body,#wrapper {
     padding-left: 10px;
 }
 #PopWrapCloseBtn{
+    border-radius: 0px;
     float:right;
     height: 50px;
     width: 50px;
 }
+/*--------------------- Connection Status --------------------- */
+
+#CxnStatus input{
+    display: block;
+    width: 90%;
+    margin:auto;
+}
+#CxnStatus input:focus{
+    box-shadow : 0px 0px 5px #064773;
+}
 #CxnQR{
-    width: 50%;
+    width: 40%;
     display: block;
     margin: auto;
 }
 #CxnQR > img{
     width: 100%;
 }
+
+
