@@ -19,7 +19,9 @@ function close(e) 	{
 	$("#ToggleCxnStatus").addClass("danger"); 
 	$("#ErrMsg").fadeIn();
 };
-function msg  (e) 	{ $("#DebugMsgList").append("<p>Received: "+ e.data + "</p>"); };
+function msg  (e) 	{ 
+	$("#DebugMsgList").append("<p>Received: "+ e.data + "</p>"); 
+};
 function error(e)  	{ 
 	$("#DebugMsgList").append("<p>Error: "+e+"</p>"); 
 	$("#ToggleCxnStatus").addClass("danger"); 

@@ -193,14 +193,15 @@ class WebSocketTCPServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
         
     def finish_request(self, request, client_address):
         #Finish one request by instantiating RequestHandlerClass
-        self.RequestHandlerClass(request, client_address, self)
+        t = self.RequestHandlerClass(request, client_address, self)
+        self.handlers.append(t)
         
     def process_request(self, request, client_address):
         #Start a new thread to process the request
         t = threading.Thread(target = self.process_request_thread, args = (request, client_address))
         t.daemon = True
         t.start()
-        self.handlers.append(t)
+        
         
     def get_handlers(self):
         #returns the list of handlers
