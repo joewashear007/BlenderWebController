@@ -80,6 +80,12 @@ html,body,#wrapper {
     z-index: 0;
     display:inline-block;
 }
+#ErrMsg {
+    display: block;
+    margin-top: 0px;
+    z-index: 200;
+}
+
 /*------------- Middle Content ------------------*/
 #middle {
     z-index: 0;

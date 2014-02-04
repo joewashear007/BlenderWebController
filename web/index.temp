@@ -27,12 +27,11 @@
 		<!-- __PYTHON_INSERT__ -->
 	</head>
 	<body>
+		
 		<div id="wrapper">
 			<div id="top">
-				<div>
-					<h1>Blender Web Controller</h1>
-					
-				</div>
+				<h1>Blender Web Controller</h1>
+				<h2 id="ErrMsg" class="danger" >Not Connected</h2>
 			</div>
 			<div id="middle">
 				<div id="ButtonControl" class="container">
@@ -40,8 +39,7 @@
                         <div class="row">
                         <button id=RotateUp class="col col-1 ctrlBtn fa fa-arrow-up"></button>
                         </div><div class="row">
-                        <button id=RotateLeft class="col col-2 ctrlBtn fa fa-arrow-left"></button>
-                        <button id=RotateRight class="col col-2 ctrlBtn fa fa-arrow-right"></button>
+                        <button id=RotateLeft class="col col-2 ctrlBtn fa fa-arrow-left"></button><button id=RotateRight class="col col-2 ctrlBtn fa fa-arrow-right"></button>
                         </div><div class="row">
                         <button id=RotateDown class="col col-1 ctrlBtn fa fa-arrow-down"></button>
                         </div><div class="row">
@@ -67,7 +65,7 @@
         <div id="PopWrap">
             <span id="PopWrapHead"><h3>Status: Good!</h3><button id="PopWrapCloseBtn" >X</button></span>
             <div id="CxnStatus">
-                <p class="danger" >Not Connected</p>
+                
                 <span id="CxnQR"></span>
                 <p>
                 <label for="CxnHTTPAddress" class="label">Address of Host</label> 
@@ -75,7 +73,7 @@
                 <label for="CxnWSAddress" class="label">Address of Websocket</label> 
                 <input name="wsAddr" type="text" id="CxnWSAddress" />
                 </p>
-				<button id="CxnStatusDiscxnBtn">Disconnect</button>
+				<button id="ToggleCxnBtn">Connect</button>
             </div>
              <div id="DebugInfo">
                 <span id="DebugMsgList">

@@ -8,29 +8,53 @@
  */
  
 Hammer.plugins.fakeMultitouch();
-
-function open (e) 	{ $("#DebugMsgList").append("<p>Connect!</p>"); $("#ToggleCxnStatus").removeClass("danger"); };
-function close(e) 	{ $("#DebugMsgList").append("<p>Connection Closed!</p>"); $("#ToggleCxnStatus").addClass("danger"); };
+var s = null;
+function open (e) 	{ 
+	$("#DebugMsgList").append("<p>Connect!</p>"); 
+	$("#ToggleCxnStatus").removeClass("danger"); 
+	$("#ErrMsg").fadeOut();
+};
+function close(e) 	{ 
+	$("#DebugMsgList").append("<p>Connection Closed!</p>"); 
+	$("#ToggleCxnStatus").addClass("danger"); 
+	$("#ErrMsg").fadeIn();
+};
 function msg  (e) 	{ $("#DebugMsgList").append("<p>Received: "+ e.data + "</p>"); };
-function error(e)  	{ $("#Status").text("Error");			};
+function error(e)  	{ 
+	$("#DebugMsgList").append("<p>Error: "+e+"</p>"); 
+	$("#ToggleCxnStatus").addClass("danger"); 
+	$("#ErrMsg").text("Err!").fadeIn();	
+};
+function toggleConnection(){
+	if(s){
+		s.close(1000, "Try to Close");
+		$("#ToggleCxnBtn").text("Connect");
+		s = null;
+	}else{
+		try {
+			if (address != "" ||  address != "$address") {
+				s = new WebSocket(address);
+				s.onopen = open;
+				s.onclose = close;
+				s.onmessage = msg;
+				s.onerror = error;
+				$("#ToggleCxnBtn").text("Disconnect");
+			}
+		} catch (ex) {
+			error(ex);
+		}
+	}
+}
+
 
 $(document).ready(function(){
-    //$("#CxnStatus p").remove();
     $("#CxnHTTPAddress").val(document.URL);
     $("#CxnWSAddress").val(address);
+	toggleConnection();
+	
+	
     var qrcode = new QRCode(document.getElementById("CxnQR"), document.URL);
-    try {
-        if (address != "" ||  address != "$address") {
-            var s = new WebSocket(address);
-            s.onopen = open;
-            s.onclose = close;
-            s.onmessage = msg;
-            s.onerror = error;
-        }
-    } catch (ex) {
-        console.log("Socket exception:", ex);
-        $("#Status").text("Error");
-    }
+    
     $(".ctrlBtn").mousedown( function () {
         var data = {"Actuator":$(this).attr("id"), };
         s.send(JSON.stringify(data));
@@ -53,7 +77,7 @@ $(document).ready(function(){
     $("#ResetModel").mouseup(function() { s.send(JSON.stringify({"Reset":true}));});
     $("#PopWrapCloseBtn").click(function(){ $("#PopWrap").fadeOut(); });
     $("#DebugMsgListBtn").click(function(){ $("#DebugMsgList").empty(); });
-    $("#CxnStatusDiscxnBtn").click(function(){ s.close(1000, "Try to Close"); });
+    $("#ToggleCxnBtn").click( toggleConnection );
     $("#ToggleControl").click( function() {
         $("#SwipeControl").fadeToggle();
         $("#ButtonControl").fadeToggle();
