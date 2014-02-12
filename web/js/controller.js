@@ -10,6 +10,7 @@
 /* -------------------------- Global Varibles ---------------------------- */ 
 Hammer.plugins.fakeMultitouch();
 var s = null;
+var somekeyDown = 0;
 
 /* -------------------------- Websocket Fucntions ---------------------------- 
  Functions used to handel the connection, opening, closing sendgin, and reciveing of the websocket
@@ -127,16 +128,22 @@ $(document).ready(function(){
     //Keyboard Events
     $(document).keydown( function(event) {
         //Left Arrow
-        if ( event.which == 37 ) { event.preventDefault(); send("Actuator", "RotateLeft" ); }
+        if ( event.which == 37 && !somekeyDown)
+            { event.preventDefault(); somekeyDown = true; event.shiftKey ? send("Actuator", "ZRotateLeft" ) : send("Actuator", "RotateLeft" ); }
         // Up Arrow 
-        if ( event.which == 38 ) { event.preventDefault(); send("Actuator", "RotateUp" ); }
+        if ( event.which == 38 && !somekeyDown) 
+            { event.preventDefault(); somekeyDown = true; event.shiftKey ? send("Actuator", "ZoomOut" ) :send("Actuator", "RotateUp" ); }
         //Right Arrow
-        if ( event.which == 39 ) { event.preventDefault(); send("Actuator", "RotateRight" ); }
+        if ( event.which == 39 && !somekeyDown) 
+            { event.preventDefault(); somekeyDown = true; event.shiftKey ? send("Actuator", "ZRotateRight" ) :send("Actuator", "RotateRight" ); }
         //Down Arrow    
-        if ( event.which == 40 ) { event.preventDefault(); send("Actuator", "RotateDown" ); }
-
+        if ( event.which == 40 && !somekeyDown) 
+            { event.preventDefault(); somekeyDown = true; event.shiftKey ? send("Actuator", "ZoomIn" ) :send("Actuator", "RotateDown" ); }
+        // Esccape Keyboard
+        if ( event.which == 27 && !somekeyDown) 
+            { somekeyDown = true; toggleConnection(); }   
     });
-    $(document).keyup( function(event) { send("Stop", "All");});
+    $(document).keyup( function(event) { send("Stop", "All"); somekeyDown = false; });
 });
 
 

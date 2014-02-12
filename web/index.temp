@@ -54,7 +54,7 @@
 				</div>
 			</div>
 			<div id="bottom">
-                <button id="ResetModel" class="fa fa-refresh "></button>
+                <button id="ResetModel" class="fa fa-retweet "></button>
                 <button id="ToggleControl" class="fa fa-hand-o-right"></button>
 				<button id="MasterLock" class="fa fa-lock"></button>
                 <button id="ToggleDebugInfo" class="fa fa-list-ul"></button>	
