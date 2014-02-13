@@ -12,6 +12,9 @@ Hammer.plugins.fakeMultitouch();
 var s = null;
 var somekeyDown = 0;
 var hasLock = false;
+
+window.onbeforeunload = close;
+
 /* -------------------------- Websocket Fucntions ---------------------------- 
  Functions used to handel the connection, opening, closing sendgin, and reciveing of the websocket
 */ 
@@ -27,6 +30,11 @@ function close(e) 	{
 	$("#ErrMsg").text("Not Connected").fadeIn();
 };
 function msg  (e) 	{ 
+    msg_data = JSON.parse(e.data);
+    if (msg_data.hasOwnProperty("LOCK")){
+        $("#MasterLock").toggleClass("danger");
+        msg_data["LOCK"] ? hasLock = true: hasLock = false;
+    }
 	$("#DebugMsgList").append("<p>Received: "+ e.data + "</p>");
 };
 function error(e)  	{ 
@@ -68,17 +76,9 @@ function toggleConnection(){
 }
 function toggleLock(){
     if(hasLock){
-        if(s){
-           s.send("LET_LOCK_GO");
-        }else{
-            $("#DebugMsgList").append("<p>Event: LET_LOCK_GO </p>");
-        }
+        send("LOCK", false);
     }else{
-        if(s){
-           s.send("GIVE_ME_LOCK");
-        }else{
-            $("#DebugMsgList").append("<p>Event: GIVE_ME_LOCK</p>");
-        }
+        send("LOCK", true);
     }
 }
 /* -------------------------- Document Ready Function ---------------------------- 

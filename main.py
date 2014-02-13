@@ -32,7 +32,8 @@ def main():
             server.stop()
             run = False
         else:
-            server.send(i)
+            if i:
+                server.send(i)
     print("Good Bye")
 
 if __name__ == '__main__':

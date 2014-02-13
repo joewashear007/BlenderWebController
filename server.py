@@ -20,6 +20,7 @@ import hashlib
 import struct
 import shutil
 import webbrowser
+import json
 from io import StringIO
 from string import Template
 
@@ -33,21 +34,28 @@ class WebSocketHandler(socketserver.BaseRequestHandler):
 
 #-------------- Over ride these  ----------------------------------------
     def on_message(self, msg):
+        #msg is a array, decoded from JSON
         #Override this function to handle the input from webcontroller
         print(msg)
-        self.send_message("Got :" + msg)
+        #self.send_message("Got :" + ast.literal_eval(msg))
         
     def handle_message(self, msg):    
-        #there is no lock or the current thread has it
-        if not self.lock_id or self.lock_id == threading.current_thread().ident:
-            if msg == "GIVE_ME_LOCK":
-                self.lock_id = threading.current_thread().ident
-                self.send_message("LOCK_GIVING");
-            elif msg == "LET_LOCK_GO":
-                self.lock_id = None
-                self.send_message("LOCK_RELEASED");
-            else:
-                self.on_message(msg)
+        #only the user with the lock can control
+        if self._hasLock():
+            msg_data = json.loads(msg)
+            if "LOCK" in msg_data:
+                if msg_data["LOCK"]:
+                    WebSocketHandler.lock_id = threading.current_thread().ident
+                    self.send_json(dict(LOCK=True));
+                    print("Locking to thread: " ,WebSocketHandler.lock_id, "   :   ", threading.current_thread().ident)
+                else:
+                    WebSocketHandler.lock_id = None
+                    self.send_json(dict(LOCK=False));
+            #elif "MESSAGE" in msg_data:
+            #    self.on_message(msg["MESSAGE"])
+            #else:
+            #   print("Unknown CMD, trashing: ", msg_data)
+            self.on_message(msg_data)
         else:
             print("Locked, trashing: ", msg) 
             
@@ -56,12 +64,23 @@ class WebSocketHandler(socketserver.BaseRequestHandler):
         self.send_message("Server: Closing Connection")
         
     def send_message(self, message):
-        self.request.sendall(self._pack(message))
+        print("Sending: ", message)
+        self.send_json(dict(MESSAGE=message))
+        
+    def send_json(self, data):
+        #sends a python dict as a json object
+        self.request.sendall(self._pack(json.dumps(data)))
 #-------------------------------------------------------------------
 
     magic = b'258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
     lock_id = None
 
+    def _hasLock(self):
+        #there is no lock or the current thread has it
+        return (not WebSocketHandler.lock_id) or (WebSocketHandler.lock_id == threading.current_thread().ident)
+    
+    
+    
     def setup(self):
         #Overwrtien function from socketserver
         #Init some varibles
