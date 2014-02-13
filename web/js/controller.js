@@ -11,7 +11,7 @@
 Hammer.plugins.fakeMultitouch();
 var s = null;
 var somekeyDown = 0;
-
+var hasLock = false;
 /* -------------------------- Websocket Fucntions ---------------------------- 
  Functions used to handel the connection, opening, closing sendgin, and reciveing of the websocket
 */ 
@@ -66,7 +66,21 @@ function toggleConnection(){
 		}
 	}
 }
-
+function toggleLock(){
+    if(hasLock){
+        if(s){
+           s.send("LET_LOCK_GO");
+        }else{
+            $("#DebugMsgList").append("<p>Event: LET_LOCK_GO </p>");
+        }
+    }else{
+        if(s){
+           s.send("GIVE_ME_LOCK");
+        }else{
+            $("#DebugMsgList").append("<p>Event: GIVE_ME_LOCK</p>");
+        }
+    }
+}
 /* -------------------------- Document Ready Function ---------------------------- 
  Main function, Handels all events, swipe, and keybord control
  Makes the QR code
@@ -93,6 +107,7 @@ $(document).ready(function(){
         $("#PopWrap").fadeIn();
     });
     $("#ToggleCxnBtn")   .click( toggleConnection );
+    $("#MasterLock")     .click( toggleLock ); 
     $("#PopWrapCloseBtn").click( function() { $("#PopWrap").fadeOut();      });
     $("#DebugMsgListBtn").click( function() { $("#DebugMsgList").empty();   });
     $("#ToggleControl")  .click( function() {

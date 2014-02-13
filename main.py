@@ -10,24 +10,30 @@
  # */
  
 from server import WebSocketHttpServer
-from server import WebSocketsHandler
+from server import WebSocketHandler
 
 def main():
-	print()
-	print()
-	print("*** Starting Websocket Server ***")
-	print()
-	print("Press Any Key To Quit...")
-	print()
-	server = WebSocketHttpServer(WebSocketsHandler, http_address=('',8000))
-	if server.start():
-		print()
-		server.launch_webpage()
-	else:
-		print("Error Starting Server")
-	i = input()
-	server.stop()
-	print("Good Bye")
+    run = True
+    print()
+    print()
+    print("*** Starting Websocket Server ***")
+    print()
+    print("Press Any Key To Quit...")
+    print()
+    server = WebSocketHttpServer(WebSocketHandler, http_address=('',8000))
+    if server.start():
+        print()
+        server.launch_webpage()
+    else:
+        print("Error Starting Server")
+    while run:
+        i = input("Enter Command:")
+        if i == "q":
+            server.stop()
+            run = False
+        else:
+            server.send(i)
+    print("Good Bye")
 
 if __name__ == '__main__':
-	main()
+    main()

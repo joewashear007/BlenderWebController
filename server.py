@@ -29,7 +29,7 @@ class QuiteCGIHandler(http.server.CGIHTTPRequestHandler):
         pass #Hides all messages for Request Handler
 
 # Inherit this class to handle the websocket connection
-class WebSocketsHandler(socketserver.BaseRequestHandler):
+class WebSocketHandler(socketserver.BaseRequestHandler):
 
 #-------------- Over ride these  ----------------------------------------
     def on_message(self, msg):
@@ -37,6 +37,20 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
         print(msg)
         self.send_message("Got :" + msg)
         
+    def handle_message(self, msg):    
+        #there is no lock or the current thread has it
+        if not self.lock_id or self.lock_id == threading.current_thread().ident:
+            if msg == "GIVE_ME_LOCK":
+                self.lock_id = threading.current_thread().ident
+                self.send_message("LOCK_GIVING");
+            elif msg == "LET_LOCK_GO":
+                self.lock_id = None
+                self.send_message("LOCK_RELEASED");
+            else:
+                self.on_message(msg)
+        else:
+            print("Locked, trashing: ", msg) 
+            
     def on_close(self):
         print("Server: Closing Connection for ", self.client_address)
         self.send_message("Server: Closing Connection")
@@ -46,12 +60,15 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
 #-------------------------------------------------------------------
 
     magic = b'258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
+    lock_id = None
 
     def setup(self):
         #Overwrtien function from socketserver
         #Init some varibles
         print("\nConnection Established", self.client_address)
         self.closeHandle = False
+        self.alive = threading.Event()
+        self.alive.set()
     
     def handle(self):
         #handles the handshake with the server
@@ -60,10 +77,11 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
             self.handshake()
         except:
             print("HANDSHAKE ERROR! - Try using FireFox")
-            return
-            
+            #return
+           
+    def run(self):
         #runs the handler in a thread
-        while 1:
+        while self.alive.isSet():
             msg = self.request.recv(2)
             if not msg or self.closeHandle or msg[0] == 136: 
                 print("Received Closed")
@@ -77,7 +95,7 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
             decoded = ""
             for char in self.request.recv(length):
                 decoded += chr(char ^ masks[len(decoded) % 4])
-            self.on_message(decoded)
+            self.handle_message(decoded)
         self.close()
         
     def close(self, message="Cxn Closed"):
@@ -172,7 +190,7 @@ class HTTPServer(threading.Thread):
 
     def run(self):
         #Overwrtien from Threading.Thread
-        if self.httpd is not None:
+        if self.httpd is not None :
             self.httpd.serve_forever()
         else:
             print("Error! - HTTP Server is NULL")
@@ -189,19 +207,22 @@ class WebSocketTCPServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
     def __init__(self, server_address, RequestHandlerClass, bind_and_activate=True):
         socketserver.TCPServer.__init__(self, server_address, RequestHandlerClass, bind_and_activate)
         self.handlers = []
-        self.daemon_threads = False
+        self.daemon_threads = True
         
     def finish_request(self, request, client_address):
         #Finish one request by instantiating RequestHandlerClass
+        print("launching a new request")
         t = self.RequestHandlerClass(request, client_address, self)
+        print("Request:" , t)
         self.handlers.append(t)
+        print("Num request:" ,len(self.handlers))
+        t.run()
         
-    def process_request(self, request, client_address):
-        #Start a new thread to process the request
-        t = threading.Thread(target = self.process_request_thread, args = (request, client_address))
-        t.daemon = True
-        t.start()
-        
+    # def process_request(self, request, client_address):
+        # #Start a new thread to process the request
+        # t = threading.Thread(target = self.process_request_thread, args = (request, client_address))
+        # t.daemon = True
+        # t.start() 
         
     def get_handlers(self):
         #returns the list of handlers
@@ -238,6 +259,9 @@ class WebsocketServer(threading.Thread):
     def stop(self):
         print("Killing WebSocket Server ...")
         if self.wsd is not None:
+            for h in self.wsd.handlers:
+                h.alive.clear()
+                
             self.wsd.shutdown()
         print("Done")
         
@@ -245,8 +269,12 @@ class WebsocketServer(threading.Thread):
         #returns the list of handlers
         return self.wsd.get_handlers()
         
+    def send(self, msg):
+        for h in self.wsd.get_handlers():
+            h.send_message(msg)
+        
 class WebSocketHttpServer():
-    def __init__(self, handler_class, http_address=('',0), ws_address=('',0) ):
+    def __init__(self, handler_class = WebSocketHandler, http_address=('',0), ws_address=('',0) ):
         self.http_address = http_address
         self.ws_address = ws_address
         self.handler = handler_class
@@ -310,7 +338,10 @@ class WebSocketHttpServer():
             print(e)
             print()
             return False
-            
+    
+    def send(self, msg):
+        self.wsServer.send(msg)
+    
     def launch_webpage(self):
         #Copies all the resource over to the temp dir
         webbrowser.open(self.httpServer.get_address() + "/index.html")
