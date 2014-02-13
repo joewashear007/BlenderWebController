@@ -43,7 +43,18 @@ button:active{
     padding: 20px 20px 0px 20px;
     font-weight:bold;
 }
-
+.disabled{
+    background: #ccc;
+    color: #999;
+    box-shadow: none;
+}
+.disabled:hover{
+    box-shadow: none;
+}
+.disabled:active{
+    box-shadow: none;
+    background: #ccc;
+}
 
 
 html,body,#wrapper {

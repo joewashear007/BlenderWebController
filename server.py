@@ -43,20 +43,21 @@ class WebSocketHandler(socketserver.BaseRequestHandler):
         #only the user with the lock can control
         if self._hasLock():
             msg_data = json.loads(msg)
-            if "LOCK" in msg_data:
-                if msg_data["LOCK"]:
+            if "MASTER_REQUEST" in msg_data:
+                if msg_data["MASTER_REQUEST"]:
                     WebSocketHandler.lock_id = threading.current_thread().ident
-                    self.send_json(dict(LOCK=True));
+                    self.send_json(dict(MASTER_STATUS=True));
                     print("Locking to thread: " ,WebSocketHandler.lock_id, "   :   ", threading.current_thread().ident)
                 else:
                     WebSocketHandler.lock_id = None
-                    self.send_json(dict(LOCK=False));
+                    self.send_json(dict(MASTER_STATUS=False));
             #elif "MESSAGE" in msg_data:
             #    self.on_message(msg["MESSAGE"])
             #else:
             #   print("Unknown CMD, trashing: ", msg_data)
             self.on_message(msg_data)
         else:
+            self.send_json(dict(SLAVE=True));
             print("Locked, trashing: ", msg) 
             
     def on_close(self):

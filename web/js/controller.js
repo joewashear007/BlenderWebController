@@ -11,14 +11,16 @@
 Hammer.plugins.fakeMultitouch();
 var s = null;
 var somekeyDown = 0;
-var hasLock = false;
+var isMaster = false;
 
 window.onbeforeunload = close;
 
 /* -------------------------- Websocket Fucntions ---------------------------- 
  Functions used to handel the connection, opening, closing sendgin, and reciveing of the websocket
 */ 
-
+function log(msg){
+    $("#DebugMsgList").append("<p>log: "+ msg + "</p>");
+}
 function open (e) 	{ 
 	$("#DebugMsgList").append("<p>Connect!</p>"); 
 	$("#ToggleCxnStatus").removeClass("danger"); 
@@ -31,11 +33,12 @@ function close(e) 	{
 };
 function msg  (e) 	{ 
     msg_data = JSON.parse(e.data);
-    if (msg_data.hasOwnProperty("LOCK")){
-        $("#MasterLock").toggleClass("danger");
-        msg_data["LOCK"] ? hasLock = true: hasLock = false;
+    if (msg_data.hasOwnProperty("SLAVE")){ toggleSlave(msg_data["SLAVE"]); }
+    if (msg_data.hasOwnProperty("MASTER_STATUS")){
+        isMaster = msg_data["MASTER_STATUS"];
+        styleMaster();
     }
-	$("#DebugMsgList").append("<p>Received: "+ e.data + "</p>");
+	log(e.data);
 };
 function error(e)  	{ 
 	$("#DebugMsgList").append("<p>Error: "+e+"</p>"); 
@@ -52,7 +55,7 @@ function send(key,msg){
         $("#DebugMsgList").append("<p>Event: "+ data + "</p>");
     }
 }
-function toggleConnection(){
+function toggleConnection() {
     //Opens and closes a conenction using the address in #CxnWSAddress
 	if(s){
 		s.close(1000, "Try to Close");
@@ -74,13 +77,31 @@ function toggleConnection(){
 		}
 	}
 }
-function toggleLock(){
-    if(hasLock){
-        send("LOCK", false);
+function toggleLockCommand()    {    send("MASTER_REQUEST", !isMaster );  }
+function toggleSlave(locked)    {   
+    //Toogle the control of all commands with locked status
+    if(locked){
+        //$(".ctrlBtn").attr("disabled", true).addClass("disabled");
+        $(".ctrlBtn").addClass("disabled");
+        //$("#MasterLock").addClass("danger");
+        $("#ErrMsg").text("Locked").fadeIn();	
     }else{
-        send("LOCK", true);
+        //$(".ctrlBtn").attr("disabled", false).removeClass("disabled");
+        $(".ctrlBtn").removeClass("disabled");
+        //$("#MasterLock").removeClass("danger");
+        $("#ErrMsg").text("Locked").fadeOut();
     }
 }
+function styleMaster(){
+    if(isMaster){
+        log("You are now Master"); 
+        $("#MasterLock").addClass("danger");
+    }else{
+        $("#MasterLock").removeClass("danger");
+    }
+    
+}
+
 /* -------------------------- Document Ready Function ---------------------------- 
  Main function, Handels all events, swipe, and keybord control
  Makes the QR code
@@ -107,7 +128,7 @@ $(document).ready(function(){
         $("#PopWrap").fadeIn();
     });
     $("#ToggleCxnBtn")   .click( toggleConnection );
-    $("#MasterLock")     .click( toggleLock ); 
+    $("#MasterLock")     .click( toggleLockCommand ); 
     $("#PopWrapCloseBtn").click( function() { $("#PopWrap").fadeOut();      });
     $("#DebugMsgListBtn").click( function() { $("#DebugMsgList").empty();   });
     $("#ToggleControl")  .click( function() {
