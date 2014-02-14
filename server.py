@@ -47,10 +47,12 @@ class WebSocketHandler(socketserver.BaseRequestHandler):
                 if msg_data["MASTER_REQUEST"]:
                     WebSocketHandler.lock_id = threading.current_thread().ident
                     self.send_json(dict(MASTER_STATUS=True));
-                    print("Locking to thread: " ,WebSocketHandler.lock_id, "   :   ", threading.current_thread().ident)
+                    print("Locking to thread: " ,WebSocketHandler.lock_id, "   :   ", self.id)
+                    self.broadcast_all(dict(SLAVE=True))
                 else:
                     WebSocketHandler.lock_id = None
-                    self.send_json(dict(MASTER_STATUS=False));
+                    self.send_json(dict(MASTER_STATUS=False))
+                    self.broadcast_all(dict(SLAVE=False))
             #elif "MESSAGE" in msg_data:
             #    self.on_message(msg["MESSAGE"])
             #else:
@@ -71,14 +73,23 @@ class WebSocketHandler(socketserver.BaseRequestHandler):
     def send_json(self, data):
         #sends a python dict as a json object
         self.request.sendall(self._pack(json.dumps(data)))
+        
+    def broadcast_all(self, data):
+        #send a araay converted into JSON to every thread
+        for t in WebSocketHandler.connections:
+            if t.id == self.id:
+                continue
+            t.send_json(data)
+    
 #-------------------------------------------------------------------
 
     magic = b'258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
     lock_id = None
+    connections = []
 
     def _hasLock(self):
         #there is no lock or the current thread has it
-        return (not WebSocketHandler.lock_id) or (WebSocketHandler.lock_id == threading.current_thread().ident)
+        return (not WebSocketHandler.lock_id) or (WebSocketHandler.lock_id == self.id)
     
     
     
@@ -87,8 +98,10 @@ class WebSocketHandler(socketserver.BaseRequestHandler):
         #Init some varibles
         print("\nConnection Established", self.client_address)
         self.closeHandle = False
+        self.id = threading.current_thread().ident
         self.alive = threading.Event()
         self.alive.set()
+        WebSocketHandler.connections.append(self)
     
     def handle(self):
         #handles the handshake with the server
@@ -116,6 +129,9 @@ class WebSocketHandler(socketserver.BaseRequestHandler):
             for char in self.request.recv(length):
                 decoded += chr(char ^ masks[len(decoded) % 4])
             self.handle_message(decoded)
+            
+            #WebSocketHandler.broadcast_all.wait(0.01)
+            
         self.close()
         
     def close(self, message="Cxn Closed"):
