@@ -20,6 +20,7 @@ import hashlib
 import struct
 import shutil
 import webbrowser
+import json
 from io import StringIO
 from string import Template
 
@@ -29,29 +30,78 @@ class QuiteCGIHandler(http.server.CGIHTTPRequestHandler):
         pass #Hides all messages for Request Handler
 
 # Inherit this class to handle the websocket connection
-class WebSocketsHandler(socketserver.BaseRequestHandler):
+class WebSocketHandler(socketserver.BaseRequestHandler):
 
 #-------------- Over ride these  ----------------------------------------
     def on_message(self, msg):
+        #msg is a array, decoded from JSON
         #Override this function to handle the input from webcontroller
         print(msg)
-        self.send_message("Got :" + msg)
+        #self.send_message("Got :" + ast.literal_eval(msg))
         
+    def handle_message(self, msg):    
+        #only the user with the lock can control
+        if self._hasLock():
+            msg_data = json.loads(msg)
+            if "MASTER_REQUEST" in msg_data:
+                if msg_data["MASTER_REQUEST"]:
+                    WebSocketHandler.lock_id = threading.current_thread().ident
+                    self.send_json(dict(MASTER_STATUS=True));
+                    print("Locking to thread: " ,WebSocketHandler.lock_id, "   :   ", self.id)
+                    self.broadcast_all(dict(SLAVE=True))
+                else:
+                    WebSocketHandler.lock_id = None
+                    self.send_json(dict(MASTER_STATUS=False))
+                    self.broadcast_all(dict(SLAVE=False))
+            #elif "MESSAGE" in msg_data:
+            #    self.on_message(msg["MESSAGE"])
+            #else:
+            #   print("Unknown CMD, trashing: ", msg_data)
+            self.on_message(msg_data)
+        else:
+            self.send_json(dict(SLAVE=True));
+            print("Locked, trashing: ", msg) 
+            
     def on_close(self):
         print("Server: Closing Connection for ", self.client_address)
         self.send_message("Server: Closing Connection")
         
     def send_message(self, message):
-        self.request.sendall(self._pack(message))
+        print("Sending: ", message)
+        self.send_json(dict(MESSAGE=message))
+        
+    def send_json(self, data):
+        #sends a python dict as a json object
+        self.request.sendall(self._pack(json.dumps(data)))
+        
+    def broadcast_all(self, data):
+        #send a araay converted into JSON to every thread
+        for t in WebSocketHandler.connections:
+            if t.id == self.id:
+                continue
+            t.send_json(data)
+    
 #-------------------------------------------------------------------
 
     magic = b'258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
+    lock_id = None
+    connections = []
 
+    def _hasLock(self):
+        #there is no lock or the current thread has it
+        return (not WebSocketHandler.lock_id) or (WebSocketHandler.lock_id == self.id)
+    
+    
+    
     def setup(self):
         #Overwrtien function from socketserver
         #Init some varibles
         print("\nConnection Established", self.client_address)
         self.closeHandle = False
+        self.id = threading.current_thread().ident
+        self.alive = threading.Event()
+        self.alive.set()
+        WebSocketHandler.connections.append(self)
     
     def handle(self):
         #handles the handshake with the server
@@ -60,10 +110,11 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
             self.handshake()
         except:
             print("HANDSHAKE ERROR! - Try using FireFox")
-            return
-            
+            #return
+           
+    def run(self):
         #runs the handler in a thread
-        while 1:
+        while self.alive.isSet():
             msg = self.request.recv(2)
             if not msg or self.closeHandle or msg[0] == 136: 
                 print("Received Closed")
@@ -77,7 +128,10 @@ class WebSocketsHandler(socketserver.BaseRequestHandler):
             decoded = ""
             for char in self.request.recv(length):
                 decoded += chr(char ^ masks[len(decoded) % 4])
-            self.on_message(decoded)
+            self.handle_message(decoded)
+            
+            #WebSocketHandler.broadcast_all.wait(0.01)
+            
         self.close()
         
     def close(self, message="Cxn Closed"):
@@ -172,7 +226,7 @@ class HTTPServer(threading.Thread):
 
     def run(self):
         #Overwrtien from Threading.Thread
-        if self.httpd is not None:
+        if self.httpd is not None :
             self.httpd.serve_forever()
         else:
             print("Error! - HTTP Server is NULL")
@@ -189,19 +243,22 @@ class WebSocketTCPServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
     def __init__(self, server_address, RequestHandlerClass, bind_and_activate=True):
         socketserver.TCPServer.__init__(self, server_address, RequestHandlerClass, bind_and_activate)
         self.handlers = []
-        self.daemon_threads = False
+        self.daemon_threads = True
         
     def finish_request(self, request, client_address):
         #Finish one request by instantiating RequestHandlerClass
+        print("launching a new request")
         t = self.RequestHandlerClass(request, client_address, self)
+        print("Request:" , t)
         self.handlers.append(t)
+        print("Num request:" ,len(self.handlers))
+        t.run()
         
-    def process_request(self, request, client_address):
-        #Start a new thread to process the request
-        t = threading.Thread(target = self.process_request_thread, args = (request, client_address))
-        t.daemon = True
-        t.start()
-        
+    # def process_request(self, request, client_address):
+        # #Start a new thread to process the request
+        # t = threading.Thread(target = self.process_request_thread, args = (request, client_address))
+        # t.daemon = True
+        # t.start() 
         
     def get_handlers(self):
         #returns the list of handlers
@@ -238,6 +295,9 @@ class WebsocketServer(threading.Thread):
     def stop(self):
         print("Killing WebSocket Server ...")
         if self.wsd is not None:
+            for h in self.wsd.handlers:
+                h.alive.clear()
+                
             self.wsd.shutdown()
         print("Done")
         
@@ -245,8 +305,12 @@ class WebsocketServer(threading.Thread):
         #returns the list of handlers
         return self.wsd.get_handlers()
         
+    def send(self, msg):
+        for h in self.wsd.get_handlers():
+            h.send_message(msg)
+        
 class WebSocketHttpServer():
-    def __init__(self, handler_class, http_address=('',0), ws_address=('',0) ):
+    def __init__(self, handler_class = WebSocketHandler, http_address=('',0), ws_address=('',0) ):
         self.http_address = http_address
         self.ws_address = ws_address
         self.handler = handler_class
@@ -310,7 +374,10 @@ class WebSocketHttpServer():
             print(e)
             print()
             return False
-            
+    
+    def send(self, msg):
+        self.wsServer.send(msg)
+    
     def launch_webpage(self):
         #Copies all the resource over to the temp dir
         webbrowser.open(self.httpServer.get_address() + "/index.html")
