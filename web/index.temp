@@ -12,23 +12,84 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no" />
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1" />
 		<title>BlenderWebController</title>
 		<script src="js/jquery-1.8.2.min.js"></script>
+		<script src="js/jquery.mobile-1.4.1.min.js"></script>
 		<script src="js/hammer.min.js"></script>
 		<script src="js/hammer.fakemultitouch.js"></script>
 		<script src="js/hammer.showtouches.js"></script>
 		<script src="js/qrcode.min.js"></script>
         <script>var address = "$address";</script>
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css" />
+        <link rel="stylesheet" href="css/jquery.mobile.icons-1.4.1.min.css" />
         <link rel="stylesheet" href="css/font-awesome.min.css" />
         <link rel="stylesheet" href="css/style.css" />
 		<script src="js/controller.js"></script> 
-        
+        <script>
+             $(function(){$("#mypanel").panel();});
+        </script>
 		<!-- __PYTHON_INSERT__ -->
 	</head>
 	<body>
-		
-		<div id="wrapper">
+        <div data-role="panel" id="mypanel">
+            <!-- panel content goes here -->
+            <p><a href="#foo">Foo</a></p>
+            <p><a href="#bar">Bar</a></p>
+            <a href="#my-header" data-rel="close">Close panel</a>
+        </div><!-- /panel -->
+    
+		<div data-role="page" id="foo">
+            <div data-role="header">
+                <a href="#mypanel" class="ui-btn ui-shadow ui-corner-all">Open</a>
+                <h1>Blender Web Controller</h1>
+            </div><!-- /header -->
+
+            <div role="main" class="ui-content">
+                <div class="ui-grid-a ui-responsive">
+                    <div class="ui-block-a">
+                        <div class="ui-grid-solo">
+                            <div class="ui-block-a"><a href="#" id=RotateUp class="ui-btn ui-shadow ui-corner-all fa fa-arrow-up ctrlBtn"></a></div>
+                        </div>
+                        <div class="ui-grid-a">
+                            <div class="ui-block-a"><a href="#" id=RotateLeft class="ui-btn ui-shadow ui-corner-all fa fa-arrow-left ctrlBtn"></a></div>
+                            <div class="ui-block-b"><a href="#" id=RotateRight class="ui-btn ui-shadow ui-corner-all fa fa-arrow-right ctrlBtn"></a></div>
+                        </div>
+                        <div class="ui-grid-solo">
+                            <div class="ui-block-a"><a href="#" id=RotateDown class="ui-btn ui-shadow ui-corner-all fa fa-arrow-down ctrlBtn"></a></div>
+                        </div>
+                    </div>
+                    <div class=" ui-block-b ui-grid-a ui-responsive">
+                        <div class="ui-block-a"><a href="#" id=ZoomIn class="ui-btn ui-shadow ui-corner-all fa fa-plus ctrlBtn"></a></div>
+                        <div class="ui-block-b"><a href="#" id=ZoomOut class="ui-btn ui-shadow ui-corner-all fa fa-minus ctrlBtn"></a></div>
+                    </div>
+                     <div class=" ui-block-b ui-grid-a ui-responsive">
+                        <div class="ui-block-a"><a href="#" id=ZRotateLeft class="ui-btn ui-shadow ui-corner-all fa fa-repeat ctrlBtn"></a></div>
+                        <div class="ui-block-b"><a href="#" id=ZRotateRight class="ui-btn ui-shadow ui-corner-all fa fa-undo ctrlBtn"></a></div>
+                    </div>
+                </div>
+
+            </div><!-- /content -->
+        </div><!-- /page -->
+    
+    
+        <!-- Start of second page -->
+        <div data-role="page" id="bar">
+
+            <div data-role="header">
+                <a href="#mypanel" class="ui-btn ui-shadow ui-corner-all">Open</a>
+                <h1>BAr</h1>
+            </div><!-- /header -->
+
+            <div role="main" class="ui-content">
+                <p>I'm the second in the source order so I'm hidden when the page loads. I'm just shown if a link that references my id is beeing clicked.</p>
+                <p><a href="#foo">Back to foo</a></p>
+            </div><!-- /content -->
+        </div><!-- /page -->
+
+        
+        
+		<div id="wrapper" style="display:none;">
 			<div id="top">
 				<h1>Blender Web Controller</h1>
 				<h2 id="ErrMsg" class="danger" >Not Connected</h2>
@@ -81,9 +142,9 @@
 				<button id="DebugMsgListBtn">Clear</button>
             </div>
         </div>
-		<script>
-            
-        </script>
+        
+        
+		
 	</body>
 </html>
 

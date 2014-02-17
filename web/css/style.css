@@ -6,10 +6,20 @@
  * this stuff is worth it, you can buy me a beer in return Joseph Livecchi
  * ----------------------------------------------------------------------------
  */
+ 
+body { -webkit-touch-callout: none !important; }
+a { -webkit-user-select: none !important; }
+
+.ctrlBtn{
+    display: block;
+}
+
+/*
 *{
     font-family: Verdana, Verdana, Geneva, sans-serif; 
     text-shadow: 0.1rem 0.1rem 0 rgba(150,150,150,0.3);    
 }
+
 button{
     color: white;
     text-align: center;
@@ -74,7 +84,7 @@ html,body,#wrapper {
 #wrapper {
     position:relative;
 }
-/*------------- Top Banner ------------------*/
+/*------------- Top Banner ------------------
 #top {
     position:fixed;
     height:50px;
@@ -97,7 +107,7 @@ html,body,#wrapper {
     z-index: 200;
 }
 
-/*------------- Middle Content ------------------*/
+/*------------- Middle Content ------------------
 #middle {
     z-index: 0;
     position:absolute;
@@ -138,7 +148,7 @@ html,body,#wrapper {
     width: 47%;
     margin-right: 2%;
 }
-/*------------- Bottom Banner ------------------*/
+/*------------- Bottom Banner ------------------
 #bottom {
     position:fixed;
     bottom:0;
@@ -165,11 +175,11 @@ html,body,#wrapper {
    background: #1b435e;
 }
 
-/*------------- Button Control ------------------*/
+/*------------- Button Control ------------------
 #ButtonControl button{
 }
 
-/*------------- Swipe Control ------------------*/
+/*------------- Swipe Control ------------------
 #SwipeControl{
 	display:none;
 	height: 90%;
@@ -227,7 +237,7 @@ html,body,#wrapper {
     height: 50px;
     width: 50px;
 }
-/*--------------------- Connection Status --------------------- */
+/*--------------------- Connection Status --------------------- 
 
 #CxnStatus input{
     display: block;

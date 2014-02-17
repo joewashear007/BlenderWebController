@@ -136,7 +136,9 @@ $(document).ready(function(){
         $("#ButtonControl").fadeToggle();
         $(this).text();
     });
-    
+    $("a").bind('taphold', function(event) {
+        event.preventDefault();
+    });
     //------------------ Control events ----------------------------------
     
     //Arrow Button click event
