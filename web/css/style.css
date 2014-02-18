@@ -10,13 +10,12 @@
 body { -webkit-touch-callout: none !important; }
 a { -webkit-user-select: none !important; }
 
-
-.ctrlBtn-Wrapper .ui-controlgroup-controls {
-    width: 100% !important;
+.ctrlBtn{
+    padding-top: 0.7em;
+    
 }
-
 #ResetModel{
-    display: block;
+     padding-top: 0.7em;
 }
 
 /*
