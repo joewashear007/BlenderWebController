@@ -27,13 +27,15 @@
         <link rel="stylesheet" href="css/style.css" />
 		<script src="js/controller.js"></script> 
         <script>
-            // $(function(){$("#mypanel").panel();});
+             $(function(){
+                $("#mypanel").panel().enhanceWithin();
+                $("#mypanel lu").listview('refresh');
+            });
         </script>
 		<!-- __PYTHON_INSERT__ -->
 	</head>
 	<body>
-		<div data-role="page" id="foo">
-            <div data-role="panel" id="mypanel">
+        <div data-role="panel" id="mypanel">
                     <ul data-role="listview"  data-inset="true" data-divider-theme="a">
                         <li data-role="list-divider">Contoller Mode</li>
                         <li><a href="#foo">Buttons</a></li>
@@ -44,7 +46,7 @@
                         <li><a href="#my-header" data-rel="close">Close panel</a></li>
                     </ul>
             </div>
-            
+		<div data-role="page" id="foo">
             <div data-role="header">
                 <a href="#mypanel" class="ui-btn ui-shadow ui-corner-all">Open</a>
                 <h1>Button Control</h1>
