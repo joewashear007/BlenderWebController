@@ -145,8 +145,9 @@ $(document).ready(function(){
     $(".ctrlBtn").mousedown(    function() { send("Actuator", $(this).attr("id"));  })
                  .mouseup  (    function() { send("Stop", "All");                   });
     // Reset Button
-    $("#ResetModel").click (    function() { s.send(JSON.stringify({"Reset":true}));});
-    
+    $("#ResetModel").mousedown(    function() { send("Reset", true);                })
+                    .mouseup  (    function() { send("Stop", "All");                });
+
     // Swipe Control
     var element = document.getElementById('SwipeControl');
     var hammertime = Hammer(element, {
