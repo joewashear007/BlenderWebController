@@ -22,6 +22,8 @@
 		<script src="js/qrcode.min.js"></script>
         <script>var address = "$address";</script>
         <link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css" />
+        <link rel="stylesheet" href="css/BlenderController.min.css" />
+        
         <link rel="stylesheet" href="css/jquery.mobile.icons-1.4.1.min.css" />
         <link rel="stylesheet" href="css/font-awesome.min.css" />
         <link rel="stylesheet" href="css/style.css" />

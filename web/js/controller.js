@@ -19,7 +19,7 @@ window.onbeforeunload = close;
  Functions used to handel the connection, opening, closing sendgin, and reciveing of the websocket
 */ 
 function log(msg){
-    $("#DebugMsgList").prepend('<input   data-wrapper-class="controlgroup-textinput ui-btn" value="'+ msg +'"/>');
+    $("#DebugMsgList").prepend('<textarea   data-wrapper-class="controlgroup-textinput ui-btn" >'+ msg +'</textarea>');
 }
 function open (e) 	{ 
 	log("Connected!"); 
