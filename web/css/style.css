@@ -7,7 +7,9 @@
  * ----------------------------------------------------------------------------
  */
  
-body { -webkit-touch-callout: none !important; }
+body { -webkit-touch-callout: none !important; 
+    height: 100%;
+}
 a { -webkit-user-select: none !important; }
 
 .ctrlBtn{
@@ -17,7 +19,16 @@ a { -webkit-user-select: none !important; }
 #ResetModel{
      padding-top: 0.7em;
 }
-
+#SwipeControl{
+    height: 100%;
+}
+#bar .ui-content {
+    position : absolute;
+    top      : 40px;
+    right    : 0;
+    bottom   : 16px;
+    left     : 0;
+}
 /*
 *{
     font-family: Verdana, Verdana, Geneva, sans-serif; 

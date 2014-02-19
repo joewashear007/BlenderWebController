@@ -12,7 +12,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1" />
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, height=device-height" />
 		<title>BlenderWebController</title>
 		<script src="js/jquery-1.8.2.min.js"></script>
 		<script src="js/jquery.mobile-1.4.1.min.js"></script>
@@ -29,14 +29,13 @@
         <script>
              $(function(){
                 $("#mypanel").panel().enhanceWithin();
-                $("#mypanel lu").listview('refresh');
             });
         </script>
 		<!-- __PYTHON_INSERT__ -->
 	</head>
 	<body>
         <div data-role="panel" id="mypanel">
-                    <ul data-role="listview"  data-inset="true" data-divider-theme="a">
+                    <ul id="nav-list" data-role="listview"  data-inset="true" data-divider-theme="a" data-theme="a">
                         <li data-role="list-divider">Contoller Mode</li>
                         <li><a href="#foo">Buttons</a></li>
                         <li><a href="#bar">Swipe</a></li>
@@ -94,8 +93,9 @@
             </div><!-- /header -->
 
             <div role="main" class="ui-content">
-                <p>I'm the second in the source order so I'm hidden when the page loads. I'm just shown if a link that references my id is beeing clicked.</p>
-                <p><a href="#foo">Back to foo</a></p>
+                <div id="SwipeControl" class="ui-body ui-body-a ui-corner-all">
+                    <p id="SwipeEvent">&nbsp <p>
+				</div>
             </div><!-- /content -->
         </div><!-- /page -->
 
