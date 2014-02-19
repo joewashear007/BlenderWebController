@@ -19,15 +19,15 @@ window.onbeforeunload = close;
  Functions used to handel the connection, opening, closing sendgin, and reciveing of the websocket
 */ 
 function log(msg){
-    $("#DebugMsgList").append("<p>log: "+ msg + "</p>");
+    $("#DebugMsgList").prepend('<input   data-wrapper-class="controlgroup-textinput ui-btn" value="'+ msg +'"/>');
 }
 function open (e) 	{ 
-	$("#DebugMsgList").append("<p>Connect!</p>"); 
+	log("Connected!"); 
 	$("#ToggleCxnStatus").removeClass("danger"); 
 	$("#ErrMsg").fadeOut();
 };
 function close(e) 	{ 
-	$("#DebugMsgList").append("<p>Connection Closed!</p>"); 
+	log("Connection Closed!"); 
 	$("#ToggleCxnStatus").addClass("danger"); 
 	$("#ErrMsg").text("Not Connected").fadeIn();
 };
@@ -41,7 +41,7 @@ function msg  (e) 	{
 	log(e.data);
 };
 function error(e)  	{ 
-	$("#DebugMsgList").append("<p>Error: "+e+"</p>"); 
+	log("Error: "+ e ); 
 	$("#ToggleCxnStatus").addClass("danger"); 
 	$("#ErrMsg").text("Error! - Check Msg").fadeIn();	
 };
@@ -52,7 +52,7 @@ function send(key,msg){
     if(s){
        s.send(data);
     }else{
-        $("#DebugMsgList").append("<p>Event: "+ data + "</p>");
+        log("Event: "+ data);
     }
 }
 function toggleConnection() {
