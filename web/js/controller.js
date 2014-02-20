@@ -82,23 +82,19 @@ function toggleLockCommand()    {    send("MASTER_REQUEST", !isMaster );  }
 function toggleSlave(locked)    {   
     //Toogle the control of all commands with locked status
     if(locked){
-        //$(".ctrlBtn").attr("disabled", true).addClass("disabled");
-        $(".ctrlBtn").addClass("disabled");
-        //$("#MasterLock").addClass("danger");
-        $("#ErrMsg").text("Locked").fadeIn();	
+        $(".ctrlBtn").attr("disabled", true)
+        $(".ErrMsg").text("Locked").fadeIn();	
     }else{
-        //$(".ctrlBtn").attr("disabled", false).removeClass("disabled");
-        $(".ctrlBtn").removeClass("disabled");
-        //$("#MasterLock").removeClass("danger");
-        $("#ErrMsg").text("Locked").fadeOut();
+        $(".ctrlBtn").attr("disabled", false);
+        $(".ErrMsg").text("Locked").fadeOut();
     }
 }
-function styleMaster(){
+function styleMaster(){ 
     if(isMaster){
         log("You are now Master"); 
-        $("#MasterLock").addClass("danger");
+        $(".MasterLock").addClass("danger");
     }else{
-        $("#MasterLock").removeClass("danger");
+        $(".MasterLock").removeClass("danger");
     }
     
 }

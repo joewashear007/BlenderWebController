@@ -55,7 +55,10 @@
             <div data-role="header">				
                 <a href="#mypanel" class="ui-btn ui-icon-bars ui-corner-all ui-btn-icon-notext iconButton"> &nbsp </a>
                 <h1>Button Control</h1>
-				<button class="ui-btn ui-icon-recycle ui-corner-all ui-btn-icon-notext iconButton ResetModel"> &nbsp </button>
+				<div class="ui-btn-right">
+					<a class="ui-btn ui-icon-recycle ui-corner-all ui-btn-icon-notext iconButton ResetModel"> &nbsp </a>
+					<a class="ui-btn ui-icon-lock ui-corner-all ui-btn-icon-notext iconButton MasterLock"> &nbsp </a>
+				</div>
             </div>
             <!-- content -->
             <div role="main" class="ui-content">
@@ -100,7 +103,10 @@
                 <!-- /header -->
                 <a href="#mypanel" class="ui-btn ui-icon-bars ui-corner-all ui-btn-icon-notext iconButton"> &nbsp </a>
                 <h1>Swipe Control</h1>
-				<button class="ui-btn ui-icon-recycle ui-corner-all ui-btn-icon-notext iconButton ResetModel"> &nbsp </button>
+				<div class="ui-btn-right">
+					<a class="ui-btn ui-icon-recycle ui-corner-all ui-btn-icon-notext iconButton ResetModel"> &nbsp </a>
+					<a class="ui-btn ui-icon-lock ui-corner-all ui-btn-icon-notext iconButton MasterLock"> &nbsp </a>
+				</div>
             </div>
 
             <div role="main" class="ui-content">
@@ -163,70 +169,7 @@
 
             </div>
         </div>
-              
-        
-        
-        
-        
-        
-        
-        
-		<div id="wrapper" style="display:none;">
-			<div id="top">
-				<h1>Blender Web Controller</h1>
-				<h2 id="ErrMsg" class="danger" >Not Connected</h2>
-			</div>
-			<div id="middle">
-				<div id="ButtonControl" class="container">
-					<p class="label">Use the Buttons To Control The Blender Object</p>
-                        <div class="row">
-                        <button id=RotateUp class="col col-1 ctrlBtn fa fa-arrow-up"></button>
-                        </div><div class="row">
-                        <button id=RotateLeft class="col col-2 ctrlBtn fa fa-arrow-left"></button><button id=RotateRight class="col col-2 ctrlBtn fa fa-arrow-right"></button>
-                        </div><div class="row">
-                        <button id=RotateDown class="col col-1 ctrlBtn fa fa-arrow-down"></button>
-                        </div><div class="row">
-                        <button id=ZoomIn class="col col-2 ctrlBtn fa fa-plus "></button><button id=ZRotateLeft class="col col-2 ctrlBtn fa fa-repeat"></button>
-                        </div><div class="row">
-						<button id=ZoomOut class="col col-2 ctrlBtn fa fa-minus"></button><button id=ZRotateRight class="col col-2 ctrlBtn fa fa-undo"></button>
-                        </div>
-				</div>
-				<div id="SwipeControl" class="container">
-                    <p class="label">Swipe Here</p>
-                    <p id="SwipeEvent"><p>
-				</div>
-			</div>
-			<div id="bottom">
-                <button id="ResetModel" class="fa fa-retweet "></button>
-                <button id="ToggleControl" class="fa fa-hand-o-right"></button>
-				<button id="MasterLock" class="fa fa-lock"></button>
-                <button id="ToggleDebugInfo" class="fa fa-list-ul"></button>	
-                <button id="ToggleCxnStatus" class="danger danger-button fa fa-signal"></button>
-				
-			</div>
-		</div>
-        <div id="PopWrap">
-            <span id="PopWrapHead"><h3>Status: Good!</h3><button id="PopWrapCloseBtn" >X</button></span>
-            <div id="CxnStatus">
-                
-                <span id="CxnQR"></span>
-                <p>
-                <label for="CxnHTTPAddress" class="label">Address of Host</label> 
-                <input name="httpAddr" type="text" id="CxnHTTPAddress" />
-                <label for="CxnWSAddress" class="label">Address of Websocket</label> 
-                <input name="wsAddr" type="text" id="CxnWSAddress" />
-                </p>
-				<button id="ToggleCxnBtn">Connect</button>
-            </div>
-             <div id="DebugInfo">
-                <span id="DebugMsgList">
-                </span>
-				<button id="DebugMsgListBtn">Clear</button>
-            </div>
-        </div>
-        
-        
-		
+
 	</body>
 </html>
 
