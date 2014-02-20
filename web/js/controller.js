@@ -18,18 +18,19 @@ window.onbeforeunload = close;
 /* -------------------------- Websocket Fucntions ---------------------------- 
  Functions used to handel the connection, opening, closing sendgin, and reciveing of the websocket
 */ 
-function log(msg){
-    $("#DebugMsgList").prepend('<textarea   data-wrapper-class="controlgroup-textinput ui-btn" >'+ msg +'</textarea>');
+function log(msg, title="Message" ){
+    $("#DebugMsgList").listview({create: function( event, ui ) {}} );
+    $("#DebugMsgList").prepend('<li><h3>'+title+'</h3><p>'+ msg +'</p></li>').listview( "refresh" );
 }
 function open (e) 	{ 
 	log("Connected!"); 
 	$("#ToggleCxnStatus").removeClass("danger"); 
-	$("#ErrMsg").fadeOut();
+	$(".ErrMsg").fadeOut();
 };
 function close(e) 	{ 
 	log("Connection Closed!"); 
 	$("#ToggleCxnStatus").addClass("danger"); 
-	$("#ErrMsg").text("Not Connected").fadeIn();
+	$(".ErrMsg").text("Not Connected").fadeIn();
 };
 function msg  (e) 	{ 
     msg_data = JSON.parse(e.data);
@@ -43,7 +44,7 @@ function msg  (e) 	{
 function error(e)  	{ 
 	log("Error: "+ e ); 
 	$("#ToggleCxnStatus").addClass("danger"); 
-	$("#ErrMsg").text("Error! - Check Msg").fadeIn();	
+	$(".ErrMsg").text("Error! - Check Msg").fadeIn();	
 };
 function send(key,msg){
     var raw_data = {};
@@ -145,7 +146,7 @@ $(document).ready(function(){
     $(".ctrlBtn").mousedown(    function() { send("Actuator", $(this).attr("id"));  })
                  .mouseup  (    function() { send("Stop", "All");                   });
     // Reset Button
-    $("#ResetModel").mousedown(    function() { send("Reset", true);                })
+    $(".ResetModel").mousedown(    function() { send("Reset", true);                })
                     .mouseup  (    function() { send("Stop", "All");                });
 
     // Swipe Control
