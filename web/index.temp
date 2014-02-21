@@ -21,11 +21,9 @@
 		<script src="js/hammer.showtouches.js"></script>
 		<script src="js/qrcode.min.js"></script>
         <script>var address = "$address";</script>
-        <link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css" />
+        <link rel="stylesheet" href="css/jquery.mobile.inline-svg-1.4.1.css" />
         <link rel="stylesheet" href="css/BlenderController.min.css" />
-        
         <link rel="stylesheet" href="css/jquery.mobile.icons-1.4.1.min.css" />
-        <link rel="stylesheet" href="css/font-awesome.min.css" />
         <link rel="stylesheet" href="css/style.css" />
 		<script src="js/controller.js"></script> 
         <script>
@@ -62,7 +60,7 @@
             </div>
             <!-- content -->
             <div role="main" class="ui-content">
-				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMSg" >Not Connected</h2>
+				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMsg" >Not Connected</h2>
                 <div class="ui-grid-a ui-responsive">
                     <div class="ui-block-a">
 						<div class="ui-grid-solo">
@@ -78,7 +76,7 @@
                     </div>
                     <div class="ui-block-b">
 						<div class="ui-grid-a" >
-							<div class="ui-block-a"><a href="#" id=ZoomIn class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-plus ctrlBtn ">&nbsp </a></div>
+							<div class="ui-block-a"><a href="#" id=ZoomIn class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-plus ctrlBtn">&nbsp </a></div>
 							<div class="ui-block-b"><a href="#" id=ZoomOut class="ui-btn ui-shadow ui-corner-all  ui-btn-icon-top ui-icon-minus ctrlBtn ">&nbsp </a></div>
 						</div>
 						<div class="ui-grid-a" >
@@ -110,7 +108,7 @@
             </div>
 
             <div role="main" class="ui-content">
-				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMSg" >Not Connected</h2>
+				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMsg" >Not Connected</h2>
                 <div id="SwipeControl" class="ui-body ui-body-a ui-corner-all">
                     <p id="SwipeEvent">&nbsp <p>
 				</div>
@@ -128,7 +126,7 @@
             </div>
 
             <div role="main" class="ui-content">
-				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMSg" >Not Connected</h2>
+				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMsg" >Not Connected</h2>
                 <h3 class="ui-bar ui-bar-a ui-corner-all">Http & Websocket Address</h3>
                 <div data-role="controlgroup">
                     <!-- <label for="CxnHTTPAddress" class="label">Host Address</label> -->
@@ -163,7 +161,7 @@
             </div>
 
             <div role="main" class="ui-content">
-				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMSg" >Not Connected</h2>
+				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMsg" >Not Connected</h2>
 				<h3 class="ui-bar ui-bar-a ui-corner-all">Received Messages</h3>
 					<ul data-role="listview" data-inset="True" id="DebugMsgList"></ul>
 
