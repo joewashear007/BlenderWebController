@@ -18,18 +18,16 @@ window.onbeforeunload = close;
 /* -------------------------- Websocket Fucntions ---------------------------- 
  Functions used to handel the connection, opening, closing sendgin, and reciveing of the websocket
 */ 
-function log(msg, title="Message" ){
-    $("#DebugMsgList").listview({create: function( event, ui ) {}} );
+function log(msg, title ){
+    if(typeof(title)==='undefined') title="Message" ;
     $("#DebugMsgList").prepend('<li><h3>'+title+'</h3><p>'+ msg +'</p></li>').listview( "refresh" );
 }
 function open (e) 	{ 
 	log("Connected!"); 
-	$("#ToggleCxnStatus").removeClass("danger"); 
 	$(".ErrMsg").fadeOut();
 };
 function close(e) 	{ 
 	log("Connection Closed!"); 
-	$("#ToggleCxnStatus").addClass("danger"); 
 	$(".ErrMsg").text("Not Connected").fadeIn();
 };
 function msg  (e) 	{ 
@@ -42,8 +40,7 @@ function msg  (e) 	{
 	log(e.data);
 };
 function error(e)  	{ 
-	log("Error: "+ e ); 
-	$("#ToggleCxnStatus").addClass("danger"); 
+	log("Error: "+ e );  
 	$(".ErrMsg").text("Error! - Check Msg").fadeIn();	
 };
 function send(key,msg){
@@ -82,10 +79,10 @@ function toggleLockCommand()    {    send("MASTER_REQUEST", !isMaster );  }
 function toggleSlave(locked)    {   
     //Toogle the control of all commands with locked status
     if(locked){
-        $(".ctrlBtn").attr("disabled", true)
+        $(".ctrlBtn").addClass('ui-disabled');
         $(".ErrMsg").text("Locked").fadeIn();	
     }else{
-        $(".ctrlBtn").attr("disabled", false);
+        $(".ctrlBtn").removeClass('ui-disabled');
         $(".ErrMsg").text("Locked").fadeOut();
     }
 }
@@ -107,32 +104,18 @@ function styleMaster(){
 $(document).ready(function(){
     $("#CxnHTTPAddress").val(document.URL);
     $("#CxnWSAddress").val(address);
+    //$(".ctrlBtn").button({create: function( event, ui ) {}});
+    $("#DebugMsgList").listview({create: function( event, ui ) {}} );
+    
 	toggleConnection();
 	
     var qrcode = new QRCode(document.getElementById("CxnQR"), document.URL);
     
     // ---------------- UI Button Events ---------------------------------
-    $("#ToggleCxnStatus").click( function() { 
-        $("#PopWrapHead > h3").text("Cxn Status");
-        $("#DebugInfo").hide();
-        $("#CxnStatus").show();
-        $("#PopWrap").fadeIn();
-    });
-	$("#ToggleDebugInfo").click( function() { 
-        $("#PopWrapHead > h3").text("Messages");
-        $("#DebugInfo").show();
-        $("#CxnStatus").hide();
-        $("#PopWrap").fadeIn();
-    });
+
     $("#ToggleCxnBtn")   .click( toggleConnection );
-    $("#MasterLock")     .click( toggleLockCommand ); 
-    $("#PopWrapCloseBtn").click( function() { $("#PopWrap").fadeOut();      });
+    $(".MasterLock")     .click( toggleLockCommand ); 
     $("#DebugMsgListBtn").click( function() { $("#DebugMsgList").empty();   });
-    $("#ToggleControl")  .click( function() {
-        $("#SwipeControl").fadeToggle();
-        $("#ButtonControl").fadeToggle();
-        $(this).text();
-    });
     $("a").bind('taphold', function(event) {
         event.preventDefault();
     });

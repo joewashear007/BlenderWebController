@@ -380,7 +380,7 @@ class WebSocketHttpServer():
     
     def launch_webpage(self):
         #Copies all the resource over to the temp dir
-        webbrowser.open(self.httpServer.get_address() + "/index.html")
+        webbrowser.open(self.httpServer.get_address() + "index.html")
         
     def status(self):
         if self.wsServer is None or self.httpServer is None:
