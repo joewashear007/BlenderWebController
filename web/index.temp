@@ -12,78 +12,162 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no" />
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, height=device-height" />
 		<title>BlenderWebController</title>
 		<script src="js/jquery-1.8.2.min.js"></script>
+		<script src="js/jquery.mobile-1.4.1.min.js"></script>
 		<script src="js/hammer.min.js"></script>
 		<script src="js/hammer.fakemultitouch.js"></script>
 		<script src="js/hammer.showtouches.js"></script>
 		<script src="js/qrcode.min.js"></script>
         <script>var address = "$address";</script>
-        <link rel="stylesheet" href="css/font-awesome.min.css" />
+        <link rel="stylesheet" href="css/jquery.mobile.inline-svg-1.4.1.css" />
+        <link rel="stylesheet" href="css/BlenderController.min.css" />
+        <link rel="stylesheet" href="css/jquery.mobile.icons-1.4.1.min.css" />
         <link rel="stylesheet" href="css/style.css" />
 		<script src="js/controller.js"></script> 
-        
+        <script>
+             $(function(){
+                $("#mypanel").panel().enhanceWithin();
+            });
+        </script>
 		<!-- __PYTHON_INSERT__ -->
 	</head>
 	<body>
-		
-		<div id="wrapper">
-			<div id="top">
-				<h1>Blender Web Controller</h1>
-				<h2 id="ErrMsg" class="danger" >Not Connected</h2>
-			</div>
-			<div id="middle">
-				<div id="ButtonControl" class="container">
-					<p class="label">Use the Buttons To Control The Blender Object</p>
-                        <div class="row">
-                        <button id=RotateUp class="col col-1 ctrlBtn fa fa-arrow-up"></button>
-                        </div><div class="row">
-                        <button id=RotateLeft class="col col-2 ctrlBtn fa fa-arrow-left"></button><button id=RotateRight class="col col-2 ctrlBtn fa fa-arrow-right"></button>
-                        </div><div class="row">
-                        <button id=RotateDown class="col col-1 ctrlBtn fa fa-arrow-down"></button>
-                        </div><div class="row">
-                        <button id=ZoomIn class="col col-2 ctrlBtn fa fa-plus "></button><button id=ZRotateLeft class="col col-2 ctrlBtn fa fa-repeat"></button>
-                        </div><div class="row">
-						<button id=ZoomOut class="col col-2 ctrlBtn fa fa-minus"></button><button id=ZRotateRight class="col col-2 ctrlBtn fa fa-undo"></button>
-                        </div>
+<!-- SIDE PANEL NAV BAR -->
+        <div data-role="panel" id="mypanel">
+            <ul id="nav-list" data-role="listview"  data-inset="true" data-divider-theme="a" data-theme="a">
+                <li data-role="list-divider">Contoller Mode</li>
+                <li><a href="#Page-Buttons">Buttons</a></li>
+                <li><a href="#Page-Swipe">Swipe</a></li>
+                <li data-role="list-divider">Settings</li>
+                <li><a href="#Page-Cxn">Connection</a></li>
+                <li><a href="#Page-Info">Info</a></li>
+                <li><a href="#my-header" data-rel="close">Close panel</a></li>
+            </ul>
+        </div>
+        
+<!-- PAGE: BUTTONS -->
+		<div data-role="page" id="Page-Buttons">
+            <!-- /header -->
+            <div data-role="header">				
+                <a href="#mypanel" class="ui-btn ui-icon-bars ui-corner-all ui-btn-icon-notext iconButton"> &nbsp </a>
+                <h1>Button Control</h1>
+				<div class="ui-btn-right">
+					<a class="ui-btn ui-icon-recycle ui-corner-all ui-btn-icon-notext iconButton ResetModel"> &nbsp </a>
+					<a class="ui-btn ui-icon-lock ui-corner-all ui-btn-icon-notext iconButton MasterLock"> &nbsp </a>
 				</div>
-				<div id="SwipeControl" class="container">
-                    <p class="label">Swipe Here</p>
-                    <p id="SwipeEvent"><p>
-				</div>
-			</div>
-			<div id="bottom">
-                <button id="ResetModel" class="fa fa-retweet "></button>
-                <button id="ToggleControl" class="fa fa-hand-o-right"></button>
-				<button id="MasterLock" class="fa fa-lock"></button>
-                <button id="ToggleDebugInfo" class="fa fa-list-ul"></button>	
-                <button id="ToggleCxnStatus" class="danger danger-button fa fa-signal"></button>
-				
-			</div>
-		</div>
-        <div id="PopWrap">
-            <span id="PopWrapHead"><h3>Status: Good!</h3><button id="PopWrapCloseBtn" >X</button></span>
-            <div id="CxnStatus">
-                
-                <span id="CxnQR"></span>
-                <p>
-                <label for="CxnHTTPAddress" class="label">Address of Host</label> 
-                <input name="httpAddr" type="text" id="CxnHTTPAddress" />
-                <label for="CxnWSAddress" class="label">Address of Websocket</label> 
-                <input name="wsAddr" type="text" id="CxnWSAddress" />
-                </p>
-				<button id="ToggleCxnBtn">Connect</button>
             </div>
-             <div id="DebugInfo">
-                <span id="DebugMsgList">
-                </span>
-				<button id="DebugMsgListBtn">Clear</button>
+            <!-- content -->
+            <div role="main" class="ui-content">
+				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMsg" >Not Connected</h2>
+                <div class="ui-grid-a ui-responsive">
+                    <div class="ui-block-a">
+						<div class="ui-grid-solo">
+							<div class="ui-block-a"><a href="#" id=RotateUp class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-arrow-u ctrlBtn ">&nbsp </a></div>
+						</div>
+						<div class="ui-grid-a" >
+							<div class="ui-block-a"><a href="#" id=RotateLeft class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-arrow-l ctrlBtn ">&nbsp </a></div>
+							<div class="ui-block-b"><a href="#" id=RotateRight class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-arrow-r ctrlBtn ">&nbsp </a></div>
+						</div>
+						<div class="ui-grid-solo">
+							<div class="ui-block-a"><a href="#" id=RotateDown class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-arrow-d ctrlBtn">&nbsp </a></div>
+						</div>
+                    </div>
+                    <div class="ui-block-b">
+						<div class="ui-grid-a" >
+							<div class="ui-block-a"><a href="#" id=ZoomIn class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-plus ctrlBtn">&nbsp </a></div>
+							<div class="ui-block-b"><a href="#" id=ZoomOut class="ui-btn ui-shadow ui-corner-all  ui-btn-icon-top ui-icon-minus ctrlBtn ">&nbsp </a></div>
+						</div>
+						<div class="ui-grid-a" >
+							<div class="ui-block-a"><a href="#" id=ZRotateLeft class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-back ctrlBtn ">&nbsp </a></div>
+							<div class="ui-block-b"><a href="#" id=ZRotateRight class="ui-btn ui-shadow ui-corner-all  ui-btn-icon-top ui-icon-forward ctrlBtn ">&nbsp </a></div>
+						</div>
+						<!--
+						<div class="ui-grid-a" >
+						   <div class="ui-block-a"><a href="#" id=ResetModel class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-recycle ctrlBtn">&nbsp </a></div>
+						</div>
+                        -->
+                    </div>
+                </div>
+
             </div>
         </div>
-		<script>
-            
-        </script>
+    
+    
+<!-- PAGE: Swipe -->
+         <div data-role="page" id="Page-Swipe">
+            <div data-role="header">
+                <!-- /header -->
+                <a href="#mypanel" class="ui-btn ui-icon-bars ui-corner-all ui-btn-icon-notext iconButton"> &nbsp </a>
+                <h1>Swipe Control</h1>
+				<div class="ui-btn-right">
+					<a class="ui-btn ui-icon-recycle ui-corner-all ui-btn-icon-notext iconButton ResetModel"> &nbsp </a>
+					<a class="ui-btn ui-icon-lock ui-corner-all ui-btn-icon-notext iconButton MasterLock"> &nbsp </a>
+				</div>
+            </div>
+
+            <div role="main" class="ui-content">
+				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMsg" >Not Connected</h2>
+                <div id="SwipeControl" class="ui-body ui-body-a ui-corner-all">
+                    <p id="SwipeEvent">&nbsp <p>
+				</div>
+            </div>
+        </div>
+        
+        
+<!-- PAGE: Conenction -->
+        <div data-role="page" id="Page-Cxn">
+            <div data-role="header">
+                <!-- /header -->
+                <a href="#mypanel" class="ui-btn ui-icon-bars ui-corner-all ui-btn-icon-notext iconButton"> &nbsp </a>
+                <h1>Connection Settings</h1>
+				<a href="#popupLogin" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-icon-camera ui-btn-icon-notext iconButton" data-transition="pop">&nbsp </a>
+            </div>
+
+            <div role="main" class="ui-content">
+				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMsg" >Not Connected</h2>
+                <h3 class="ui-bar ui-bar-a ui-corner-all">Http & Websocket Address</h3>
+                <div data-role="controlgroup">
+                    <!-- <label for="CxnHTTPAddress" class="label">Host Address</label> -->
+                    <input name="httpAddr" type="url" id="CxnHTTPAddress"  data-wrapper-class="controlgroup-textinput ui-btn" />
+                    <!-- <label for="CxnWSAddress" class="label" > Websocket Address</label> -->
+                    <input name="wsAddr" type="url" id="CxnWSAddress"  data-wrapper-class="controlgroup-textinput ui-btn" data-clear-btn="true"/>
+                    <button id="ToggleCxnBtn">Connect</button>
+                </div>
+                
+                
+                
+                <div data-role="popup" id="popupLogin" data-theme="a" class="ui-corner-all">
+                    <form>
+                        <div style="padding:10px 20px;">
+                            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+                            <h3>Scan to connect</h3>
+                            <span id="CxnQR"></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        
+<!-- PAGE: Info -->
+         <div data-role="page" id="Page-Info">
+            <div data-role="header">
+                <!-- /header -->
+                <a href="#mypanel" class="ui-btn ui-icon-bars ui-corner-all ui-btn-icon-notext iconButton"> &nbsp </a>
+                <h1>Swipe Control</h1>
+                <button id="DebugMsgListBtn" class="ui-btn ui-icon-check ui-corner-all ui-btn-icon-notext iconButton"> &nbsp </button>
+            </div>
+
+            <div role="main" class="ui-content">
+				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMsg" >Not Connected</h2>
+				<h3 class="ui-bar ui-bar-a ui-corner-all">Received Messages</h3>
+					<ul data-role="listview" data-inset="True" id="DebugMsgList"></ul>
+
+            </div>
+        </div>
+
 	</body>
 </html>
 
