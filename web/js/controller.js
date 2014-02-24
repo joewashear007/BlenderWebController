@@ -8,7 +8,11 @@
  */
 
 /* -------------------------- Global Varibles ---------------------------- */ 
-Hammer.plugins.fakeMultitouch();
+// if(!Hammer.HAS_TOUCHEVENTS && !Hammer.HAS_POINTEREVENTS) {
+   console.log("Faking touch");
+   Hammer.plugins.showTouches();
+   Hammer.plugins.fakeMultitouch();
+// }
 var s = null;
 var somekeyDown = 0;
 var isMaster = false;
@@ -133,16 +137,22 @@ $(document).ready(function(){
     var element = document.getElementById('SwipeControl');
     var hammertime = Hammer(element, {
             prevent_default: true,
-            no_mouseevents: true
+            no_mouseevents: true,
+            transform_always_block: true
     })
-    .on("tap",          function(event) { send("Stop"    , "All"            );  })
-    .on("dragleft",     function(event) { send("Actuator", "RotateLeft"     );  })
-    .on("dragright",    function(event) { send("Actuator", "RotateRight"    );  })
-    .on("dragdown",     function(event) { send("Actuator", "RotateDown"     );  })
-    .on("dragup",       function(event) { send("Actuator", "RotateUp"       );  })
-    .on("pinchin",      function(event) { send("Actuator", "ZoomIn"         );  })
-    .on("pinchout",     function(event) { send("Actuator", "ZoomOut"        );  })
-    .on("rotate",       function(event) { send("Actuator", "ZRotateLeft"    );  })
+    .on("tap",          function(event) { send("Stop"    , "All"            );  event.gesture.stopDetect();})
+    .on("dragleft",     function(event) { send("Actuator", "RotateLeft"     );  event.gesture.stopDetect();})
+    .on("dragright",    function(event) { send("Actuator", "RotateRight"    );  event.gesture.stopDetect();})
+    .on("dragdown",     function(event) { send("Actuator", "RotateDown"     );  event.gesture.stopDetect();})
+    .on("dragup",       function(event) { send("Actuator", "RotateUp"       );  event.gesture.stopDetect();})
+    
+    .on("rotate",       function(event) { if(event.gesture.rotation < 0 ){
+                                            send("Actuator", "ZRotateLeft"    ); 
+                                          }else{ send("Actuator", "ZRotateRight"    ); }
+                                          event.gesture.stopDetect();
+                                        })
+    .on("pinchin",      function(event) { send("Actuator", "ZoomIn"         );  event.gesture.stopDetect();})
+    .on("pinchout",     function(event) { send("Actuator", "ZoomOut"        );  event.gesture.stopDetect();})
     .on("release",      function(event) { send("Stop"    , "All"            );  });
     
     //Keyboard Events
