@@ -47,10 +47,11 @@ function error(e)  	{
 	log("Error: "+ e );  
 	$(".ErrMsg").text("Error! - Check Msg").fadeIn();	
 };
-function send(key,msg){
+function send(key,msg,speed){
+    if(typeof(speed)==='undefined') speed = 0.001;
     var raw_data = {};
     raw_data[key] = msg;
-    raw_data["Speed"] =( $("#speed").val()/1000 );
+    raw_data["Speed"] = speed;
     var data = JSON.stringify(raw_data);
     if(s){
        s.send(data);
@@ -109,12 +110,9 @@ function styleMaster(){
 $(document).ready(function(){
     $("#CxnHTTPAddress").val(document.URL);
     $("#CxnWSAddress").val(address);
-    //$(".ctrlBtn").button({create: function( event, ui ) {}});
     $("#DebugMsgList").listview({create: function( event, ui ) {}} );
-    
 	toggleConnection();
-	
-    var qrcode = new QRCode(document.getElementById("CxnQR"), document.URL);
+	var qr = new QRCode(document.getElementById("CxnQR"), document.URL);
     
     // ---------------- UI Button Events ---------------------------------
 
@@ -127,7 +125,7 @@ $(document).ready(function(){
     //------------------ Control events ----------------------------------
     
     //Arrow Button click event
-    $(".ctrlBtn").mousedown(    function() { send("Actuator", $(this).attr("id"));  })
+    $(".ctrlBtn").mousedown(    function() { send("Actuator", $(this).attr("id"), $("#btn_speed").val()/1000 );  })
                  .mouseup  (    function() { send("Stop", "All");                   });
     // Reset Button
     $(".ResetModel").mousedown(    function() { send("Reset", true);                })
@@ -140,20 +138,22 @@ $(document).ready(function(){
             no_mouseevents: true,
             transform_always_block: true
     })
-    .on("tap",          function(event) { send("Stop"    , "All"            );  event.gesture.stopDetect();})
-    .on("dragleft",     function(event) { send("Actuator", "RotateLeft"     );  event.gesture.stopDetect();})
-    .on("dragright",    function(event) { send("Actuator", "RotateRight"    );  event.gesture.stopDetect();})
-    .on("dragdown",     function(event) { send("Actuator", "RotateDown"     );  event.gesture.stopDetect();})
-    .on("dragup",       function(event) { send("Actuator", "RotateUp"       );  event.gesture.stopDetect();})
-    
+    .on("tap",          function(event) { send("Stop"    , "All" ); })
+    .on("release",      function(event) { send("Stop"    , "All" ); })
+    .on("dragleft",     function(event) { send("Actuator", "RotateLeft" , ($("#swipe_speed").val()/1000)    );  event.gesture.stopDetect();})
+    .on("dragright",    function(event) { send("Actuator", "RotateRight", ($("#swipe_speed").val()/1000)    );  event.gesture.stopDetect();})
+    .on("dragdown",     function(event) { send("Actuator", "RotateDown" , ($("#swipe_speed").val()/1000)    );  event.gesture.stopDetect();})
+    .on("dragup",       function(event) { send("Actuator", "RotateUp"   , ($("#swipe_speed").val()/1000)    );  event.gesture.stopDetect();})
+    .on("pinchin",      function(event) { send("Actuator", "ZoomIn"     , ($("#swipe_speed").val()/1000)    );  event.gesture.stopDetect();})
+    .on("pinchout",     function(event) { send("Actuator", "ZoomOut"    , ($("#swipe_speed").val()/1000)    );  event.gesture.stopDetect();})
     .on("rotate",       function(event) { if(event.gesture.rotation < 0 ){
-                                            send("Actuator", "ZRotateLeft"    ); 
-                                          }else{ send("Actuator", "ZRotateRight"    ); }
+                                                send("Actuator", "ZRotateLeft", ($("#swipe_speed").val()/1000)    ); 
+                                          }else{ 
+                                                send("Actuator", "ZRotateRight", ($("#swipe_speed").val()/1000)   ); }
                                           event.gesture.stopDetect();
-                                        })
-    .on("pinchin",      function(event) { send("Actuator", "ZoomIn"         );  event.gesture.stopDetect();})
-    .on("pinchout",     function(event) { send("Actuator", "ZoomOut"        );  event.gesture.stopDetect();})
-    .on("release",      function(event) { send("Stop"    , "All"            );  });
+                                        });
+    
+    
     
     //Keyboard Events
     $(document).keydown( function(event) {

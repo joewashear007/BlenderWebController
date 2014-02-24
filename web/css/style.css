@@ -22,7 +22,7 @@ a { -webkit-user-select: none !important; }
     position : absolute;
     top      : 40px;
     right    : 0;
-    bottom   : 16px;
+    bottom   : 70px;
     left     : 0;
 }
 .iconButton  {

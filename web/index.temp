@@ -90,7 +90,7 @@
             <div data-role="footer" data-id="main-footer">
                 <form class="ui-field-contain">
                     <label for="strength">Strength</label>
-                    <input name="strength" id="speed" min="0" max="100" value="50" type="range" data-mini="true">
+                    <input name="strength" id="btn_speed" min="1" max="100" value="50" type="range" data-mini="true">
                 </form>
             </div>
         </div>
@@ -114,7 +114,12 @@
                     <p id="SwipeEvent">&nbsp <p>
 				</div>
             </div>
-            
+            <div data-role="footer" data-id="main-footer">
+                <form class="ui-field-contain">
+                    <label for="strength">Strength</label>
+                    <input name="strength" id="swipe_speed" min="1" max="100" value="5" type="range" data-mini="true">
+                </form>
+            </div>
         </div>
         
         
