@@ -83,14 +83,15 @@
 							<div class="ui-block-a"><a href="#" id=ZRotateLeft class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-back ctrlBtn ">&nbsp </a></div>
 							<div class="ui-block-b"><a href="#" id=ZRotateRight class="ui-btn ui-shadow ui-corner-all  ui-btn-icon-top ui-icon-forward ctrlBtn ">&nbsp </a></div>
 						</div>
-						<!--
-						<div class="ui-grid-a" >
-						   <div class="ui-block-a"><a href="#" id=ResetModel class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-recycle ctrlBtn">&nbsp </a></div>
-						</div>
-                        -->
                     </div>
                 </div>
-
+            
+            </div>
+            <div data-role="footer" data-id="main-footer">
+                <form class="ui-field-contain">
+                    <label for="strength">Strength</label>
+                    <input name="strength" id="speed" min="0" max="100" value="50" type="range" data-mini="true">
+                </form>
             </div>
         </div>
     
@@ -113,6 +114,7 @@
                     <p id="SwipeEvent">&nbsp <p>
 				</div>
             </div>
+            
         </div>
         
         

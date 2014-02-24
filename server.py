@@ -327,6 +327,7 @@ class WebSocketHttpServer():
         self.cwd = os.path.dirname(os.path.realpath(__file__))
         self.tempdir = tempfile.mkdtemp()
         os.chdir(self.tempdir)
+        print("New temp dir:", self.tempdir)
     
     def _make_webpage(self):
         shutil.copytree( self.cwd+"/web/js", self.tempdir+"/js/")

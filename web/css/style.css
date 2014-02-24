@@ -30,3 +30,19 @@ a { -webkit-user-select: none !important; }
     border-radius: .3125em !important;
     
 }
+.ui-footer{
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px; 
+}
+.ui-footer form {
+ 
+}
+.ui-footer form input{
+    display: none;
+}
+
+.ui-footer .ui-slider-track {
+    margin-left: 15px;
+}

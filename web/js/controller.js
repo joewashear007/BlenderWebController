@@ -46,6 +46,7 @@ function error(e)  	{
 function send(key,msg){
     var raw_data = {};
     raw_data[key] = msg;
+    raw_data["Speed"] =( $("#speed").val()/1000 );
     var data = JSON.stringify(raw_data);
     if(s){
        s.send(data);
