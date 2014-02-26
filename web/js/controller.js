@@ -119,14 +119,15 @@ $(document).ready(function(){
     $("#ToggleCxnBtn")   .click( toggleConnection );
     $(".MasterLock")     .click( toggleLockCommand ); 
     $("#DebugMsgListBtn").click( function() { $("#DebugMsgList").empty();   });
-    $("a").bind('taphold', function(event) {
-        event.preventDefault();
-    });
+    $("a").bind("contextmenu", function(e) {         e.preventDefault();    });
+    $("button").bind("contextmenu", function(e) {         e.preventDefault();    });
     //------------------ Control events ----------------------------------
     
     //Arrow Button click event
-    $(".ctrlBtn").mousedown(    function() { send("Actuator", $(this).attr("id"), $("#btn_speed").val()/1000 );  })
-                 .mouseup  (    function() { send("Stop", "All");                   });
+    //$(".ctrlBtn").on("mousedown vmousedown tap",  function(e) {  e.preventDefault(); send("Actuator", $(this).attr("id"), $("#btn_speed").val()/1000 );  })
+    //             .on("mouseup mouseleave vmouseup vmouseout",  function() { send("Stop", "All");                   });
+    $(".ctrlBtn").on("vmousedown ",  function(e) {  e.preventDefault(); send("Actuator", $(this).attr("id"), $("#btn_speed").val()/1000 );  })
+                 .on("vmouseup ",  function() { send("Stop", "All");                   });
     // Reset Button
     $(".ResetModel").mousedown(    function() { send("Reset", true);                })
                     .mouseup  (    function() { send("Stop", "All");                });
