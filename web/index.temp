@@ -89,7 +89,7 @@
             </div>
             <div data-role="footer" data-id="main-footer">
                 <form class="ui-field-contain">
-                    <label for="strength">Strength</label>
+                    <label for="strength">Sensitivity</label>
                     <input name="strength" id="btn_speed" min="1" max="100" value="50" type="range" data-mini="true">
                 </form>
             </div>
@@ -111,12 +111,18 @@
             <div role="main" class="ui-content">
 				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMsg" >Not Connected</h2>
                 <div id="SwipeControl" class="ui-body ui-body-a ui-corner-all">
-                    <p id="SwipeEvent">&nbsp <p>
+                    <p id="SwipeEvent">Swipe Controls <p>
+                    <ul>
+                        <li><b>TAP:</b> Stop </li>
+                        <li><b>SWIPE:</b> Rotate</li>
+                        <li><b>PINCH:</b> Zoom </li>
+                        <li><b>ROTATE:</b> Rotate Z Axis </li>
+                    </ul>
 				</div>
             </div>
             <div data-role="footer" data-id="main-footer">
                 <form class="ui-field-contain">
-                    <label for="strength">Strength</label>
+                    <label for="strength">Sensitivity</label>
                     <input name="strength" id="swipe_speed" min="1" max="100" value="5" type="range" data-mini="true">
                 </form>
             </div>
