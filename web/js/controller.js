@@ -8,11 +8,9 @@
  */
 
 /* -------------------------- Global Varibles ---------------------------- */ 
-// if(!Hammer.HAS_TOUCHEVENTS && !Hammer.HAS_POINTEREVENTS) {
-   console.log("Faking touch");
-   Hammer.plugins.showTouches();
-   Hammer.plugins.fakeMultitouch();
-// }
+
+Hammer.plugins.showTouches();
+Hammer.plugins.fakeMultitouch();
 var s = null;
 var somekeyDown = 0;
 var isMaster = false;
