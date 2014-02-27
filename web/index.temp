@@ -14,6 +14,9 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, height=device-height" />
 		<title>BlenderWebController</title>
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css" />
+        <link rel="stylesheet" href="css/BlenderController.min.css" />
+        <link rel="stylesheet" href="css/style.css" />
 		<script src="js/jquery-1.8.2.min.js"></script>
 		<script src="js/jquery.mobile-1.4.1.min.js"></script>
 		<script src="js/hammer.min.js"></script>
@@ -21,18 +24,8 @@
 		<script src="js/hammer.showtouches.js"></script>
 		<script src="js/qrcode.min.js"></script>
         <script>var address = "$address";</script>
-        <link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css" />
-        <link rel="stylesheet" href="css/jquery.mobile.inline-svg-1.4.1.css" />
-        <link rel="stylesheet" href="css/BlenderController.min.css" />
-        
-        <link rel="stylesheet" href="css/style.css" />
 		<script src="js/controller.js"></script> 
-        <script>
-             $(function(){
-                $("#mypanel").panel().enhanceWithin();
-            });
-        </script>
-		<!-- __PYTHON_INSERT__ -->
+        <script>$(function(){$("#mypanel").panel().enhanceWithin();});</script>
 	</head>
 	<body>
 <!-- SIDE PANEL NAV BAR -->
@@ -44,7 +37,6 @@
                 <li data-role="list-divider">Settings</li>
                 <li><a href="#Page-Cxn">Connection</a></li>
                 <li><a href="#Page-Info">Info</a></li>
-                <li><a href="#my-header" data-rel="close">Close panel</a></li>
             </ul>
         </div>
         
@@ -88,10 +80,23 @@
                 </div>
             
             </div>
-            <div data-role="footer" data-id="main-footer">
-                <form class="ui-field-contain">
-                    <label for="strength">Sensitivity</label>
-                    <input name="strength" id="btn_speed" min="1" max="100" value="50" type="range" data-mini="true">
+            <div data-role="footer" data-id="main-footer" id="button-footer">
+                <div data-role="controlgroup" data-type="horizontal" data-mini="true" >
+                    <a class="ui-btn ui-corner-all ui-shadow "><<</a>
+                    <a class="ui-btn ui-corner-all ui-shadow "><</a>
+                    <a class="ui-btn ui-corner-all ui-shadow ">Play</a>
+                    <a class="ui-btn ui-corner-all ui-shadow ">></a>
+                    <a class="ui-btn ui-corner-all ui-shadow ">>></a>
+                </div>
+                <a href="#button-popup-strength" data-rel="popup" data-position-to="#button-footer" class="ui-btn ui-btn-right ui-corner-all ui-shadow ui-icon-gear ui-btn-icon-notext iconButton">Sensitivity</a>
+            </div>
+            
+            <div data-role="popup" id="button-popup-strength" class="ui-corner-all ui-content" >
+                <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+                <h3>Adjust Movement Sensitivity</h3>
+                <form>
+                    <label for="strength"  class="ui-hidden-accessible">Sensitivity</label>
+                    <input name="strength" id="btn_speed" min="1" max="100" value="50" type="range" data-highlight="true" data-popup-enabled="true" >
                 </form>
             </div>
         </div>
@@ -109,7 +114,7 @@
 				</div>
             </div>
 
-            <div role="main" class="ui-content">
+            <div role="main" class="ui-content fullHeight">
 				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMsg" >Not Connected</h2>
                 <div id="SwipeControl" class="ui-body ui-body-a ui-corner-all">
                     <p id="SwipeEvent">Swipe Controls <p>
@@ -121,22 +126,34 @@
                     </ul>
 				</div>
             </div>
-            <div data-role="footer" data-id="main-footer">
-                <form class="ui-field-contain">
-                    <label for="strength">Sensitivity</label>
-                    <input name="strength" id="swipe_speed" min="1" max="100" value="5" type="range" data-mini="true">
+            <div data-role="footer" data-id="main-footer" id="slide-footer">
+                <div data-role="controlgroup" data-type="horizontal" data-mini="true" >
+                    <a class="ui-btn ui-corner-all ui-shadow "><<</a>
+                    <a class="ui-btn ui-corner-all ui-shadow "><</a>
+                    <a class="ui-btn ui-corner-all ui-shadow ">Play</a>
+                    <a class="ui-btn ui-corner-all ui-shadow ">></a>
+                    <a class="ui-btn ui-corner-all ui-shadow ">>></a>
+                </div>
+                <a href="#swipe-popup-strength" data-rel="popup" data-position-to="#slide-footer" class="ui-btn ui-btn-right ui-corner-all ui-shadow ui-icon-gear ui-btn-icon-notext iconButton">Sensitivity</a>
+            </div>
+            
+            <div data-role="popup" id="swipe-popup-strength" class="ui-corner-all ui-content" >
+                <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+                <h3>Adjust Movement Sensitivity</h3>
+                <form>
+                    <label for="strength"  class="ui-hidden-accessible">Sensitivity</label>
+                    <input name="strength" id="swipe_speed" min="1" max="100" value="5" type="range" data-highlight="true" data-popup-enabled="true" >
                 </form>
             </div>
         </div>
-        
-        
+
 <!-- PAGE: Conenction -->
         <div data-role="page" id="Page-Cxn">
             <div data-role="header">
                 <!-- /header -->
                 <a href="#mypanel" class="ui-btn ui-icon-bars ui-corner-all ui-btn-icon-notext iconButton"> &nbsp </a>
                 <h1>Connection Settings</h1>
-				<a href="#popupLogin" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-icon-camera ui-btn-icon-notext iconButton" data-transition="pop">&nbsp </a>
+				<a href="#popupLogin" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-icon-camera ui-btn-icon-notext iconButton">&nbsp </a>
             </div>
 
             <div role="main" class="ui-content">
@@ -149,10 +166,8 @@
                     <input name="wsAddr" type="url" id="CxnWSAddress"  data-wrapper-class="controlgroup-textinput ui-btn" data-clear-btn="true"/>
                     <button id="ToggleCxnBtn">Connect</button>
                 </div>
-                
-                
-                
-                <div data-role="popup" id="popupLogin" data-theme="a" class="ui-corner-all">
+            </div>
+            <div data-role="popup" id="popupLogin" data-theme="a" class="ui-corner-all">
                     <form>
                         <div style="padding:10px 20px;">
                             <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
@@ -161,7 +176,6 @@
                         </div>
                     </form>
                 </div>
-            </div>
         </div>
         
         
