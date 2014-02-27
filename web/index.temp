@@ -21,9 +21,10 @@
 		<script src="js/hammer.showtouches.js"></script>
 		<script src="js/qrcode.min.js"></script>
         <script>var address = "$address";</script>
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css" />
         <link rel="stylesheet" href="css/jquery.mobile.inline-svg-1.4.1.css" />
         <link rel="stylesheet" href="css/BlenderController.min.css" />
-        <link rel="stylesheet" href="css/jquery.mobile.icons-1.4.1.min.css" />
+        
         <link rel="stylesheet" href="css/style.css" />
 		<script src="js/controller.js"></script> 
         <script>
@@ -83,14 +84,15 @@
 							<div class="ui-block-a"><a href="#" id=ZRotateLeft class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-back ctrlBtn ">&nbsp </a></div>
 							<div class="ui-block-b"><a href="#" id=ZRotateRight class="ui-btn ui-shadow ui-corner-all  ui-btn-icon-top ui-icon-forward ctrlBtn ">&nbsp </a></div>
 						</div>
-						<!--
-						<div class="ui-grid-a" >
-						   <div class="ui-block-a"><a href="#" id=ResetModel class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-recycle ctrlBtn">&nbsp </a></div>
-						</div>
-                        -->
                     </div>
                 </div>
-
+            
+            </div>
+            <div data-role="footer" data-id="main-footer">
+                <form class="ui-field-contain">
+                    <label for="strength">Sensitivity</label>
+                    <input name="strength" id="btn_speed" min="1" max="100" value="50" type="range" data-mini="true">
+                </form>
             </div>
         </div>
     
@@ -110,8 +112,20 @@
             <div role="main" class="ui-content">
 				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMsg" >Not Connected</h2>
                 <div id="SwipeControl" class="ui-body ui-body-a ui-corner-all">
-                    <p id="SwipeEvent">&nbsp <p>
+                    <p id="SwipeEvent">Swipe Controls <p>
+                    <ul>
+                        <li><b>TAP:</b> Stop </li>
+                        <li><b>SWIPE:</b> Rotate</li>
+                        <li><b>PINCH:</b> Zoom </li>
+                        <li><b>ROTATE:</b> Rotate Z Axis </li>
+                    </ul>
 				</div>
+            </div>
+            <div data-role="footer" data-id="main-footer">
+                <form class="ui-field-contain">
+                    <label for="strength">Sensitivity</label>
+                    <input name="strength" id="swipe_speed" min="1" max="100" value="5" type="range" data-mini="true">
+                </form>
             </div>
         </div>
         
