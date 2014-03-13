@@ -1,5 +1,5 @@
 bl_info = {
-    "name": "Blender Web Conttroller",
+    "name": "Blender Web Controller",
     "category": "Game Engine",
 }
 
