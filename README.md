@@ -25,7 +25,7 @@ This add-on is developed at the University of Toledo as a research project. The 
 
  How to use
 -------------------------
- 8. Load and enable the add-on into blender. _Search Google for how to do this_
+ 8. Install and enable the "WebControllerAddon.py" add-on into blender. _Search Google for how to do this_ 
  9. Under Render Settings tab, there should now be a "Web Control" panel. Click on the "Setup" button. This will generate all the needed objects, scripts and logic.
  10. Reposition the camera and empty as needed
  11. Click "p" to start the game engine
