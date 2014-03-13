@@ -8,9 +8,6 @@
  */
 
 /* -------------------------- Global Varibles ---------------------------- */ 
-
-Hammer.plugins.showTouches();
-Hammer.plugins.fakeMultitouch();
 var s = null;
 var somekeyDown = 0;
 var isMaster = false;
@@ -110,7 +107,7 @@ $(document).ready(function(){
     $("#CxnWSAddress").val(address);
     $("#DebugMsgList").listview({create: function( event, ui ) {}} );
 	toggleConnection();
-	var qr = new QRCode(document.getElementById("CxnQR"), document.URL);
+	$("#CxnQR").qrcode(document.URL);
     
     // ---------------- UI Button Events ---------------------------------
 
