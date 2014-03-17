@@ -20,12 +20,14 @@ import mnfy
 import ast
 import os
 from html.parser import HTMLParser
+from string import Template
 
 output = "bin"
 css_files = ["style.css", "BlenderController.min.css"]
 js_files = ["controller.js"]
 html_files = ["index.html"]
 py_files = ["handler.py", "main.py", "server.py", "startServers.py"]
+replacements = {"WEBSITE": "index.html"} 
 
 
 class HTMLBuilder(HTMLParser):
@@ -81,10 +83,17 @@ def main():
                         line = replacement
                     new_content += line
             f.write( htmlmin.minify(new_content, remove_comments=True, remove_empty_space=True, ))
-
+    
+    #Build sub dictionary
+    subs = dict()
+    for i in replacements:
+        subs[i] = '"""' + open(output + "/" + replacements[i]).read() + '"""'
+    
     for file in py_files:
+        content = open("python/" + file).read()
+        new_content = Template(content).safe_substitute(subs)
         minifier = mnfy.SourceCode()
-        minifier.visit(ast.parse(open("python/" + file).read()))
+        minifier.visit(ast.parse(new_content))
         with open("bin/" + file, "w") as f:
             f.write(  str(minifier) ) 
     

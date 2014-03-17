@@ -22,9 +22,9 @@ import json
 from io import StringIO
 from string import Template
 
-def writeWebsite(file, site_file, new_address):
-    site_string = open(site_file).read()
-    site = Template(site_string).safe_substitute(address=new_address)
+
+def writeWebsite(file, new_address):
+    site = Template($WEBSITE).safe_substitute(address=new_address)
     html = open(file ,"w")
     html.write(site)
     html.close()
@@ -335,7 +335,7 @@ class WebSocketHttpServer():
         print("New temp dir:", self.tempdir)
     
     def _make_webpage(self):
-        writeWebsite(self.tempdir + "/index.html" , self.cwd + "/../bin/index.html",  self.wsServer.get_address())
+        writeWebsite(self.tempdir + "/index.html" , self.wsServer.get_address())
         
     def stop(self):
         try:
