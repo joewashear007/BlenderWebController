@@ -19,18 +19,46 @@ import htmlmin
 import mnfy
 import ast
 import os
+from html.parser import HTMLParser
+
+output = "bin"
+css_files = ["style.css", "BlenderController.min.css"]
+js_files = ["controller.js"]
+html_files = ["index.html"]
+py_files = ["handler.py", "main.py", "server.py", "startServers.py"]
+
+
+class HTMLBuilder(HTMLParser):
+    def __init__(self):
+        super( HTMLBuilder, self ).__init__()
+        self._replace = ""
+        
+    def handle_starttag(self, tag, attrs):
+        self._replace = None
+        for attr in attrs:
+            key, value = attr
+            if tag == "link" and "href" in key:
+                if value in css_files:
+                    self._replace = "style", value
+            if tag == "script" and "src" in key:
+                if value in js_files:
+                    self._replace = "script", value
+
+    def replacement(self):
+        #Returns what should be replaced
+        if self._replace:
+            tag, file = self._replace 
+            return "<"+tag+">" + open(output + "/"+ file).read() +"</"+tag+">"
+        else:
+            return None
+
+
 
 def main():
-    output = "bin"
+    
     if not os.path.exists(output):
         os.makedirs(output)
     
-    
-    css_files = ["style.css", "BlenderController.min.css"]
-    js_files = ["controller.js"]
-    html_files = ["index.html"]
-    py_files = ["handler.py", "main.py", "server.py", "startServers.py"]
-
     for file in css_files:
         with open("bin/" + file, "w") as f:
             f.write( cssmin.cssmin(open("web/" + file).read()) )
@@ -41,7 +69,18 @@ def main():
            
     for file in html_files:  
         with open("bin/" + file, "w") as f:
-            f.write( htmlmin.minify(open("web/"+ file).read(), remove_comments=True, remove_empty_space=True, ))
+            content = open("web/"+ file).readlines()
+            new_content = ""
+            p = HTMLBuilder()
+            for line in content:
+                line = line.strip()
+                if line :
+                    p.feed(line)
+                    replacement = p.replacement()
+                    if replacement:
+                        line = replacement
+                    new_content += line
+            f.write( htmlmin.minify(new_content, remove_comments=True, remove_empty_space=True, ))
 
     for file in py_files:
         minifier = mnfy.SourceCode()
