@@ -26,7 +26,7 @@ output = "bin"
 css_files = ["style.css", "BlenderController.min.css"]
 js_files = ["controller.js"]
 html_files = ["index.html"]
-py_files = ["handler.py", "main.py", "server.py", "startServers.py"]
+py_files = ["handler.py", "server_test.py", "server.py", "startServers.py"]
 replacements = {"WEBSITE": "index.html"} 
 
 

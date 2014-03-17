@@ -7,8 +7,8 @@
 
 
  
-from Python.server import WebSocketHttpServer
-from Python.server import WebSocketHandler
+from server import WebSocketHttpServer
+from server import WebSocketHandler
 
 def main():
     run = True
