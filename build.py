@@ -84,7 +84,7 @@ def main():
 
     for file in py_files:
         minifier = mnfy.SourceCode()
-        minifier.visit(ast.parse(open(file).read()))
+        minifier.visit(ast.parse(open("python/" + file).read()))
         with open("bin/" + file, "w") as f:
             f.write(  str(minifier) ) 
     

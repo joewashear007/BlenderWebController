@@ -9,7 +9,7 @@
 var s = null;
 var somekeyDown = 0;
 var isMaster = false;
-
+var ipRegex = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{1,5})/
 window.onbeforeunload = close;
 
 /* -------------------------- Websocket Fucntions ---------------------------- 
@@ -61,7 +61,7 @@ function toggleConnection() {
 	}else{
 		try {
             address = $("#CxnWSAddress").val();
-			if (address != "" ||  address != "$address") {
+			if ( ipRegex.test(address)) {
 				s = new WebSocket(address);
 				s.onopen = open;
 				s.onclose = close;
