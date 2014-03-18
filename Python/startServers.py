@@ -8,7 +8,7 @@
 
 
 from server import WebSocketHttpServer
-from Handler import BlenderHandler
+from handler import BlenderHandler
 import threading
 
 

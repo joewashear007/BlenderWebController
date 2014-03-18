@@ -19,15 +19,23 @@ import htmlmin
 import mnfy
 import ast
 import os
+import shutil
 from html.parser import HTMLParser
 from string import Template
 
-output = "bin"
+#output directory
+output = "bin/"
+#List of ile to be minified
 css_files = ["style.css", "BlenderController.min.css"]
 js_files = ["controller.js"]
 html_files = ["index.html"]
-py_files = ["handler.py", "server_test.py", "server.py", "startServers.py"]
-replacements = {"WEBSITE": "index.html"} 
+py_files = ["handler.py", "server_test.py", "startServers.py", "endServers.py"]
+py_files_with_web_subs = ["server.py"]
+py_files_with_py_subs = ["WebControllerAddon.py"]
+
+#Replacements in python files
+web_replacements = {"_WEBSITE": "index.html"} 
+py_replacements = {"_START_SERVER":"startServers.py", "_END_SERVER":"endServers.py", "_HANDLER":"handler.py", "_SERVER":"server.py"} 
 
 
 class HTMLBuilder(HTMLParser):
@@ -50,51 +58,76 @@ class HTMLBuilder(HTMLParser):
         #Returns what should be replaced
         if self._replace:
             tag, file = self._replace 
-            return "<"+tag+">" + open(output + "/"+ file).read() +"</"+tag+">"
+            return "<"+tag+">" + open(output + file).read() +"</"+tag+">"
         else:
             return None
 
 
 
 def main():
+    # Makes the output dir
+    if os.path.exists(output):
+        shutil.rmtree(output) 
+    os.makedirs(output)
     
-    if not os.path.exists(output):
-        os.makedirs(output)
-    
+    #minify the CSS files
     for file in css_files:
-        with open("bin/" + file, "w") as f:
+        with open(output + file, "w") as f:
             f.write( cssmin.cssmin(open("web/" + file).read()) )
-            
+    #Minify the Javascript files
     for file in js_files:      
-        with open("bin/"+ file, "w") as f:
+        with open( output + file, "w") as f:
             f.write( slimit.minify(open("web/"+file).read(), mangle=True, mangle_toplevel=True) )
-           
+    #Adds the minify CSS & JS file in HTML, minfy the HTML
     for file in html_files:  
-        with open("bin/" + file, "w") as f:
-            content = open("web/"+ file).readlines()
-            new_content = ""
-            p = HTMLBuilder()
-            for line in content:
-                line = line.strip()
-                if line :
-                    p.feed(line)
-                    replacement = p.replacement()
-                    if replacement:
-                        line = replacement
-                    new_content += line
-            f.write( htmlmin.minify(new_content, remove_comments=True, remove_empty_space=True, ))
-    
-    #Build sub dictionary
-    subs = dict()
-    for i in replacements:
-        subs[i] = '"""' + open(output + "/" + replacements[i]).read() + '"""'
-    
+        content = open("web/"+ file).readlines()
+        new_content = ""
+        p = HTMLBuilder()
+        for line in content:
+            line = line.strip()
+            if line :
+                p.feed(line)
+                replacement = p.replacement()
+                if replacement:
+                    line = replacement
+                new_content += line
+        f = open(output + file, "w")
+        f.write( htmlmin.minify(new_content, remove_comments=True, remove_empty_space=True, ))
+        
+    #Preforms minify python files
     for file in py_files:
         content = open("python/" + file).read()
-        new_content = Template(content).safe_substitute(subs)
+        minifier = mnfy.SourceCode()
+        minifier.visit(ast.parse(content))
+        with open(output + file, "w") as f:
+            f.write(  str(minifier) ) 
+    
+    #Build the website subsitute dictionary
+    subs_web= dict()
+    for i in web_replacements:
+        subs_web[i] = '"""' + open(output  + web_replacements[i]).read() + '"""'
+    #Preforms Website Subsitutes on Pythons files, Minify them
+    for file in py_files_with_web_subs:
+        content = open("python/" + file).read()
+        new_content = Template(content).safe_substitute(subs_web)
         minifier = mnfy.SourceCode()
         minifier.visit(ast.parse(new_content))
-        with open("bin/" + file, "w") as f:
+        with open(output + file, "w") as f:
+            f.write(  str(minifier) ) 
+    
+    #Build subsitute dictionary
+    subs_py = dict()
+    for i in py_replacements:
+        s = open(output  + py_replacements[i] ).read()
+        s = s.replace("\\n", "\\\\n").replace("\\d", "\\\\d").replace("\\'", "\\\\'")
+        subs_py[i] = """'''""" + s + """'''"""
+    #Preforms Subsitutes on Pythons files, Minify them
+    for file in py_files_with_py_subs:
+        content = open("python/" + file).read()
+        new_content = Template(content).safe_substitute(subs_py)
+        minifier = mnfy.SourceCode()
+        minifier.visit(ast.parse(new_content))
+        with open(output + file, "w") as f:
             f.write(  str(minifier) ) 
     
 if __name__ == '__main__':
