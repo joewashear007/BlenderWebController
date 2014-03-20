@@ -1,0 +1,197 @@
+<!--
+# Copyright (C) <2014> <Joseph Liveccchi, joewashear007@gmail.com>
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, height=device-height" />
+		<title>BlenderWebController</title>
+        <link rel=stylesheet href=http://cdnjs.cloudflare.com/ajax/libs/jquery-mobile/1.4.1/jquery.mobile.min.css />
+        <link rel="stylesheet" href="BlenderController.min.css" />
+        <link rel="stylesheet" href="style.css" />
+        
+		<script src=http://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.js></script>
+        <script src=http://cdnjs.cloudflare.com/ajax/libs/jquery-mobile/1.4.1/jquery.mobile.min.js></script>
+        <script src=http://cdnjs.cloudflare.com/ajax/libs/hammer.js/1.0.6/hammer.min.js></script>
+        <script src=http://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js></script>
+	</head>
+	<body>
+<!-- SIDE PANEL NAV BAR -->
+        <div data-role="panel" id="mypanel">
+            <ul id="nav-list" data-role="listview"  data-inset="true" data-divider-theme="a" data-theme="a">
+                <li data-role="list-divider">Contoller Mode</li>
+                <li><a href="#Page-Buttons">Buttons</a></li>
+                <li><a href="#Page-Swipe">Swipe</a></li>
+                <li data-role="list-divider">Settings</li>
+                <li><a href="#Page-Cxn">Connection</a></li>
+                <li><a href="#Page-Info">Info</a></li>
+            </ul>
+        </div>
+        
+<!-- PAGE: BUTTONS -->
+		<div data-role="page" id="Page-Buttons">
+            <!-- /header -->
+            <div data-role="header">				
+                <a href="#mypanel" class="ui-btn ui-icon-bars ui-corner-all ui-btn-icon-notext iconButton"> &nbsp </a>
+                <h1>Button Control</h1>
+				<div class="ui-btn-right">
+					<a class="ui-btn ui-icon-recycle ui-corner-all ui-btn-icon-notext iconButton ResetModel"> &nbsp </a>
+					<a class="ui-btn ui-icon-lock ui-corner-all ui-btn-icon-notext iconButton MasterLock"> &nbsp </a>
+				</div>
+            </div>
+            <!-- content -->
+            <div role="main" class="ui-content">
+				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMsg" >Not Connected</h2>
+                <div class="ui-grid-a ui-responsive">
+                    <div class="ui-block-a">
+						<div class="ui-grid-solo">
+							<div class="ui-block-a"><a href="#" id=RotateUp class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-arrow-u ctrlBtn ">&nbsp </a></div>
+						</div>
+						<div class="ui-grid-a" >
+							<div class="ui-block-a"><a href="#" id=RotateLeft class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-arrow-l ctrlBtn ">&nbsp </a></div>
+							<div class="ui-block-b"><a href="#" id=RotateRight class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-arrow-r ctrlBtn ">&nbsp </a></div>
+						</div>
+						<div class="ui-grid-solo">
+							<div class="ui-block-a"><a href="#" id=RotateDown class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-arrow-d ctrlBtn">&nbsp </a></div>
+						</div>
+                    </div>
+                    <div class="ui-block-b">
+						<div class="ui-grid-a" >
+							<div class="ui-block-a"><a href="#" id=ZoomIn class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-plus ctrlBtn">&nbsp </a></div>
+							<div class="ui-block-b"><a href="#" id=ZoomOut class="ui-btn ui-shadow ui-corner-all  ui-btn-icon-top ui-icon-minus ctrlBtn ">&nbsp </a></div>
+						</div>
+						<div class="ui-grid-a" >
+							<div class="ui-block-a"><a href="#" id=ZRotateLeft class="ui-btn ui-shadow ui-corner-all ui-btn-icon-top ui-icon-back ctrlBtn ">&nbsp </a></div>
+							<div class="ui-block-b"><a href="#" id=ZRotateRight class="ui-btn ui-shadow ui-corner-all  ui-btn-icon-top ui-icon-forward ctrlBtn ">&nbsp </a></div>
+						</div>
+                    </div>
+                </div>
+            
+            </div>
+            <div data-role="footer" data-id="main-footer" id="button-footer">
+                <div data-role="controlgroup" data-type="horizontal" data-mini="true" >
+                    <a class="ui-btn ui-corner-all ui-shadow "><<</a>
+                    <a class="ui-btn ui-corner-all ui-shadow "><</a>
+                    <a class="ui-btn ui-corner-all ui-shadow ">Play</a>
+                    <a class="ui-btn ui-corner-all ui-shadow ">></a>
+                    <a class="ui-btn ui-corner-all ui-shadow ">>></a>
+                </div>
+                <a href="#button-popup-strength" data-rel="popup" data-position-to="#button-footer" class="ui-btn ui-btn-right ui-corner-all ui-shadow ui-icon-gear ui-btn-icon-notext iconButton">Sensitivity</a>
+            </div>
+            
+            <div data-role="popup" id="button-popup-strength" class="ui-corner-all ui-content" >
+                <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+                <h3>Adjust Movement Sensitivity</h3>
+                <form>
+                    <label for="strength"  class="ui-hidden-accessible">Sensitivity</label>
+                    <input name="strength" id="btn_speed" min="1" max="100" value="50" type="range" data-highlight="true" data-popup-enabled="true" >
+                </form>
+            </div>
+        </div>
+    
+    
+<!-- PAGE: Swipe -->
+         <div data-role="page" id="Page-Swipe">
+            <div data-role="header">
+                <!-- /header -->
+                <a href="#mypanel" class="ui-btn ui-icon-bars ui-corner-all ui-btn-icon-notext iconButton"> &nbsp </a>
+                <h1>Swipe Control</h1>
+				<div class="ui-btn-right">
+					<a class="ui-btn ui-icon-recycle ui-corner-all ui-btn-icon-notext iconButton ResetModel"> &nbsp </a>
+					<a class="ui-btn ui-icon-lock ui-corner-all ui-btn-icon-notext iconButton MasterLock"> &nbsp </a>
+				</div>
+            </div>
+
+            <div role="main" class="ui-content fullHeight">
+				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMsg" >Not Connected</h2>
+                <div id="SwipeControl" class="ui-body ui-body-a ui-corner-all">
+                    <p id="SwipeEvent">Swipe Controls <p>
+                    <ul>
+                        <li><b>TAP:</b> Stop </li>
+                        <li><b>SWIPE:</b> Rotate</li>
+                        <li><b>PINCH:</b> Zoom </li>
+                        <li><b>ROTATE:</b> Rotate Z Axis </li>
+                    </ul>
+				</div>
+            </div>
+            <div data-role="footer" data-id="main-footer" id="slide-footer">
+                <div data-role="controlgroup" data-type="horizontal" data-mini="true" >
+                    <a class="ui-btn ui-corner-all ui-shadow "><<</a>
+                    <a class="ui-btn ui-corner-all ui-shadow "><</a>
+                    <a class="ui-btn ui-corner-all ui-shadow ">Play</a>
+                    <a class="ui-btn ui-corner-all ui-shadow ">></a>
+                    <a class="ui-btn ui-corner-all ui-shadow ">>></a>
+                </div>
+                <a href="#swipe-popup-strength" data-rel="popup" data-position-to="#slide-footer" class="ui-btn ui-btn-right ui-corner-all ui-shadow ui-icon-gear ui-btn-icon-notext iconButton">Sensitivity</a>
+            </div>
+            
+            <div data-role="popup" id="swipe-popup-strength" class="ui-corner-all ui-content" >
+                <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+                <h3>Adjust Movement Sensitivity</h3>
+                <form>
+                    <label for="strength"  class="ui-hidden-accessible">Sensitivity</label>
+                    <input name="strength" id="swipe_speed" min="1" max="100" value="5" type="range" data-highlight="true" data-popup-enabled="true" >
+                </form>
+            </div>
+        </div>
+
+<!-- PAGE: Conenction -->
+        <div data-role="page" id="Page-Cxn">
+            <div data-role="header">
+                <!-- /header -->
+                <a href="#mypanel" class="ui-btn ui-icon-bars ui-corner-all ui-btn-icon-notext iconButton"> &nbsp </a>
+                <h1>Connection Settings</h1>
+				<a href="#popupLogin" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-icon-camera ui-btn-icon-notext iconButton">&nbsp </a>
+            </div>
+
+            <div role="main" class="ui-content">
+				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMsg" >Not Connected</h2>
+                <h3 class="ui-bar ui-bar-a ui-corner-all">Http & Websocket Address</h3>
+                <div data-role="controlgroup">
+                    <!-- <label for="CxnHTTPAddress" class="label">Host Address</label> -->
+                    <input name="httpAddr" type="url" id="CxnHTTPAddress"  data-wrapper-class="controlgroup-textinput ui-btn" />
+                    <!-- <label for="CxnWSAddress" class="label" > Websocket Address</label> -->
+                    <input name="wsAddr" type="url" id="CxnWSAddress"  data-wrapper-class="controlgroup-textinput ui-btn" data-clear-btn="true"/>
+                    <button id="ToggleCxnBtn">Connect</button>
+                </div>
+            </div>
+            <div data-role="popup" id="popupLogin" data-theme="a" class="ui-corner-all">
+                    <form>
+                        <div style="padding:10px 20px;">
+                            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+                            <h3>Scan to connect</h3>
+                            <span id="CxnQR"></span>
+                        </div>
+                    </form>
+                </div>
+        </div>
+        
+        
+<!-- PAGE: Info -->
+         <div data-role="page" id="Page-Info">
+            <div data-role="header">
+                <!-- /header -->
+                <a href="#mypanel" class="ui-btn ui-icon-bars ui-corner-all ui-btn-icon-notext iconButton"> &nbsp </a>
+                <h1>Swipe Control</h1>
+                <button id="DebugMsgListBtn" class="ui-btn ui-icon-check ui-corner-all ui-btn-icon-notext iconButton"> &nbsp </button>
+            </div>
+
+            <div role="main" class="ui-content">
+				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMsg" >Not Connected</h2>
+				<h3 class="ui-bar ui-bar-a ui-corner-all">Received Messages</h3>
+					<ul data-role="listview" data-inset="True" id="DebugMsgList"></ul>
+
+            </div>
+        </div>
+
+	</body>
+    <script>var address = "$address";</script>
+    <script src="controller.js"></script> 
+    <script>$(function(){$("#mypanel").panel().enhanceWithin();});</script>
+</html>
+
+

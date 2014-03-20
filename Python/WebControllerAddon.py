@@ -45,6 +45,7 @@ class BlenderWebController_op(bpy.types.Operator):
     
     def execute(self, context):
         bpy.context.scene.render.engine = 'BLENDER_GAME'
+        bpy.context.scene.game_settings.show_debug_properties = True
         #-------------- Create Text Files --------------------------
         bpy.ops.text.new()
         bpy.data.texts[-1].name = "Read Me"
@@ -74,8 +75,16 @@ class BlenderWebController_op(bpy.types.Operator):
         #-------------- Add empty Controller ------------------------
         bpy.ops.object.add(type='EMPTY')
         bpy.context.active_object.name = "Controller"
+        bpy.ops.object.game_property_new(type="INT", name="Website Port")
+        bpy.ops.object.game_property_new(type="INT", name="Socket Port")
+        bpy.ops.object.game_property_new(type="STRING", name="Website Address")
+        bpy.ops.object.game_property_new(type="STRING", name="Socket Address")
         bpy.data.objects["Controller"].location = (0.0, 0.0, 0.0)
-
+        bpy.data.objects['Controller'].game.properties['Website Port'].value = 8000
+        bpy.data.objects['Controller'].game.properties['Socket Port'].value = 0
+        bpy.data.objects['Controller'].game.properties['Website Address'].show_debug = True
+        bpy.data.objects['Controller'].game.properties['Socket Address'].show_debug = True
+        
         bpy.ops.logic.sensor_add(       type="DELAY",  name="StartServer")
         bpy.ops.logic.controller_add(   type="PYTHON", name="Sever")
         bpy.ops.logic.actuator_add(     type="MOTION", name="RotateRight")
@@ -123,6 +132,9 @@ class BlenderWebController_op(bpy.types.Operator):
         bpy.data.objects["ControllerView"].game.actuators["ZoomIn"].link(c)
         bpy.data.objects["ControllerView"].game.actuators["ZoomOut"].link(c)
 
+        
+        bpy.ops.object.select_all(action="DESELECT")
+        bpy.data.objects['Controller'].select = True
         return {'FINISHED'}  
 
 def register():

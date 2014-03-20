@@ -24,7 +24,9 @@ def run_server():
             print("Press Any Key To Quit...")
             print()
             if bge.logic.globalDict["Server"].start():
-                print()
+                cont = bge.logic.getCurrentController()
+                cont.owner["Website Address"] = bge.logic.globalDict["Server"].httpServer.get_address()
+                cont.owner["Socket Address"] = bge.logic.globalDict["Server"].wsServer.get_address()
                 bge.logic.globalDict["Server"].launch_webpage()
                 bge.logic.globalDict["Running"] = True
             else:
@@ -36,7 +38,9 @@ def main():
     cont = bge.logic.getCurrentController()
     scene = bge.logic.getCurrentScene()
     scene.active_camera = scene.objects['ControllerView']
-    bge.logic.globalDict["Server"] = WebSocketHttpServer(BlenderHandler, http_address=('',8000))
+    http_addr = ('', cont.owner["Website Port"])
+    ws_addr = ('', cont.owner["Socket Port"])
+    bge.logic.globalDict["Server"] = WebSocketHttpServer(BlenderHandler, http_address=http_addr, ws_address=ws_addr)
     run_server()
 
 if __name__ == '__main__':
