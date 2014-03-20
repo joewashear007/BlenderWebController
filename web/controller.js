@@ -20,11 +20,13 @@ function log(msg, title ){
     $("#DebugMsgList").prepend('<li><h3>'+title+'</h3><p>'+ msg +'</p></li>').listview( "refresh" );
 }
 function open (e) 	{ 
+    $("#ToggleCxnBtn").text("Disconnect");
 	log("Connected!"); 
 	$(".ErrMsg").fadeOut();
 };
 function close(e) 	{ 
 	log("Connection Closed!"); 
+    $("#ToggleCxnBtn").text("Connect");
 	$(".ErrMsg").text("Not Connected").fadeIn();
 };
 function msg  (e) 	{ 
@@ -37,7 +39,8 @@ function msg  (e) 	{
 	log(e.data);
 };
 function error(e)  	{ 
-	log("Error: "+ e );  
+	log("Error: "+ e );
+    $("#ToggleCxnBtn").text("Connect");    
 	$(".ErrMsg").text("Error! - Check Msg").fadeIn();	
 };
 function send(key,msg,speed){
@@ -56,7 +59,6 @@ function toggleConnection() {
     //Opens and closes a conenction using the address in #CxnWSAddress
 	if(s){
 		s.close(1000, "Try to Close");
-		$("#ToggleCxnBtn").text("Connect");
 		s = null;
 	}else{
 		try {
@@ -67,7 +69,6 @@ function toggleConnection() {
 				s.onclose = close;
 				s.onmessage = msg;
 				s.onerror = error;
-				$("#ToggleCxnBtn").text("Disconnect");
 			}
 		} catch (ex) {
 			error("Could Not Connected");
