@@ -75,14 +75,19 @@ class BlenderWebController_op(bpy.types.Operator):
         bpy.data.objects['Controller'].game.properties['Website Address'].show_debug = True
         bpy.data.objects['Controller'].game.properties['Socket Address'].show_debug = True
         
-        bpy.ops.logic.sensor_add(       type="DELAY",  name="StartServer")
-        bpy.ops.logic.controller_add(   type="PYTHON", name="Sever")
-        bpy.ops.logic.actuator_add(     type="MOTION", name="RotateRight")
-        bpy.ops.logic.actuator_add(     type="MOTION", name="RotateLeft")
-        bpy.ops.logic.actuator_add(     type="MOTION", name="RotateUp")
-        bpy.ops.logic.actuator_add(     type="MOTION", name="RotateDown")
-        bpy.ops.logic.actuator_add(     type="MOTION", name="ZRotateLeft")
-        bpy.ops.logic.actuator_add(     type="MOTION", name="ZRotateRight")
+        bpy.ops.logic.sensor_add(       type="DELAY",       name="StartServer")
+        bpy.ops.logic.sensor_add(       type="KEYBOARD",    name="QuitKey")
+        bpy.ops.logic.sensor_add(       type="MESSAGE",     name="QuitMsg")
+        bpy.ops.logic.controller_add(   type="PYTHON",      name="Sever")
+        bpy.ops.logic.controller_add(   type="PYTHON",      name="QuitSever")
+        bpy.ops.logic.actuator_add(     type="MOTION",      name="RotateRight")
+        bpy.ops.logic.actuator_add(     type="MOTION",      name="RotateLeft")
+        bpy.ops.logic.actuator_add(     type="MOTION",      name="RotateUp")
+        bpy.ops.logic.actuator_add(     type="MOTION",      name="RotateDown")
+        bpy.ops.logic.actuator_add(     type="MOTION",      name="ZRotateLeft")
+        bpy.ops.logic.actuator_add(     type="MOTION",      name="ZRotateRight")
+        bpy.ops.logic.actuator_add(     type="MESSAGE",     name="SendQuit")
+        bpy.ops.logic.actuator_add(     type="GAME",        name="QuitGame")
 
         #------------- Add Camera ----------------
         bpy.ops.object.add(type='CAMERA')
@@ -100,8 +105,12 @@ class BlenderWebController_op(bpy.types.Operator):
 
         #------------------ Add Logic Block Info -----------------------
         bpy.data.objects["Controller"].game.sensors["StartServer"].use_repeat           = True
+        bpy.data.objects["Controller"].game.sensors["QuitKey"].key                      = "Q"
+        bpy.data.objects["Controller"].game.sensors['QuitMsg'].subject                  = "QUIT"
         bpy.data.objects['Controller'].game.controllers['Sever'].use_priority           = True
         bpy.data.objects['Controller'].game.controllers['Sever'].text                   = bpy.data.texts['StartServer']
+        bpy.data.objects['Controller'].game.controllers['QuitSever'].text               = bpy.data.texts['EndServer']
+        bpy.data.objects['Controller'].game.actuators['QuitGame'].mode                  = "QUIT"
         bpy.data.objects["Controller"].game.actuators["RotateRight"].offset_rotation    = (0.0,     0.0,   math.radians(-1))
         bpy.data.objects["Controller"].game.actuators["RotateLeft"].offset_rotation     = (0.0,     0.0,    math.radians(1))
         bpy.data.objects["Controller"].game.actuators["RotateUp"].offset_rotation       = (math.radians(1),     0.0,    0.0)
@@ -110,8 +119,10 @@ class BlenderWebController_op(bpy.types.Operator):
         bpy.data.objects["Controller"].game.actuators["ZRotateRight"].offset_rotation   = (0.0,     math.radians(-1),   0.0)
         bpy.data.objects["ControllerView"].game.actuators["ZoomIn"].offset_location     = (0.0,     0.0,                0.01)
         bpy.data.objects["ControllerView"].game.actuators["ZoomOut"].offset_location    = (0.0,     0.0,                -0.01)
+        bpy.data.objects['Controller'].game.actuators['SendQuit'].to_property = bpy.data.objects['Controller'].name
 
         c = bpy.data.objects['Controller'].game.controllers['Sever']
+        d = bpy.data.objects['Controller'].game.controllers['QuitSever']
         bpy.data.objects['Controller'].game.sensors['StartServer'].link(c)
         bpy.data.objects['Controller'].game.actuators['RotateRight'].link(c)
         bpy.data.objects['Controller'].game.actuators['RotateLeft'].link(c)
@@ -119,9 +130,24 @@ class BlenderWebController_op(bpy.types.Operator):
         bpy.data.objects['Controller'].game.actuators['RotateDown'].link(c)
         bpy.data.objects['Controller'].game.actuators['ZRotateLeft'].link(c)
         bpy.data.objects['Controller'].game.actuators['ZRotateRight'].link(c)
+        bpy.data.objects['Controller'].game.actuators['SendQuit'].link(c)
         bpy.data.objects["ControllerView"].game.actuators["ZoomIn"].link(c)
         bpy.data.objects["ControllerView"].game.actuators["ZoomOut"].link(c)
+        
+        bpy.data.objects['Controller'].game.sensors['QuitKey'].link(d)
+        bpy.data.objects['Controller'].game.sensors['QuitMsg'].link(d)
+        bpy.data.objects['Controller'].game.actuators['QuitGame'].link(d)
 
+        #Show collaspsed
+        for s in bpy.data.objects["ControllerView"].game.sensors:
+            s.show_expanded = False
+        for s in bpy.data.objects["ControllerView"].game.actuators:
+            s.show_expanded = False
+        for s in bpy.data.objects["Controller"].game.sensors:
+            s.show_expanded = False
+        for s in bpy.data.objects["Controller"].game.actuators:
+            s.show_expanded = False
+        
         
         bpy.ops.object.select_all(action="DESELECT")
         bpy.data.objects['Controller'].select = True
