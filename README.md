@@ -6,13 +6,14 @@ Short Description
 
 This is a [Blender](http://blender.org) add-on that use your smartphone to control the view of model in the Blender Game Engine.
 
-Feature Description
+Description
 ---------------------
 This Blender add-on allows someone to present a 3D model and to control the camera positioning using a website. The add-on will create a new camera in the Blender scene and all the necessary scripts and logic to control it. It then create server to host the controlling website and a web-socket to communicate with the BGE. The website also also master/everyone locking, so a unique user or everyone can control the model. 
 
 This add-on is developed at the University of Toledo as a research project. The goal of this project is to make a piece of software that would make it easy for professor to present a 3D model and control it in front of students. The master/everyone control is so the professor can lock control allowing only himself or any one of his students to control the model.
 
-**Main Features:**
+Main Feature List:
+------------------------------------------
 
  1. Control the BGE using your smartphone!
  2. Everything included in the add-on, use only the standard python modules (website does use CDN so internet connection is required)
@@ -25,17 +26,26 @@ This add-on is developed at the University of Toledo as a research project. The 
 
  How to use
 -------------------------
- 8. Install and enable the "WebControllerAddon.py" add-on into blender. _Search Google for how to do this_ 
- 9. Under Render Settings tab, there should now be a "Web Control" panel. Click on the "Setup" button. This will generate all the needed objects, scripts and logic.
- 10. Reposition the camera and empty as needed
- 11. Click "p" to start the game engine
- 12. Use website to control the model
+_Note: The add-on "WebControllerAddon.py" is in the built_files folder_
+ 1. Install and enable the "WebControllerAddon.py" add-on into blender. _Search Google for how to do this_ 
+ 2. Under Render Settings tab, there should now be a "Web Control" panel. Click on the "Setup" button. This will generate all the needed objects, scripts and logic.
+ 3. Reposition the camera and empty as needed
+ 4. Click "p" to start the game engine
+ 5. Use website to control the model
+
+Hack or Modify
+------------------------------------
+If you want to hack/modify/fix/etc on this script, please feel free to do so. There is a build script that will auto minify and merge the files. This script does need some external python libraries with are listed in the script. 
 
 FAQ
 ------
-**Not Connect Banner on website load**
+**Can I run this Anaglyph or Stereoscopic 3D modes?**
 
-There is a nasty bug that is preventing the website from using the correct web-socket address. If you have the console open you will see that Blender has started the web-socket on port #####. Under the connections tab on the website, enter that number into the web-socket input field and click on connect
+Yes! Blender Game Engine has this featuer built in. Under the game settings, there is an option for this. Consult other references if you need help.
+
+**What are the funny strings of text in the top-right hand corner? Can I remove them?**
+
+These strings are debug properties. They show the current ip:port addresses that the script is currently hosting. If you would like to turn them off, under the Game menu, Select "Show Debug properties". (Game menu will only show up if you have the Game Engine Slected as your render type. This can be done with the dark pulldown to the right)
 
  **I can't connect to website.**
 
@@ -57,3 +67,6 @@ Please submit a GitHub issues!
 This project is licensed under the the MIT license. See included file for more details
 
 Copyright (c) <2014, Joseph Livecchi>
+
+
+    

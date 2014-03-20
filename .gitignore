@@ -215,6 +215,5 @@ pip-log.txt
 .mr.developer.cfg
 
 #The generated index file
-index.html
 *.blend1
 *.blend2

@@ -1,17 +1,15 @@
 /*
- * ----------------------------------------------------------------------------
- * "THE BEER-WARE LICENSE" (Revision 42):
- * <joewashear007@gmail.com> wrote this file. As long as you retain this notice you
- * can do whatever you want with this stuff. If we meet some day, and you think
- * this stuff is worth it, you can buy me a beer in return Joseph Livecchi
- * ----------------------------------------------------------------------------
+# Copyright (C) <2014> <Joseph Liveccchi, joewashear007@gmail.com>
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 /* -------------------------- Global Varibles ---------------------------- */ 
 var s = null;
 var somekeyDown = 0;
 var isMaster = false;
-
+var ipRegex = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{1,5})/
 window.onbeforeunload = close;
 
 /* -------------------------- Websocket Fucntions ---------------------------- 
@@ -22,11 +20,13 @@ function log(msg, title ){
     $("#DebugMsgList").prepend('<li><h3>'+title+'</h3><p>'+ msg +'</p></li>').listview( "refresh" );
 }
 function open (e) 	{ 
+    $("#ToggleCxnBtn").text("Disconnect");
 	log("Connected!"); 
 	$(".ErrMsg").fadeOut();
 };
 function close(e) 	{ 
 	log("Connection Closed!"); 
+    $("#ToggleCxnBtn").text("Connect");
 	$(".ErrMsg").text("Not Connected").fadeIn();
 };
 function msg  (e) 	{ 
@@ -39,7 +39,8 @@ function msg  (e) 	{
 	log(e.data);
 };
 function error(e)  	{ 
-	log("Error: "+ e );  
+	log("Error: "+ e );
+    $("#ToggleCxnBtn").text("Connect");    
 	$(".ErrMsg").text("Error! - Check Msg").fadeIn();	
 };
 function send(key,msg,speed){
@@ -58,18 +59,16 @@ function toggleConnection() {
     //Opens and closes a conenction using the address in #CxnWSAddress
 	if(s){
 		s.close(1000, "Try to Close");
-		$("#ToggleCxnBtn").text("Connect");
 		s = null;
 	}else{
 		try {
             address = $("#CxnWSAddress").val();
-			if (address != "" ||  address != "$address") {
+			if ( ipRegex.test(address)) {
 				s = new WebSocket(address);
 				s.onopen = open;
 				s.onclose = close;
 				s.onmessage = msg;
 				s.onerror = error;
-				$("#ToggleCxnBtn").text("Disconnect");
 			}
 		} catch (ex) {
 			error("Could Not Connected");
