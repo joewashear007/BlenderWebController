@@ -46,12 +46,7 @@ class BlenderWebController_op(bpy.types.Operator):
     def execute(self, context):
         bpy.context.scene.render.engine = 'BLENDER_GAME'
         bpy.context.scene.game_settings.show_debug_properties = True
-        #-------------- Create Text Files --------------------------
-        bpy.ops.text.new()
-        bpy.data.texts[-1].name = "Read Me"
-        bpy.data.texts["Read Me"].write("Hello World")
-        print("Created the Read me file")
-        
+        #-------------- Create Text Files --------------------------   
         bpy.ops.text.new()
         bpy.data.texts[-1].name = 'StartServer'
         bpy.data.texts['StartServer'].from_string($_START_SERVER)
@@ -66,11 +61,6 @@ class BlenderWebController_op(bpy.types.Operator):
         bpy.data.texts[-1].name = "server.py"
         bpy.data.texts["server.py"].use_module = True
         bpy.data.texts["server.py"].from_string($_SERVER)
-                    
-        
-        print("Done Creating Files")
-        for x in bpy.data.texts:
-            print(x.name)
         
         #-------------- Add empty Controller ------------------------
         bpy.ops.object.add(type='EMPTY')
