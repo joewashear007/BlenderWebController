@@ -15,14 +15,15 @@ This add-on is developed at the University of Toledo as a research project. The 
 Main Feature List:
 ------------------------------------------
 
- 1. Control the BGE using your smartphone!
- 2. Everything included in the add-on, use only the standard python modules (website does use CDN so internet connection is required)
- 3. Create new objects in blender, so it won't modify anything
- 4. Uses python to create a web host to launch the controlling website
- 5. The website features button, keyboard, and touch controls
- 6. The website has a QR code for the connection information to easily share with others
- 7. Master/Everyone control modes; Switch on will only allow that user to control the model, Off will allow anyone to control it.
+ + Control the BGE using your smartphone!
+ + Everything included in the add-on, use only the standard python modules (website does use CDN so internet connection is required)
+ + Create new objects in blender, so it won't modify anything
+ + Uses python to create a web host to launch the controlling website
+ + The website features button, keyboard, and touch controls
+ + The website has a QR code for the connection information to easily share with others
+ + Master/Everyone control modes; Switch on will only allow that user to control the model, Off will allow anyone to control it.
 
+>
 
  How to use
 -------------------------
@@ -32,6 +33,8 @@ _Note: The add-on "WebControllerAddon.py" is in the built_files folder_
  3. Reposition the camera and empty as needed
  4. Click "p" to start the game engine
  5. Use website to control the model
+ 6. When finished, click "q" to exit
+ **Use "q" to exit the game instead of "esc" so the script will clean of the temp files it creates!**
 
 Hack or Modify
 ------------------------------------
@@ -47,13 +50,19 @@ Yes! Blender Game Engine has this featuer built in. Under the game settings, the
 
 These strings are debug properties. They show the current ip:port addresses that the script is currently hosting. If you would like to turn them off, under the Game menu, Select "Show Debug properties". (Game menu will only show up if you have the Game Engine Slected as your render type. This can be done with the dark pulldown to the right)
 
- **I can't connect to website.**
+ **The website won't load at all**
 
 The machine that Blender is running on and the device you are trying to connect with have to be on the same network. Otherwise you would have to set some kind of 3rd party server. 
 
-**The Website looks like crap**
+**The website looks like crap**
 
 In order minimize the file size, improve  make this script easy to edit, he website uses CDN's to get some JavaScript files. Make sure you have external internet connection so you device can fetch those files. 
+
+**The website always has this connection error banner and doesn't work**
+
+This could be possible from a temp not being deleted OR a background process of blender not being closed properly.
+For the first one, clean out your temporary directory (on windows: C:\Users\username\Appdata\local\temp, linux: /tmp/)
+For the second one, look the the runnig processes to see of blender is running. Close it and try again.
 
 **Why are there funny play buttons on the bottom of the website?**
 
