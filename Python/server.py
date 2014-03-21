@@ -325,7 +325,6 @@ class WebSocketHttpServer():
     def _clean_server_temp_dir(self):
         os.chdir(self.cwd)
         shutil.rmtree(self.tempdir)
-        os.rmdir(self.tempdir)
         
     def _make_server_temp_dir(self):
         #make the new temp directory
@@ -343,7 +342,7 @@ class WebSocketHttpServer():
             self.wsServer.stop()
             self._clean_server_temp_dir()
         except Exception as e:
-            print("The Servers were never started")
+            print("The Servers were never started", e)
         
     def start(self):
         try:
