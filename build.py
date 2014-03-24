@@ -23,7 +23,13 @@ import shutil
 from html.parser import HTMLParser
 from string import Template
 
+
+#JS File Infomation
+in_folder = "src/web/"
+out_folder = "tmp/"
+
 #output directory
+
 output = "built_files/"
 temp = "tmp/"
 output_files = ["WebControllerAddon.py"]
@@ -66,6 +72,28 @@ class HTMLBuilder(HTMLParser):
         else:
             return None
 
+            
+class FileBuilder:
+    def __init__(self, files, in_folder, out_folder):
+        self.in_dir = in_folder
+        self.out_dir = out_folder
+        self.files = files
+        
+    def minify(self, minifer):
+        for file in self.files:
+            content = open(self.in_dir + file).readlines()
+            min_content = minifer(content)
+            output = open(self.out_dir + file, "w").write(min_content)
+
+def miniy_js(content):
+    content = "\n".join(content)
+    return slimit.minify(content, mangle=True, mangle_toplevel=True)
+    
+def miniy_css(content):
+    content = "\n".join(content)
+    return cssmin.cssmin(content)
+    
+    
 
 
 def main():
@@ -79,13 +107,19 @@ def main():
     os.makedirs(temp)
     
     #minify the CSS files
-    for file in css_files:
-        with open(temp + file, "w") as f:
-            f.write( cssmin.cssmin(open("web/" + file).read()) )
+    css_min = FileBuilder(css_files, "web/", "tmp/")
+    css_min.minify(miniy_css)
+    # for file in css_files:
+        # with open(temp + file, "w") as f:
+            # f.write( cssmin.cssmin(open("web/" + file).read()) )
     #Minify the Javascript files
-    for file in js_files:      
-        with open( temp + file, "w") as f:
-            f.write( slimit.minify(open("web/"+file).read(), mangle=True, mangle_toplevel=True) )
+    js_min = FileBuilder(js_files, "web/", "tmp/")
+    js_min.minify(miniy_css)
+    # for file in js_files:      
+        # with open( temp + file, "w") as f:
+            # f.write( slimit.minify(open("web/"+file).read(), mangle=True, mangle_toplevel=True) )
+            
+            
     #Adds the minify CSS & JS file in HTML, minfy the HTML
     for file in html_files:  
         content = open("web/"+ file).readlines()
