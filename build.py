@@ -37,16 +37,7 @@ output_files = ["WebControllerAddon.py"]
 css_files = ["style.css", "BlenderController.min.css"]
 js_files = ["controller.js"]
 html_files = ["index.html"]
-py_files = ["handler.py", "server_test.py", "startServers.py", "endServers.py"]
-py_files_with_web_subs = ["server.py"]
-py_files_with_py_subs = ["WebControllerAddon.py"]
-
-
-
-#Replacements in python files
-web_replacements = {"_WEBSITE": "index.html"} 
-py_replacements = {"_START_SERVER":"startServers.py", "_END_SERVER":"endServers.py", "_HANDLER":"handler.py", "_SERVER":"server.py"} 
-
+py_files = ["handler.py", "server_test.py", "startServers.py", "endServers.py", "server.py", "WebControllerAddon.py"]
 
 class HTMLBuilder(HTMLParser):
     def __init__(self):
@@ -74,26 +65,34 @@ class HTMLBuilder(HTMLParser):
 
             
 class FileBuilder:
-    def __init__(self, files, in_folder, out_folder):
+    replacements = dict()
+    def __init__(self, files, minify_func, in_folder, out_folder ):
         self.in_dir = in_folder
         self.out_dir = out_folder
         self.files = files
+        self.func_subsitute = None
+        self.func_minify = minify_func
         
-    def minify(self, minifer):
+    def minify(self):
         for file in self.files:
-            content = open(self.in_dir + file).readlines()
-            min_content = minifer(content)
+            print("Minifying: ", file, "   ...")
+            content = open(self.in_dir + file).read()
+            content = Template(content).safe_substitute(FileBuilder.replacements)
+            min_content = self.func_minify(content)
             output = open(self.out_dir + file, "w").write(min_content)
+            # all cap filename and replace dot wioth underscorse to get the replace string name
+            FileBuilder.replacements["_"+file.replace(".", "_").upper()] = '"""' + min_content + '"""'
+            print("Done!")
+
 
 def miniy_js(content):
-    content = "\n".join(content)
     return slimit.minify(content, mangle=True, mangle_toplevel=True)
     
 def miniy_css(content):
-    content = "\n".join(content)
     return cssmin.cssmin(content)
     
 def miniy_html(content):
+    content = content.split("\n")
     new_content = ""
     p = HTMLBuilder()
     for line in content:
@@ -106,6 +105,11 @@ def miniy_html(content):
             new_content += line
     return htmlmin.minify(new_content, remove_comments=True, remove_empty_space=True, )
 
+def miniy_py(content):
+    minifier = mnfy.SourceCode()
+    minifier.visit(ast.parse(content))
+    return str(minifier)
+
 
 def main():
     # Makes the output dir
@@ -117,76 +121,22 @@ def main():
         shutil.rmtree(temp) 
     os.makedirs(temp)
     
-    #minify the CSS files
-    css_min = FileBuilder(css_files, "web/", "tmp/")
-    css_min.minify(miniy_css)
-    # for file in css_files:
-        # with open(temp + file, "w") as f:
-            # f.write( cssmin.cssmin(open("web/" + file).read()) )
-    #Minify the Javascript files
-    js_min = FileBuilder(js_files, "web/", "tmp/")
-    js_min.minify(miniy_css)
-    # for file in js_files:      
-        # with open( temp + file, "w") as f:
-            # f.write( slimit.minify(open("web/"+file).read(), mangle=True, mangle_toplevel=True) )
-            
-            
-    #Adds the minify CSS & JS file in HTML, minfy the HTML
-    # for file in html_files:  
-        # content = open("web/"+ file).readlines()
-        # new_content = ""
-        # p = HTMLBuilder()
-        # for line in content:
-            # line = line.strip()
-            # if line :
-                # p.feed(line)
-                # replacement = p.replacement()
-                # if replacement:
-                    # line = replacement
-                # new_content += line
-        # f = open(temp + file, "w")
-        # f.write( htmlmin.minify(new_content, remove_comments=True, remove_empty_space=True, ))
-    html_min = FileBuilder(html_files, "web/", "tmp/")
-    html_min.minify(miniy_html)
+    builders = []
+    builders.append( FileBuilder(css_files, miniy_css, "web/", "tmp/") )
+    builders.append( FileBuilder(js_files, miniy_js, "web/", "tmp/") )
+    builders.append( FileBuilder(html_files, miniy_html, "web/", "tmp/") )
+    builders.append( FileBuilder(py_files, miniy_py, "python/", "tmp/") )
+    
+    for b in builders:
+        b.minify()
+
+#!!! Do this !!!
+        # s = open(temp  + py_replacements[i] ).read()
+        # s = s.replace("\\n", "\\\\n").replace("\\d", "\\\\d").replace("\\'", "\\\\'")
+        # subs_py[i] = """'''""" + s + """'''"""
+
         
         
-    #Preforms minify python files
-    for file in py_files:
-        content = open("python/" + file).read()
-        minifier = mnfy.SourceCode()
-        minifier.visit(ast.parse(content))
-        with open(temp + file, "w") as f:
-            f.write(  str(minifier) ) 
-    
-    #Build the website subsitute dictionary
-    subs_web= dict()
-    for i in web_replacements:
-        subs_web[i] = '"""' + open(temp  + web_replacements[i]).read() + '"""'
-    #Preforms Website Subsitutes on Pythons files, Minify them
-    for file in py_files_with_web_subs:
-        content = open("python/" + file).read()
-        new_content = Template(content).safe_substitute(subs_web)
-        minifier = mnfy.SourceCode()
-        minifier.visit(ast.parse(new_content))
-        with open(temp + file, "w") as f:
-            f.write(  str(minifier) ) 
-    
-    #Build subsitute dictionary
-    subs_py = dict()
-    for i in py_replacements:
-        s = open(temp  + py_replacements[i] ).read()
-        s = s.replace("\\n", "\\\\n").replace("\\d", "\\\\d").replace("\\'", "\\\\'")
-        subs_py[i] = """'''""" + s + """'''"""
-    #Preforms Subsitutes on Pythons files, Minify them
-    for file in py_files_with_py_subs:
-        content = open("python/" + file).read()
-        new_content = Template(content).safe_substitute(subs_py)
-        minifier = mnfy.SourceCode()
-        minifier.visit(ast.parse(new_content))
-        with open(temp + file, "w") as f:
-            f.write(  str(minifier) ) 
-            
-    #Copy the final output
     for i in output_files:
         shutil.copyfile(temp + i, output + i)
     
