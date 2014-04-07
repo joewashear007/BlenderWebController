@@ -93,7 +93,18 @@ def miniy_css(content):
     content = "\n".join(content)
     return cssmin.cssmin(content)
     
-    
+def miniy_html(content):
+    new_content = ""
+    p = HTMLBuilder()
+    for line in content:
+        line = line.strip()
+        if line:
+            p.feed(line)
+            replacement = p.replacement()
+            if replacement:
+                line = replacement
+            new_content += line
+    return htmlmin.minify(new_content, remove_comments=True, remove_empty_space=True, )
 
 
 def main():
@@ -121,20 +132,23 @@ def main():
             
             
     #Adds the minify CSS & JS file in HTML, minfy the HTML
-    for file in html_files:  
-        content = open("web/"+ file).readlines()
-        new_content = ""
-        p = HTMLBuilder()
-        for line in content:
-            line = line.strip()
-            if line :
-                p.feed(line)
-                replacement = p.replacement()
-                if replacement:
-                    line = replacement
-                new_content += line
-        f = open(temp + file, "w")
-        f.write( htmlmin.minify(new_content, remove_comments=True, remove_empty_space=True, ))
+    # for file in html_files:  
+        # content = open("web/"+ file).readlines()
+        # new_content = ""
+        # p = HTMLBuilder()
+        # for line in content:
+            # line = line.strip()
+            # if line :
+                # p.feed(line)
+                # replacement = p.replacement()
+                # if replacement:
+                    # line = replacement
+                # new_content += line
+        # f = open(temp + file, "w")
+        # f.write( htmlmin.minify(new_content, remove_comments=True, remove_empty_space=True, ))
+    html_min = FileBuilder(html_files, "web/", "tmp/")
+    html_min.minify(miniy_html)
+        
         
     #Preforms minify python files
     for file in py_files:
