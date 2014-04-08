@@ -27,7 +27,7 @@ Main Feature List:
 
  How to use
 -------------------------
-_Note: The add-on "WebControllerAddon.py" is in the built_files folder_
+_Note: The add-on "WebControllerAddon.py" is in the main directory_
  1. Install and enable the "WebControllerAddon.py" add-on into blender. _Search Google for how to do this_ 
  2. Under Render Settings tab, there should now be a "Web Control" panel. Click on the "Setup" button. This will generate all the needed objects, scripts and logic.
  3. Reposition the camera and empty as needed
@@ -57,6 +57,8 @@ The machine that Blender is running on and the device you are trying to connect 
 **The website looks like crap**
 
 In order minimize the file size, improve  make this script easy to edit, he website uses CDN's to get some JavaScript files. Make sure you have external internet connection so you device can fetch those files. 
+
+If the website is working fine, but youstill think it look bad from a design point of view, feel free to help create a new JQuery Mobile Theme!!!
 
 **The website always has this connection error banner and doesn't work**
 
