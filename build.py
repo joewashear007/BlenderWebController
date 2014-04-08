@@ -56,7 +56,7 @@ class HTMLBuilder(HTMLParser):
         #Returns what should be replaced
         if self._replace:
             tag, file = self._replace 
-            return "<"+tag+">" + FileBuilder.replacements["_"+file.replace(".", "_").upper()].strip('"""') +"</"+tag+">"
+            return "<"+tag+">" + FileBuilder.replacements["_"+file.replace(".", "_").upper()].strip('"""').replace("\\\\d", "\\d").replace("\\.", "\.") +"</"+tag+">"
         else:
             return None
         
@@ -112,7 +112,8 @@ def main():
         os.makedirs(minified_files_dir)
     else:
         for file in glob.glob(minified_files_dir+"*"):
-            os.remove(file)
+            if os.path.isfile(file):
+                os.remove(file)
     
     builders = []
     builders.append( FileBuilder( css_files,  miniy_css, source_files_dir+"web/",   minified_files_dir) )
