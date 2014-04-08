@@ -24,7 +24,7 @@ from string import Template
 
 
 def writeWebsite(file, new_address):
-    site = Template($_WEBSITE).safe_substitute(address=new_address)
+    site = Template($_INDEX_HTML).safe_substitute(address=new_address)
     html = open(file ,"w")
     html.write(site)
     html.close()

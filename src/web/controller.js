@@ -9,7 +9,7 @@
 var s = null;
 var somekeyDown = 0;
 var isMaster = false;
-var ipRegex = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{1,5})/
+var ipRegex = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{1,5})/;
 window.onbeforeunload = close;
 
 /* -------------------------- Websocket Fucntions ---------------------------- 
@@ -56,7 +56,7 @@ function send(key,msg,speed){
     }
 }
 function toggleConnection() {
-    //Opens and closes a conenction using the address in #CxnWSAddress
+    /*Oens and closes a conenction using the address in #CxnWSAddress*/
 	if(s){
 		s.close(1000, "Try to Close");
 		s = null;
@@ -77,7 +77,7 @@ function toggleConnection() {
 }
 function toggleLockCommand()    {    send("MASTER_REQUEST", !isMaster );  }
 function toggleSlave(locked)    {   
-    //Toogle the control of all commands with locked status
+    /*Toogle the control of all commands with locked status*/
     if(locked){
         $(".ctrlBtn").addClass('ui-disabled');
         $(".ErrMsg").text("Locked").fadeIn();	
@@ -108,25 +108,24 @@ $(document).ready(function(){
 	toggleConnection();
 	$("#CxnQR").qrcode(document.URL);
     
-    // ---------------- UI Button Events ---------------------------------
+    /* ---------------- UI Button Events --------------------------------- */
 
     $("#ToggleCxnBtn")   .click( toggleConnection );
     $(".MasterLock")     .click( toggleLockCommand ); 
     $("#DebugMsgListBtn").click( function() { $("#DebugMsgList").empty();   });
     $("a").bind("contextmenu", function(e) {         e.preventDefault();    });
     $("button").bind("contextmenu", function(e) {         e.preventDefault();    });
-    //------------------ Control events ----------------------------------
+    /* ------------------ Control events ---------------------------------- */
     
-    //Arrow Button click event
-    //$(".ctrlBtn").on("mousedown vmousedown tap",  function(e) {  e.preventDefault(); send("Actuator", $(this).attr("id"), $("#btn_speed").val()/1000 );  })
-    //             .on("mouseup mouseleave vmouseup vmouseout",  function() { send("Stop", "All");                   });
+    /*Arrow Button click event*/
+    /*$(".ctrlBtn").on("mousedown vmousedown tap",  function(e) {  e.preventDefault(); send("Actuator", $(this).attr("id"), $("#btn_speed").val()/1000 );  })
+                 .on("mouseup mouseleave vmouseup vmouseout",  function() { send("Stop", "All");                   }); */
     $(".ctrlBtn").on("vmousedown ",  function(e) {  e.preventDefault(); send("Actuator", $(this).attr("id"), $("#btn_speed").val()/1000 );  })
                  .on("vmouseup ",  function() { send("Stop", "All");                   });
-    // Reset Button
     $(".ResetModel").mousedown(    function() { send("Reset", true);                })
                     .mouseup  (    function() { send("Stop", "All");                });
 
-    // Swipe Control
+    /* ---------------- Swipe Control --------------------- */
     var element = document.getElementById('SwipeControl');
     var hammertime = Hammer(element, {
             prevent_default: true,
@@ -148,23 +147,16 @@ $(document).ready(function(){
                                           event.gesture.stopDetect();
                                         });
     
-    
-    
-    //Keyboard Events
+    /* -------------- KEyboard Events ----------------------- */
     $(document).keydown( function(event) {
-        //Left Arrow
         if ( event.which == 37 && !somekeyDown)
             { event.preventDefault(); somekeyDown = true; event.shiftKey ? send("Actuator", "ZRotateLeft" ) : send("Actuator", "RotateLeft" ); }
-        // Up Arrow 
         if ( event.which == 38 && !somekeyDown) 
             { event.preventDefault(); somekeyDown = true; event.shiftKey ? send("Actuator", "ZoomOut" ) :send("Actuator", "RotateUp" ); }
-        //Right Arrow
         if ( event.which == 39 && !somekeyDown) 
             { event.preventDefault(); somekeyDown = true; event.shiftKey ? send("Actuator", "ZRotateRight" ) :send("Actuator", "RotateRight" ); }
-        //Down Arrow    
         if ( event.which == 40 && !somekeyDown) 
             { event.preventDefault(); somekeyDown = true; event.shiftKey ? send("Actuator", "ZoomIn" ) :send("Actuator", "RotateDown" ); }
-        // Esccape Keyboard
         if ( event.which == 27 && !somekeyDown) 
             { somekeyDown = true; toggleConnection(); }   
     });

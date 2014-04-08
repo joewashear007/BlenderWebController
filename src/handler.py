@@ -54,4 +54,4 @@ class BlenderHandler(server.WebSocketHandler):
     
     def on_close(self):
         cont = bge.logic.getCurrentController()
-        cont.activate(cont.actuators["QuitMsg"])
+        cont.activate(cont.actuators["SendQuit"])
