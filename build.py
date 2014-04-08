@@ -24,12 +24,8 @@ from html.parser import HTMLParser
 from string import Template
 
 
-#JS File Infomation
-in_folder = "src/web/"
-out_folder = "tmp/"
 
 #output directory
-
 output = "built_files/"
 temp = "tmp/"
 output_files = ["WebControllerAddon.py"]
@@ -80,8 +76,8 @@ class FileBuilder:
             content = Template(content).safe_substitute(FileBuilder.replacements)
             min_content = self.func_minify(content)
             output = open(self.out_dir + file, "w").write(min_content)
-            # all cap filename and replace dot wioth underscorse to get the replace string name
-            FileBuilder.replacements["_"+file.replace(".", "_").upper()] = '"""' + min_content + '"""'
+            # all cap filename and replace dot wioth underscorse to get the replace string name, add double slashes
+            FileBuilder.replacements["_"+file.replace(".", "_").upper()] = '"""' + min_content.replace("\\n", "\\\\n").replace("\\d", "\\\\d").replace("\\'", "\\\\'") + '"""'
             print("Done!")
 
 
@@ -129,14 +125,7 @@ def main():
     
     for b in builders:
         b.minify()
-
-#!!! Do this !!!
-        # s = open(temp  + py_replacements[i] ).read()
-        # s = s.replace("\\n", "\\\\n").replace("\\d", "\\\\d").replace("\\'", "\\\\'")
-        # subs_py[i] = """'''""" + s + """'''"""
-
-        
-        
+                
     for i in output_files:
         shutil.copyfile(temp + i, output + i)
     
