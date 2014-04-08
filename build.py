@@ -18,22 +18,23 @@ import cssmin
 import htmlmin
 import mnfy
 import ast
-import os
-import shutil
+import os, glob, shutil
 from html.parser import HTMLParser
 from string import Template
 
+#file directories
+minified_files_dir  = "bin/"
+source_files_dir    = "src/"
 
-
-#output directory
-output = "built_files/"
-temp = "tmp/"
-output_files = ["WebControllerAddon.py"]
 #List of ile to be minified
 css_files = ["style.css", "BlenderController.min.css"]
 js_files = ["controller.js"]
 html_files = ["index.html"]
 py_files = ["handler.py", "server_test.py", "startServers.py", "endServers.py", "server.py", "WebControllerAddon.py"]
+
+#List of files to move once built
+output_files = ["WebControllerAddon.py"]
+
 
 class HTMLBuilder(HTMLParser):
     def __init__(self):
@@ -55,11 +56,10 @@ class HTMLBuilder(HTMLParser):
         #Returns what should be replaced
         if self._replace:
             tag, file = self._replace 
-            return "<"+tag+">" + open(temp + file).read() +"</"+tag+">"
+            return "<"+tag+">" + FileBuilder.replacements["_"+file.replace(".", "_").upper()].strip('"""') +"</"+tag+">"
         else:
             return None
-
-            
+        
 class FileBuilder:
     replacements = dict()
     def __init__(self, files, minify_func, in_folder, out_folder ):
@@ -73,13 +73,12 @@ class FileBuilder:
         for file in self.files:
             print("Minifying: ", file, "   ...")
             content = open(self.in_dir + file).read()
-            content = Template(content).safe_substitute(FileBuilder.replacements)
+            content = Template( content).safe_substitute(FileBuilder.replacements)
             min_content = self.func_minify(content)
             output = open(self.out_dir + file, "w").write(min_content)
             # all cap filename and replace dot wioth underscorse to get the replace string name, add double slashes
             FileBuilder.replacements["_"+file.replace(".", "_").upper()] = '"""' + min_content.replace("\\n", "\\\\n").replace("\\d", "\\\\d").replace("\\'", "\\\\'") + '"""'
             print("Done!")
-
 
 def miniy_js(content):
     return slimit.minify(content, mangle=True, mangle_toplevel=True)
@@ -109,25 +108,23 @@ def miniy_py(content):
 
 def main():
     # Makes the output dir
-    if os.path.exists(output):
-        shutil.rmtree(output) 
-    os.makedirs(output)
-    
-    if os.path.exists(temp):
-        shutil.rmtree(temp) 
-    os.makedirs(temp)
+    if not os.path.exists(minified_files_dir):
+        os.makedirs(minified_files_dir)
+    else:
+        for file in glob.glob(minified_files_dir+"*"):
+            os.remove(file)
     
     builders = []
-    builders.append( FileBuilder(css_files, miniy_css, "web/", "tmp/") )
-    builders.append( FileBuilder(js_files, miniy_js, "web/", "tmp/") )
-    builders.append( FileBuilder(html_files, miniy_html, "web/", "tmp/") )
-    builders.append( FileBuilder(py_files, miniy_py, "python/", "tmp/") )
+    builders.append( FileBuilder( css_files,  miniy_css, source_files_dir+"web/",   minified_files_dir) )
+    builders.append( FileBuilder( js_files,   miniy_js,  source_files_dir+"web/",   minified_files_dir) )
+    builders.append( FileBuilder( html_files, miniy_html,source_files_dir+"web/",   minified_files_dir) )
+    builders.append( FileBuilder( py_files,   miniy_py,  source_files_dir,          minified_files_dir) )
     
     for b in builders:
         b.minify()
                 
-    for i in output_files:
-        shutil.copyfile(temp + i, output + i)
+    for file in output_files:
+        shutil.copyfile(minified_files_dir+file, "./"+file)
     
 if __name__ == '__main__':
     main()
