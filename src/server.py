@@ -159,10 +159,10 @@ class WebSocketHandler(socketserver.BaseRequestHandler):
             raise Exception("Couldn't find the key?:", data)
         print('Handshaking...   ', end = '')
         digest = self._websocketHash(key)
-        response = 'HTTP/1.1 101 Switching Protocols\n'
-        response += 'Upgrade: websocket\n'
-        response += 'Connection: Upgrade\n'
-        response += 'Sec-WebSocket-Accept: %s\n\n' % digest
+        response = 'HTTP/1.1 101 Switching Protocols\r\n'
+        response += 'Upgrade: websocket\r\n'
+        response += 'Connection: Upgrade\r\n'
+        response += 'Sec-WebSocket-Accept: %s\r\n\r\n' % digest
         self.handshake_done = self.request.send(response.encode())
         print("Sending Connected Message...   ", end = '')
         if self.handshake_done:
