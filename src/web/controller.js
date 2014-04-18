@@ -44,10 +44,10 @@ function error(e)  	{
 	$(".ErrMsg").text("Error! - Check Msg").fadeIn();	
 };
 function send(key,msg,speed){
-    if(typeof(speed)==='undefined') speed = 0.001;
     var raw_data = {};
     raw_data[key] = msg;
-    raw_data["Speed"] = speed;
+    if(typeof(speed)!=='undefined')
+    	raw_data["Speed"] = speed;
     var data = JSON.stringify(raw_data);
     if(s){
        s.send(data);
@@ -121,6 +121,7 @@ $(document).ready(function(){
     /*$(".ctrlBtn").on("mousedown vmousedown tap",  function(e) {  e.preventDefault(); send("Actuator", $(this).attr("id"), $("#btn_speed").val()/1000 );  })
                  .on("mouseup mouseleave vmouseup vmouseout",  function() { send("Stop", "All");                   }); */
     $(".ctrlBtn").on("vmousedown ",  function(e) {  e.preventDefault(); send("Actuator", $(this).attr("id"), $("#btn_speed").val()/1000 );  })
+    $(".actionBtn").on("vmousedown ",  function(e) {  e.preventDefault(); send("Actuator", $(this).attr("id"));  })
                  .on("vmouseup ",  function() { send("Stop", "All");                   });
     $(".ResetModel").mousedown(    function() { send("Reset", true);                })
                     .mouseup  (    function() { send("Stop", "All");                });
