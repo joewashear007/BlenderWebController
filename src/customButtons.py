@@ -1,44 +1,17 @@
-/*
+#! /usr/bin/env python3
+
 # Copyright (C) <2014> <Joseph Liveccchi, joewashear007@gmail.com>
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 # The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
- 
-body { -webkit-touch-callout: none !important; 
-    height: 100%;
-}
-a { -webkit-user-select: none !important; }
 
-.ctrlBtn{
-    padding-top: 0.7em; 
-}
-#SwipeControl{
-    height: 100%;
-}
-#Page-Swipe .fullHeight {
-    position : absolute;
-    top      : 40px;
-    right    : 0;
-    bottom   : 70px;
-    left     : 0;
-}
-.iconButton  {
-    -webkit-border-radius: .3125em !important;
-    border-radius: .3125em !important;  
-}
-.ui-footer{
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    right: 0px; 
-    min-height: 48.25px;
-}
 
-#popup-strength input{
-    display: none;
-}
 
-#popup-strength .ui-slider-track {
-    margin-left: 15px;
-}
+from server import WebSocketHandler
+
+buttons = {}
+buttons["Custom"] = ""
+buttons["Actions"] = ""
+
+
+WebSocketHandler.customButtons = buttons

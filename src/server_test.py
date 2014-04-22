@@ -9,6 +9,7 @@
  
 from server import WebSocketHttpServer
 from server import WebSocketHandler
+import customButtons
 
 def main():
     run = True

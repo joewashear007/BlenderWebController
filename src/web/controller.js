@@ -15,13 +15,13 @@ window.onbeforeunload = close;
 /* -------------------------- Websocket Fucntions ---------------------------- 
  Functions used to handel the connection, opening, closing sendgin, and reciveing of the websocket
 */ 
-function log(msg, title ){
-    if(typeof(title)==='undefined') title="Message" ;
-    $("#DebugMsgList").prepend('<li><h3>'+title+'</h3><p>'+ msg +'</p></li>').listview( "refresh" );
+function log(msg){
+    $("#DebugMsgList").prepend('<li><p>'+ msg +'</p></li>').listview( "refresh" );
+    console.log("MESSAGE: " + msg);
 }
-function open (e) 	{ 
+function open (e) 	{
+    log("Connected!");
     $("#ToggleCxnBtn").text("Disconnect");
-	log("Connected!"); 
 	$(".ErrMsg").fadeOut();
 };
 function close(e) 	{ 
@@ -30,10 +30,11 @@ function close(e) 	{
 	$(".ErrMsg").text("Not Connected").fadeIn();
 };
 function msg  (e) 	{ 
-    msg_data = JSON.parse(e.data);
-    if (msg_data.hasOwnProperty("SLAVE")){ toggleSlave(msg_data["SLAVE"]); }
+    var msg_data = JSON.parse(e.data);
+    if (msg_data.hasOwnProperty("BUTTONS")){ addCustomButtons(msg_data.BUTTONS ); }
+    if (msg_data.hasOwnProperty("SLAVE")){ toggleSlave(msg_data.SLAVE); }
     if (msg_data.hasOwnProperty("MASTER_STATUS")){
-        isMaster = msg_data["MASTER_STATUS"];
+        isMaster = msg_data.MASTER_STATUS;
         styleMaster();
     }
 	log(e.data);
@@ -56,7 +57,7 @@ function send(key,msg,speed){
     }
 }
 function toggleConnection() {
-    /*Oens and closes a conenction using the address in #CxnWSAddress*/
+    /*Opens and closes a conenction using the address in #CxnWSAddress*/
 	if(s){
 		s.close(1000, "Try to Close");
 		s = null;
@@ -95,7 +96,18 @@ function styleMaster(){
     }
     
 }
-
+function addCustomButtons(buttonJSON){
+    var buttons = '<div data-role="controlgroup" data-type="horizontal" data-mini="true">';
+    $.each(buttonJSON, function(text, action) {
+        if( text =="" && action == "")
+            buttons += '</div><div data-role="controlgroup" data-type="horizontal" data-mini="true">';
+        else
+            buttons += '<a class="ui-btn ui-corner-all ui-shadow actionBtn" id="'+action+'">'+text+'</a>';
+    });
+    buttons += '</div>';
+    $(".customButtons").html(buttons);
+    log("Added Custom Buttons");
+}
 /* -------------------------- Document Ready Function ---------------------------- 
  Main function, Handels all events, swipe, and keybord control
  Makes the QR code
@@ -104,27 +116,25 @@ function styleMaster(){
 $(document).ready(function(){
     $("#CxnHTTPAddress").val(document.URL);
     $("#CxnWSAddress").val(address);
+    $("#CxnQR").qrcode(document.URL);
     $("#DebugMsgList").listview({create: function( event, ui ) {}} );
 	toggleConnection();
-	$("#CxnQR").qrcode(document.URL);
+	
     
     /* ---------------- UI Button Events --------------------------------- */
 
     $("#ToggleCxnBtn")   .click( toggleConnection );
     $(".MasterLock")     .click( toggleLockCommand ); 
     $("#DebugMsgListBtn").click( function() { $("#DebugMsgList").empty();   });
-    $("a").bind("contextmenu", function(e) {         e.preventDefault();    });
+    
+    $("a")     .bind("contextmenu", function(e) {         e.preventDefault();    });
     $("button").bind("contextmenu", function(e) {         e.preventDefault();    });
     /* ------------------ Control events ---------------------------------- */
+    $("body").on("vmousedown ",  ".ctrlBtn",   function(e) { e.preventDefault(); send("Actuator", $(this).attr("id"), $("#btn_speed").val()/1000 );  });
+    $("body").on("vmousedown ", ".actionBtn",  function(e) { e.preventDefault(); send("Actuator", $(this).attr("id"));  });
+    $("body").on("mouseup",     "a,button",    function()  { send("Stop", "All");                });
+    $(".ResetModel").mousedown(    function() { send("Reset", true);                });
     
-    /*Arrow Button click event*/
-    /*$(".ctrlBtn").on("mousedown vmousedown tap",  function(e) {  e.preventDefault(); send("Actuator", $(this).attr("id"), $("#btn_speed").val()/1000 );  })
-                 .on("mouseup mouseleave vmouseup vmouseout",  function() { send("Stop", "All");                   }); */
-    $(".ctrlBtn").on("vmousedown ",  function(e) {  e.preventDefault(); send("Actuator", $(this).attr("id"), $("#btn_speed").val()/1000 );  })
-    $(".actionBtn").on("vmousedown ",  function(e) {  e.preventDefault(); send("Actuator", $(this).attr("id"));  })
-                 .on("vmouseup ",  function() { send("Stop", "All");                   });
-    $(".ResetModel").mousedown(    function() { send("Reset", true);                })
-                    .mouseup  (    function() { send("Stop", "All");                });
 
     /* ---------------- Swipe Control --------------------- */
     var element = document.getElementById('SwipeControl');

@@ -30,7 +30,7 @@ source_files_dir    = "src/"
 css_files = ["style.css", "BlenderController.min.css"]
 js_files = ["controller.js"]
 html_files = ["index.html"]
-py_files = ["handler.py", "server_test.py", "startServers.py", "endServers.py", "server.py", "WebControllerAddon.py"]
+py_files = ["customButtons.py", "handler.py", "server_test.py", "startServers.py", "endServers.py", "server.py", "WebControllerAddon.py"]
 
 #List of files to move once built
 output_files = ["WebControllerAddon.py"]

@@ -58,10 +58,6 @@ class WebSocketHandler(socketserver.BaseRequestHandler):
                     WebSocketHandler.lock_id = None
                     self.send_json(dict(MASTER_STATUS=False))
                     self.broadcast_all(dict(SLAVE=False))
-            #elif "MESSAGE" in msg_data:
-            #    self.on_message(msg["MESSAGE"])
-            #else:
-            #   print("Unknown CMD, trashing: ", msg_data)
             self.on_message(msg_data)
         else:
             self.send_json(dict(SLAVE=True));
@@ -89,14 +85,13 @@ class WebSocketHandler(socketserver.BaseRequestHandler):
 #-------------------------------------------------------------------
 
     magic = b'258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
+    customButtons = {}
     lock_id = None
     connections = []
 
     def _hasLock(self):
         #there is no lock or the current thread has it
         return (not WebSocketHandler.lock_id) or (WebSocketHandler.lock_id == self.id)
-    
-    
     
     def setup(self):
         #Overwrtien function from socketserver
@@ -115,8 +110,7 @@ class WebSocketHandler(socketserver.BaseRequestHandler):
             self.handshake()
         except:
             print("HANDSHAKE ERROR! - Try using FireFox")
-            #return
-           
+                        
     def run(self):
         #runs the handler in a thread
         while self.alive.isSet():
@@ -167,6 +161,7 @@ class WebSocketHandler(socketserver.BaseRequestHandler):
         print("Sending Connected Message...   ", end = '')
         if self.handshake_done:
             self.send_message("Connected!")
+            self.send_json(dict(BUTTONS=WebSocketHandler.customButtons));
         print("Connected!\n")
         
     def _websocketHash(self, key):
