@@ -15,14 +15,14 @@ This add-on is developed at the University of Toledo as a research project. The 
 Main Feature List:
 ------------------------------------------
 
- + Control the BGE using your smartphone!
- + Everything included in the add-on, use only the standard python modules (website does use CDN so internet connection is required)
- + Create new objects in blender, so it won't modify anything
+ + Control the BGE using your smartphone or any web browser!
+ + Everything included in the add-on, uses only the standard python modules (website does use CDN so internet connection is required)
+ + Create new objects in blender, so it won't modify anything you have created
  + Uses python to create a web host to launch the controlling website
  + The website features button, keyboard, and touch controls
  + The website has a QR code for the connection information to easily share with others
  + Master/Everyone control modes; Switch on will only allow that user to control the model, Off will allow anyone to control it.
-
+ + Custom Buttons can be created to fire your own Actuators
 >
 
  How to use
@@ -64,9 +64,15 @@ If the website is working fine, but youstill think it look bad from a design poi
 
 This could be possible from a temp not being deleted OR a background process of blender not being closed properly.
 For the first one, clean out your temporary directory (on windows: C:\Users\username\Appdata\local\temp, linux: /tmp/)
-For the second one, look the the runnig processes to see of blender is running. Close it and try again.
+For the second one, look the the running processes to see of blender is running. Close it and try again.
 
-**Why are there funny play buttons on the bottom of the website?**
+**Can I make custom buttons/ have it control something else?**
+
+YES! After you run the add-on, there is a script created called "customButtons.py". This file has a python dictionary with the keys being the button text and the value being the name of the Actuator. 
+_Make sure to wire the actuator up to the the Server Controller_
+
+> buttons["Button_Text"] = "ActuratorName"
+
 
 They are for later use. I hope enable animation play back one day and this buttons are a place holder for that. They do nothing.
 

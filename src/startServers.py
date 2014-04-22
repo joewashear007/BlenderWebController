@@ -9,6 +9,7 @@
 
 from server import WebSocketHttpServer
 from handler import BlenderHandler
+import customButtons
 import threading
 
 def main():
