@@ -46,6 +46,7 @@ class BlenderWebController_op(bpy.types.Operator):
     def execute(self, context):
         bpy.context.scene.render.engine = 'BLENDER_GAME'
         bpy.context.scene.game_settings.show_debug_properties = True
+        
         #-------------- Create Text Files --------------------------   
         bpy.ops.text.new()
         bpy.data.texts[-1].name = 'StartServer'
@@ -124,6 +125,7 @@ class BlenderWebController_op(bpy.types.Operator):
         bpy.data.objects["ControllerView"].game.actuators["ZoomIn"].offset_location     = (0.0,     0.0,                0.01)
         bpy.data.objects["ControllerView"].game.actuators["ZoomOut"].offset_location    = (0.0,     0.0,                -0.01)
         bpy.data.objects['Controller'].game.actuators['SendQuit'].to_property = bpy.data.objects['Controller'].name
+        bpy.data.objects['Controller'].game.actuators['SendQuit'].subject = "QUIT"
 
         c = bpy.data.objects['Controller'].game.controllers['Sever']
         d = bpy.data.objects['Controller'].game.controllers['QuitSever']

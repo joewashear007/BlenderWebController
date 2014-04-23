@@ -8,8 +8,8 @@
 from server import WebSocketHandler
 
 buttons = {}
-buttons["Custom"] = ""
-buttons["Actions"] = ""
+buttons["Quit"] = "SendQuit"
+
 
 
 WebSocketHandler.customButtons = buttons
