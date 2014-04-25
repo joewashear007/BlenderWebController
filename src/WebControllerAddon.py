@@ -30,7 +30,7 @@ class BlenderWebController_pl(bpy.types.Panel):
 
 
 class BlenderWebController_op(bpy.types.Operator):
-    """Launches a website to contoller a new BGE camera"""      # blender will use this as a tooltip for menu items and buttons.
+    """Launches a website to control a new BGE camera"""      # blender will use this as a tooltip for menu items and buttons.
     bl_idname = "game.webcontroller"        # unique identifier for buttons and menu items to reference.
     bl_label = "Setup Web Controller"         # display name in the interface.
     bl_options = {'REGISTER', 'UNDO' }
@@ -46,6 +46,7 @@ class BlenderWebController_op(bpy.types.Operator):
     def execute(self, context):
         bpy.context.scene.render.engine = 'BLENDER_GAME'
         bpy.context.scene.game_settings.show_debug_properties = True
+        
         #-------------- Create Text Files --------------------------   
         bpy.ops.text.new()
         bpy.data.texts[-1].name = 'StartServer'
@@ -61,6 +62,10 @@ class BlenderWebController_op(bpy.types.Operator):
         bpy.data.texts[-1].name = "server.py"
         bpy.data.texts["server.py"].use_module = True
         bpy.data.texts["server.py"].from_string($_SERVER_PY)
+        bpy.ops.text.new()
+        bpy.data.texts[-1].name = "customButtons.py"
+        bpy.data.texts["customButtons.py"].use_module = True
+        bpy.data.texts["customButtons.py"].from_string($_CUSTOMBUTTONS_PY)
         
         #-------------- Add empty Controller ------------------------
         bpy.ops.object.add(type='EMPTY')
@@ -70,7 +75,7 @@ class BlenderWebController_op(bpy.types.Operator):
         bpy.ops.object.game_property_new(type="STRING", name="Website Address")
         bpy.ops.object.game_property_new(type="STRING", name="Socket Address")
         bpy.data.objects["Controller"].location = (0.0, 0.0, 0.0)
-        bpy.data.objects['Controller'].game.properties['Website Port'].value = 8000
+        bpy.data.objects['Controller'].game.properties['Website Port'].value = 0
         bpy.data.objects['Controller'].game.properties['Socket Port'].value = 0
         bpy.data.objects['Controller'].game.properties['Website Address'].show_debug = True
         bpy.data.objects['Controller'].game.properties['Socket Address'].show_debug = True
@@ -120,6 +125,7 @@ class BlenderWebController_op(bpy.types.Operator):
         bpy.data.objects["ControllerView"].game.actuators["ZoomIn"].offset_location     = (0.0,     0.0,                0.01)
         bpy.data.objects["ControllerView"].game.actuators["ZoomOut"].offset_location    = (0.0,     0.0,                -0.01)
         bpy.data.objects['Controller'].game.actuators['SendQuit'].to_property = bpy.data.objects['Controller'].name
+        bpy.data.objects['Controller'].game.actuators['SendQuit'].subject = "QUIT"
 
         c = bpy.data.objects['Controller'].game.controllers['Sever']
         d = bpy.data.objects['Controller'].game.controllers['QuitSever']

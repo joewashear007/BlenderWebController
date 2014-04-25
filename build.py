@@ -30,7 +30,7 @@ source_files_dir    = "src/"
 css_files = ["style.css", "BlenderController.min.css"]
 js_files = ["controller.js"]
 html_files = ["index.html"]
-py_files = ["handler.py", "server_test.py", "startServers.py", "endServers.py", "server.py", "WebControllerAddon.py"]
+py_files = ["customButtons.py", "handler.py", "server_test.py", "startServers.py", "endServers.py", "server.py", "WebControllerAddon.py"]
 
 #List of files to move once built
 output_files = ["WebControllerAddon.py"]
@@ -77,7 +77,7 @@ class FileBuilder:
             min_content = self.func_minify(content)
             output = open(self.out_dir + file, "w").write(min_content)
             # all cap filename and replace dot wioth underscorse to get the replace string name, add double slashes
-            FileBuilder.replacements["_"+file.replace(".", "_").upper()] = '"""' + min_content.replace("\\n", "\\\\n").replace("\\d", "\\\\d").replace("\\'", "\\\\'") + '"""'
+            FileBuilder.replacements["_"+file.replace(".", "_").upper()] = '"""' + min_content.replace("\\n", "\\\\n").replace("\\r", "\\\\r").replace("\\d", "\\\\d").replace("\\'", "\\\\'") + '"""'
             print("Done!")
 
 def miniy_js(content):

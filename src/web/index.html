@@ -73,13 +73,7 @@
             
             </div>
             <div data-role="footer" data-id="main-footer" id="button-footer">
-                <div data-role="controlgroup" data-type="horizontal" data-mini="true" >
-                    <a class="ui-btn ui-corner-all ui-shadow "><<</a>
-                    <a class="ui-btn ui-corner-all ui-shadow "><</a>
-                    <a class="ui-btn ui-corner-all ui-shadow ">Play</a>
-                    <a class="ui-btn ui-corner-all ui-shadow ">></a>
-                    <a class="ui-btn ui-corner-all ui-shadow ">>></a>
-                </div>
+                <span class="customButtons"></span>
                 <a href="#button-popup-strength" data-rel="popup" data-position-to="#button-footer" class="ui-btn ui-btn-right ui-corner-all ui-shadow ui-icon-gear ui-btn-icon-notext iconButton">Sensitivity</a>
             </div>
             
@@ -119,13 +113,7 @@
 				</div>
             </div>
             <div data-role="footer" data-id="main-footer" id="slide-footer">
-                <div data-role="controlgroup" data-type="horizontal" data-mini="true" >
-                    <a class="ui-btn ui-corner-all ui-shadow "><<</a>
-                    <a class="ui-btn ui-corner-all ui-shadow "><</a>
-                    <a class="ui-btn ui-corner-all ui-shadow ">Play</a>
-                    <a class="ui-btn ui-corner-all ui-shadow ">></a>
-                    <a class="ui-btn ui-corner-all ui-shadow ">>></a>
-                </div>
+                <span class="customButtons"></span>
                 <a href="#swipe-popup-strength" data-rel="popup" data-position-to="#slide-footer" class="ui-btn ui-btn-right ui-corner-all ui-shadow ui-icon-gear ui-btn-icon-notext iconButton">Sensitivity</a>
             </div>
             
@@ -139,7 +127,7 @@
             </div>
         </div>
 
-<!-- PAGE: Conenction -->
+<!-- PAGE: Connection -->
         <div data-role="page" id="Page-Cxn">
             <div data-role="header">
                 <!-- /header -->
@@ -152,9 +140,7 @@
 				<h2 class="ui-bar ui-bar-b ui-corner-all ErrMsg" >Not Connected</h2>
                 <h3 class="ui-bar ui-bar-a ui-corner-all">Http & Websocket Address</h3>
                 <div data-role="controlgroup">
-                    <!-- <label for="CxnHTTPAddress" class="label">Host Address</label> -->
                     <input name="httpAddr" type="url" id="CxnHTTPAddress"  data-wrapper-class="controlgroup-textinput ui-btn" />
-                    <!-- <label for="CxnWSAddress" class="label" > Websocket Address</label> -->
                     <input name="wsAddr" type="url" id="CxnWSAddress"  data-wrapper-class="controlgroup-textinput ui-btn" data-clear-btn="true"/>
                     <button id="ToggleCxnBtn">Connect</button>
                 </div>

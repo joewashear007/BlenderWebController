@@ -15,7 +15,6 @@ from time import sleep
 class BlenderHandler(server.WebSocketHandler):
     def on_message(self, msg):
         cont = bge.logic.getCurrentController()
-        #msg_info = json.loads(msg)
         msg_info = msg
         if "Actuator" in msg_info:
             direction = msg_info["Actuator"]
@@ -27,10 +26,10 @@ class BlenderHandler(server.WebSocketHandler):
                 rot = cont.actuators[direction].dRot
                 loc = cont.actuators[direction].dLoc
                 #Normalize the speed back to 1
-                print(sum(rot))
+                #print(sum(rot))
                 if sum(rot) != 0:
                     rot = [x/abs(sum(rot)) for x in rot]
-                print(sum(loc))
+                #print(sum(loc))
                 if sum(loc) != 0:
                     loc = [x/abs(sum(loc)) for x in loc]
                 #set teh new speed
@@ -52,6 +51,3 @@ class BlenderHandler(server.WebSocketHandler):
     def send_message(self, msg):
         pass
     
-    def on_close(self):
-        cont = bge.logic.getCurrentController()
-        cont.activate(cont.actuators["SendQuit"])

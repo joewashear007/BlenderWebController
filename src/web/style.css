@@ -32,6 +32,7 @@ a { -webkit-user-select: none !important; }
     bottom: 0px;
     left: 0px;
     right: 0px; 
+    min-height: 48.25px;
 }
 
 #popup-strength input{
