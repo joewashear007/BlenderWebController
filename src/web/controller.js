@@ -98,11 +98,11 @@ function styleMaster(){
 }
 function addCustomButtons(buttonJSON){
     var buttons = '<div data-role="controlgroup" data-type="horizontal" data-mini="true">';
-    $.each(buttonJSON, function(text, action) {
-        if( text =="" && action == "")
+    $.each(buttonJSON, function(index, obj) {
+        if(obj.text == "" || obj.action == "")
             buttons += '</div><div data-role="controlgroup" data-type="horizontal" data-mini="true">';
         else
-            buttons += '<a class="ui-btn ui-corner-all ui-shadow actionBtn" id="'+action+'">'+text+'</a>';
+            buttons += '<a class="ui-btn ui-corner-all ui-shadow actionBtn" id="'+obj.action+'">'+obj.text+'</a>';
     });
     buttons += '</div>';
     $(".customButtons").html(buttons);

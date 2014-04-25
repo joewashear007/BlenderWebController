@@ -75,7 +75,7 @@ class BlenderWebController_op(bpy.types.Operator):
         bpy.ops.object.game_property_new(type="STRING", name="Website Address")
         bpy.ops.object.game_property_new(type="STRING", name="Socket Address")
         bpy.data.objects["Controller"].location = (0.0, 0.0, 0.0)
-        bpy.data.objects['Controller'].game.properties['Website Port'].value = 8000
+        bpy.data.objects['Controller'].game.properties['Website Port'].value = 0
         bpy.data.objects['Controller'].game.properties['Socket Port'].value = 0
         bpy.data.objects['Controller'].game.properties['Website Address'].show_debug = True
         bpy.data.objects['Controller'].game.properties['Socket Address'].show_debug = True

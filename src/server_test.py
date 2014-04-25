@@ -12,6 +12,9 @@ from server import WebSocketHandler
 import customButtons
 
 def main():
+    WebSocketHandler.AddCustomButton("", "")
+    WebSocketHandler.AddCustomButton("Hello", "Wuit")
+    WebSocketHandler.AddCustomButton("World", "Huit")
     run = True
     print()
     print()
@@ -29,6 +32,7 @@ def main():
         i = input("Enter Command:")
         if i == "q":
             server.stop()
+            print("------------------------------------------")
             run = False
         else:
             if i:

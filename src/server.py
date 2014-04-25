@@ -37,6 +37,11 @@ class QuiteCGIHandler(http.server.CGIHTTPRequestHandler):
 # Inherit this class to handle the websocket connection
 class WebSocketHandler(socketserver.BaseRequestHandler):
 
+# ---------------- Statis Functions --------------------------------
+    @classmethod
+    def AddCustomButton(cls, text, action):
+        cls._customButtons.append ( {'text':text, 'action':action} )
+
 #-------------- Over ride these  ----------------------------------------
     def on_message(self, msg):
         #msg is a array, decoded from JSON
@@ -85,7 +90,7 @@ class WebSocketHandler(socketserver.BaseRequestHandler):
 #-------------------------------------------------------------------
 
     magic = b'258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
-    customButtons = {}
+    _customButtons = []
     lock_id = None
     connections = []
 
@@ -108,8 +113,9 @@ class WebSocketHandler(socketserver.BaseRequestHandler):
         #Overwrtien function from socketserver
         try:
             self.handshake()
-        except:
+        except e:
             print("HANDSHAKE ERROR! - Try using FireFox")
+            print(e)
                         
     def run(self):
         #runs the handler in a thread
@@ -161,8 +167,8 @@ class WebSocketHandler(socketserver.BaseRequestHandler):
         print("Sending Connected Message...   ", end = '')
         if self.handshake_done:
             self.send_message("Connected!")
-            self.send_json(dict(BUTTONS=WebSocketHandler.customButtons));
-        print("Connected!\n")
+            self.send_json({"BUTTONS": WebSocketHandler._customButtons});
+            print("Connected!\n")
         
     def _websocketHash(self, key):
         result_string = key + self.magic
@@ -182,7 +188,21 @@ class WebSocketHandler(socketserver.BaseRequestHandler):
             #send the default text frame
             frame_head[0] = frame_head[0] | (1 << 0)
         return frame_head
-            
+          
+    def _int_to_bytes(self, number, bytesize):
+        try:
+            return bytearray(number.to_bytes(bytesize, byteorder='big'))
+        except:
+            # PYTHON2 HACK...
+            d = bytearray(bytesize)
+            # Use big endian byteorder
+            fmt = '!' + {1: 'b', 2: 'H', 4: 'L', 8: 'Q'}[bytesize]
+            try:
+                struct.pack_into(fmt, d, 0, number)
+            except:
+                raise OverflowError("Need more bytes to represent that number")
+            return d
+          
     def _pack(self, data ,close=False):
         #pack bytes for sending to client
         frame_head = self._get_framehead(close)        
@@ -193,12 +213,12 @@ class WebSocketHandler(socketserver.BaseRequestHandler):
             # First byte must be set to 126 to indicate the following 2 bytes
             # interpreted as a 16-bit unsigned integer are the payload length
             frame_head[1] = 126
-            frame_head += int_to_bytes(len(data), 2)
+            frame_head += self._int_to_bytes(len(data), 2)
         elif len(data) < (2**64) -1:
             # Use 8 bytes to encode the data length
             # First byte must be set to 127
             frame_head[1] = 127
-            frame_head += int_to_bytes(len(data), 8)
+            frame_head += self._int_to_bytes(len(data), 8)
         frame = frame_head + data.encode('utf-8')
         return frame
             

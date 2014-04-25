@@ -54,6 +54,8 @@ These strings are debug properties. They show the current ip:port addresses that
 
 The machine that Blender is running on and the device you are trying to connect with have to be on the same network. Otherwise you would have to set some kind of 3rd party server. 
 
+There is a current bug that we are working fixing that the webpage won't load after launching the game engine multiple times. It can be fixed if you simple close and restart blender. 
+
 **The website looks like crap**
 
 In order minimize the file size, improve  make this script easy to edit, he website uses CDN's to get some JavaScript files. Make sure you have external internet connection so you device can fetch those files. 
@@ -66,12 +68,16 @@ This could be possible from a temp not being deleted OR a background process of 
 For the first one, clean out your temporary directory (on windows: C:\Users\username\Appdata\local\temp, linux: /tmp/)
 For the second one, look the the running processes to see of blender is running. Close it and try again.
 
+**Can I pick the ports this will use?**
+
+Sure! After running the setup, select the Controller object (It is an empty in blender). There are game properites that deterime the port numbers. Changes these, 0 will auto selct a port. 
+
 **Can I make custom buttons/ have it control something else?**
 
-YES! After you run the add-on, there is a script created called "customButtons.py". This file has a python dictionary with the keys being the button text and the value being the name of the Actuator. 
+YES! After you run the add-on, there is a script created called "customButtons.py". Copy the fucntion foreach butotn you want, first argument is the button text and the second is the name of the Actuator. You can also create a second row of buttons by calling the function with both arguments as blank strings.
 _Make sure to wire the actuator up to the the Server Controller_
 
-> buttons["Button_Text"] = "ActuratorName"
+> WebSocketHandler.AddCustomButton("ButtonText", "ActuatorName")
 
 
 They are for later use. I hope enable animation play back one day and this buttons are a place holder for that. They do nothing.
@@ -83,7 +89,7 @@ Please submit a GitHub issues!
 **License**
 This project is licensed under the the MIT license. See included file for more details
 
-Copyright (c) <2014, Joseph Livecchi>
+Copyright (c) 2014, Joseph Livecchi
 
 
     
