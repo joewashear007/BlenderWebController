@@ -1,7 +1,11 @@
 import bge
-import time
-if "Server" in bge.logic.globalDict:  
+
+cont = bge.logic.getCurrentController()
+trueSensors = False
+for s in cont.sensors:
+    trueSensors = trueSensors or s.positive
+    
+if "Server" in bge.logic.globalDict and trueSensors:
         bge.logic.globalDict["Server"].stop()
-        time.sleep(1)
-        cont = bge.logic.getCurrentController()
+        bge.logic.globalDict["Server"] = None
         cont.activate(cont.actuators["QuitGame"])

@@ -20,6 +20,8 @@ def main():
         scene=bge.logic.getCurrentScene();
         scene.active_camera=scene.objects['ControllerView'];
         cont=bge.logic.getCurrentController()
+        bge.logic.globalDict['Ctrl-Ornt'] = cont.owner.worldOrientation.to_3x3()
+        bge.logic.globalDict["CtrlView-Pos"] = scene.objects["ControllerView"].localPosition.to_tuple()
         
         http_addr='',cont.owner['Website Port']
         ws_addr='',cont.owner['Socket Port']

@@ -49,22 +49,19 @@ class BlenderWebController_op(bpy.types.Operator):
         
         #-------------- Create Text Files --------------------------   
         bpy.ops.text.new()
-        bpy.data.texts[-1].name = 'StartServer'
+        bpy.data.texts[-1].name = 'StartServer.py'
         bpy.data.texts['StartServer'].from_string($_STARTSERVERS_PY)
         bpy.ops.text.new()
-        bpy.data.texts[-1].name = "EndServer"
+        bpy.data.texts[-1].name = "EndServer.py"
         bpy.data.texts["EndServer"].from_string($_ENDSERVERS_PY)
         bpy.ops.text.new()
         bpy.data.texts[-1].name = "handler.py"
-        bpy.data.texts["handler.py"].use_module = True
         bpy.data.texts["handler.py"].from_string($_HANDLER_PY)
         bpy.ops.text.new()
         bpy.data.texts[-1].name = "server.py"
-        bpy.data.texts["server.py"].use_module = True
         bpy.data.texts["server.py"].from_string($_SERVER_PY)
         bpy.ops.text.new()
         bpy.data.texts[-1].name = "customButtons.py"
-        bpy.data.texts["customButtons.py"].use_module = True
         bpy.data.texts["customButtons.py"].from_string($_CUSTOMBUTTONS_PY)
         
         #-------------- Add empty Controller ------------------------

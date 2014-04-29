@@ -253,7 +253,7 @@ class HTTPServer(threading.Thread):
 
     def stop(self):
         #Overwrtien from Threading.Thread
-        print("Killing Http Server ...")
+        print("Killing Http Server ...", end="")
         if self.httpd is not None:
             self.httpd.shutdown()
         print("Done")
@@ -267,18 +267,10 @@ class WebSocketTCPServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
         
     def finish_request(self, request, client_address):
         #Finish one request by instantiating RequestHandlerClass
-        print("launching a new request")
+        print("Starting a new request")
         t = self.RequestHandlerClass(request, client_address, self)
-        print("Request:" , t)
         self.handlers.append(t)
-        print("Num request:" ,len(self.handlers))
         t.run()
-        
-    # def process_request(self, request, client_address):
-        # #Start a new thread to process the request
-        # t = threading.Thread(target = self.process_request_thread, args = (request, client_address))
-        # t.daemon = True
-        # t.start() 
         
     def get_handlers(self):
         #returns the list of handlers
@@ -313,7 +305,7 @@ class WebsocketServer(threading.Thread):
             print("The WebSocket Server is NULL")
 
     def stop(self):
-        print("Killing WebSocket Server ...")
+        print("Killing WebSocket Server ...", end="")
         if self.wsd is not None:
             for h in self.wsd.handlers:
                 h.alive.clear()
@@ -338,12 +330,15 @@ class WebSocketHttpServer():
         self.wsServer = None
 
     def _clean_server_temp_dir(self):
-        os.chdir(self.cwd)
-        shutil.rmtree(self.tempdir)
+        try: 
+            os.chdir(self.cwd)
+            shutil.rmtree(self.tempdir)
+        except Exception as e:
+            print("Err Changing Directory: ", self.cwd)
         
     def _make_server_temp_dir(self):
         #make the new temp directory
-        self.cwd = os.path.dirname(os.path.realpath(__file__))
+        self.cwd = os.getcwd()
         self.tempdir = tempfile.mkdtemp()
         os.chdir(self.tempdir)
         print("New temp dir:", self.tempdir)
@@ -357,7 +352,8 @@ class WebSocketHttpServer():
             self.wsServer.stop()
             self._clean_server_temp_dir()
         except Exception as e:
-            print("The Servers were never started", e)
+            print("There was an error during clean up: ", e)
+            print()
         
     def start(self):
         try:

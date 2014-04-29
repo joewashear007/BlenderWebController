@@ -106,6 +106,7 @@ function addCustomButtons(buttonJSON){
     });
     buttons += '</div>';
     $(".customButtons").html(buttons);
+    $(".customButtons > div").controlgroup({ defaults: true });
     log("Added Custom Buttons");
 }
 /* -------------------------- Document Ready Function ---------------------------- 

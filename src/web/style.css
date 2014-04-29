@@ -42,3 +42,8 @@ a { -webkit-user-select: none !important; }
 #popup-strength .ui-slider-track {
     margin-left: 15px;
 }
+
+.customButtons > div{
+    display: inline-block;
+    margin-right: 8px;
+}
